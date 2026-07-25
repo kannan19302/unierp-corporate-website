@@ -6,7 +6,7 @@ import {
   Shield, ChevronRight, Check, CreditCard, Users, BarChart3,
   Package, Hammer, Activity, Heart, GraduationCap, Building2,
   Wrench, Store, Zap, ArrowRight, Star, Sparkles, Globe, ExternalLink,
-  Calculator, CheckCircle2, ChevronDown, Lock, Cpu, Play, Award, DollarSign, Clock, TrendingUp
+  Calculator, CheckCircle2, ChevronDown, Lock, Cpu, Play, Award, DollarSign, Clock, TrendingUp, X, Sliders, Layout, Layers, RefreshCw
 } from 'lucide-react';
 
 const ERP_APP_URL = process.env.NEXT_PUBLIC_ERP_APP_URL || 'http://localhost:3000';
@@ -15,17 +15,55 @@ export default function CorporateHomePage() {
   // Lead Capture State
   const [leadEmail, setLeadEmail] = useState('');
   const [isAnnual, setIsAnnual] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<'trial' | 'demo'>('trial');
   
   // Interactive Module Showcase State
   const [activeTab, setActiveTab] = useState('studio');
 
-  // ROI Calculator State
+  // Live Studio Sandbox State (Interactive Demo Widget on Page)
+  const [sandboxBrandName, setSandboxBrandName] = useState('Acme Global');
+  const [sandboxColor, setSandboxColor] = useState('#38bdf8');
+  const [sandboxLayout, setSandboxLayout] = useState<'store' | 'corporate' | 'blog'>('store');
+
+  // ROI Calculator State & Presets
   const [teamSize, setTeamSize] = useState(25);
   const [currentSpend, setCurrentSpend] = useState(2500);
   const [manualHours, setManualHours] = useState(30);
 
   // FAQ State
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  // Industry ROI Presets
+  const applyPreset = (preset: 'healthcare' | 'education' | 'realestate' | 'fieldservice' | 'retail') => {
+    switch (preset) {
+      case 'healthcare':
+        setTeamSize(45);
+        setCurrentSpend(6500);
+        setManualHours(50);
+        break;
+      case 'education':
+        setTeamSize(60);
+        setCurrentSpend(4800);
+        setManualHours(40);
+        break;
+      case 'realestate':
+        setTeamSize(30);
+        setCurrentSpend(3500);
+        setManualHours(35);
+        break;
+      case 'fieldservice':
+        setTeamSize(35);
+        setCurrentSpend(4200);
+        setManualHours(45);
+        break;
+      case 'retail':
+        setTeamSize(20);
+        setCurrentSpend(2200);
+        setManualHours(25);
+        break;
+    }
+  };
 
   // Computed ROI
   const calculatedSavings = useMemo(() => {
@@ -46,11 +84,17 @@ export default function CorporateHomePage() {
     window.location.href = `${ERP_APP_URL}/login?email=${encodeURIComponent(leadEmail)}`;
   };
 
+  const openLeadModal = (type: 'trial' | 'demo') => {
+    setModalType(type);
+    setShowModal(true);
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: '#030712', color: '#f8fafc', position: 'relative' }}>
       {/* Background Animated Glowing Orbs */}
-      <div className="animated-bg-glow glow-blue" style={{ top: '-100px', left: '20%' }} />
-      <div className="animated-bg-glow glow-purple" style={{ top: '600px', right: '10%' }} />
+      <div className="animated-bg-glow glow-blue" style={{ top: '-100px', left: '15%' }} />
+      <div className="animated-bg-glow glow-purple" style={{ top: '700px', right: '10%' }} />
+      <div className="animated-bg-glow glow-emerald" style={{ top: '1600px', left: '5%' }} />
 
       {/* ── Top Announcement Banner ── */}
       <div style={{
@@ -63,7 +107,7 @@ export default function CorporateHomePage() {
         fontSize: '0.875rem',
         fontWeight: 600,
         display: 'flex',
-        align-items: 'center',
+        alignItems: 'center',
         justifyContent: 'center',
         gap: '0.6rem'
       }}>
@@ -92,11 +136,12 @@ export default function CorporateHomePage() {
           </Link>
 
           <nav style={{ display: 'flex', gap: '2.25rem', alignItems: 'center' }}>
-            <a href="#showcase" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>Features</a>
-            <a href="#roi-calculator" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>ROI Calculator</a>
-            <a href="#industries" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>Solutions</a>
-            <a href="#pricing" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>Pricing</a>
-            <a href="http://localhost:3001/swagger" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>API Docs</a>
+            <a href="#sandbox" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Live Sandbox</a>
+            <a href="#showcase" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Features</a>
+            <a href="#roi-calculator" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>ROI Calculator</a>
+            <a href="#comparison" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Comparison</a>
+            <a href="#pricing" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Pricing</a>
+            <a href="http://localhost:3001/swagger" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>API Docs</a>
           </nav>
 
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -104,10 +149,10 @@ export default function CorporateHomePage() {
               <Globe size={15} />
               <span>Tenant Site Engine</span>
             </a>
-            <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ padding: '0.65rem 1.35rem', fontSize: '0.875rem' }}>
+            <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ padding: '0.65rem 1.35rem', fontSize: '0.875rem' }}>
               <span>Log In to Desk</span>
               <ArrowRight size={15} />
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -160,7 +205,7 @@ export default function CorporateHomePage() {
             The industry’s first composable ERP platform with an embedded <strong style={{ color: '#ffffff' }}>No-Code Builder Studio</strong>, automated financial GL, inventory, payroll, and customizable tenant web portals.
           </p>
 
-          {/* High-Converting Lead Capture Bar */}
+          {/* High-Converting Lead Capture Form */}
           <form onSubmit={handleLeadSubmit} style={{
             maxWidth: '560px',
             margin: '0 auto 2.5rem',
@@ -205,7 +250,7 @@ export default function CorporateHomePage() {
         </div>
       </section>
 
-      {/* ── Social Proof & Trust Metrics Bar ── */}
+      {/* ── Social Proof Metrics ── */}
       <section style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
         <div className="glass-panel" style={{ padding: '2.5rem 3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem', textAlign: 'center' }}>
           <div>
@@ -227,11 +272,164 @@ export default function CorporateHomePage() {
         </div>
       </section>
 
+      {/* ── Live No-Code Studio Sandbox (Interactive Motion Feature) ── */}
+      <section id="sandbox" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#38bdf8', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+            <Sliders size={18} />
+            <span>Interactive Live Demo</span>
+          </div>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>
+            Try the <span className="text-gradient">No-Code Studio Builder</span> Right Now
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+            Test customization controls live — edit your brand name, pick brand tokens, and select layout presets.
+          </p>
+        </div>
+
+        <div className="glass-panel shine-effect" style={{ padding: '2rem', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '2rem' }}>
+            
+            {/* Left Controls Bar */}
+            <div style={{ background: '#0b1329', padding: '1.75rem', borderRadius: '14px', border: '1px solid #1e293b' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Layout size={18} color="#38bdf8" />
+                <span>Studio Controls</span>
+              </h3>
+
+              {/* Brand Name Input */}
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Tenant Brand Name</label>
+                <input
+                  type="text"
+                  value={sandboxBrandName}
+                  onChange={(e) => setSandboxBrandName(e.target.value)}
+                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '0.6rem 0.85rem', color: '#ffffff', fontSize: '0.9rem', outline: 'none' }}
+                />
+              </div>
+
+              {/* Theme Color Picker */}
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Brand Primary Token</label>
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                  {[
+                    { color: '#38bdf8', label: 'Sky' },
+                    { color: '#10b981', label: 'Emerald' },
+                    { color: '#a855f7', label: 'Purple' },
+                    { color: '#f59e0b', label: 'Amber' },
+                  ].map(c => (
+                    <button
+                      key={c.color}
+                      onClick={() => setSandboxColor(c.color)}
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        background: c.color,
+                        border: sandboxColor === c.color ? '3px solid #ffffff' : 'none',
+                        cursor: 'pointer',
+                        boxShadow: sandboxColor === c.color ? `0 0 15px ${c.color}` : 'none'
+                      }}
+                      title={c.label}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Layout Preset Selector */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Page Template Preset</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {[
+                    { id: 'store', label: 'E-Commerce Storefront' },
+                    { id: 'corporate', label: 'Corporate Portal' },
+                    { id: 'blog', label: 'Blog & Media Center' },
+                  ].map(l => (
+                    <button
+                      key={l.id}
+                      onClick={() => setSandboxLayout(l.id as any)}
+                      style={{
+                        padding: '0.6rem 0.85rem',
+                        borderRadius: '8px',
+                        background: sandboxLayout === l.id ? 'rgba(56, 189, 248, 0.15)' : '#1e293b',
+                        color: sandboxLayout === l.id ? '#38bdf8' : '#94a3b8',
+                        border: sandboxLayout === l.id ? '1px solid #38bdf8' : '1px solid #334155',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        fontSize: '0.85rem',
+                        fontWeight: 600
+                      }}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Live Canvas Preview */}
+            <div style={{ background: '#090d16', borderRadius: '14px', border: '1px solid #1e293b', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ background: '#0f172a', padding: '0.75rem 1.25rem', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f59e0b' }} />
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981' }} />
+                  <span style={{ marginLeft: '0.75rem', color: '#64748b', fontSize: '0.8rem', fontWeight: 500 }}>
+                    http://localhost:3000/ — Live Preview
+                  </span>
+                </div>
+                <div style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <RefreshCw size={12} />
+                  <span>Real-time Studio Sync</span>
+                </div>
+              </div>
+
+              {/* Dynamic Live Rendered Sandbox Web Page */}
+              <div style={{ padding: '2.5rem', flex: 1, background: '#ffffff', color: '#0f172a', transition: 'all 0.3s ease' }}>
+                {/* Navbar */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', marginBottom: '2rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>
+                    <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: sandboxColor, color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
+                      {sandboxBrandName.substring(0, 1)}
+                    </div>
+                    <span>{sandboxBrandName}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem', color: '#475569', fontWeight: 500 }}>
+                    <span>Home</span>
+                    <span>{sandboxLayout === 'store' ? 'Catalog' : sandboxLayout === 'blog' ? 'Articles' : 'Services'}</span>
+                    <span>Contact</span>
+                  </div>
+                  <button style={{ background: sandboxColor, color: '#ffffff', border: 'none', padding: '0.45rem 1rem', borderRadius: '6px', fontWeight: 600, fontSize: '0.85rem' }}>
+                    {sandboxLayout === 'store' ? 'View Cart' : 'Client Portal'}
+                  </button>
+                </div>
+
+                {/* Hero Banner */}
+                <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#ffffff', padding: '2.5rem 2rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.5rem' }}>
+                  <h4 style={{ fontSize: '1.75rem', fontWeight: 800, margin: '0 0 0.75rem 0' }}>
+                    Welcome to <span style={{ color: sandboxColor }}>{sandboxBrandName}</span>
+                  </h4>
+                  <p style={{ color: '#94a3b8', fontSize: '0.95rem', maxWidth: '480px', margin: '0 auto 1.25rem' }}>
+                    {sandboxLayout === 'store' && 'Discover premium product collections powered directly by UniERP Inventory.'}
+                    {sandboxLayout === 'corporate' && 'Leading enterprise services and customer portal solutions.'}
+                    {sandboxLayout === 'blog' && 'Latest announcements, technical articles, and industry insights.'}
+                  </p>
+                  <button style={{ background: sandboxColor, color: '#ffffff', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '8px', fontWeight: 700, fontSize: '0.9rem' }}>
+                    Explore Now →
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ── Interactive Module Showcase ── */}
-      <section id="showcase" style={{ maxWidth: '1280px', margin: '0 auto', padding: '5rem 1.5rem' }}>
+      <section id="showcase" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>
-            Experience the <span className="text-gradient">UniERP Platform</span>
+            Experience the <span className="text-gradient">UniERP Suite</span>
           </h2>
           <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
             Explore our core suite built with row-level tenant security, visual layout builders, and deep transactional intelligence.
@@ -295,7 +493,7 @@ export default function CorporateHomePage() {
             </div>
 
             {/* Interactive Preview Content */}
-            <div style={{ padding: '3rem', minHeight: '360px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ padding: '3rem', minHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {activeTab === 'studio' && (
                 <div style={{ textAlign: 'center', maxWidth: '600px' }}>
                   <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
@@ -305,10 +503,10 @@ export default function CorporateHomePage() {
                   <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
                     Design custom landing pages, e-commerce storefronts, customer intake forms, and automated business workflows visually with real-time publishing.
                   </p>
-                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
                     <span>Try Builder Studio Live</span>
                     <ArrowRight size={16} />
-                  </a>
+                  </button>
                 </div>
               )}
 
@@ -321,10 +519,10 @@ export default function CorporateHomePage() {
                   <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
                     Double-entry bookkeeping, automated bank reconciliation, period-end FX revaluations, and 1,500+ weighted accounting metrics.
                   </p>
-                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
                     <span>Open Finance Workspace</span>
                     <ArrowRight size={16} />
-                  </a>
+                  </button>
                 </div>
               )}
 
@@ -337,10 +535,10 @@ export default function CorporateHomePage() {
                   <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
                     Serial/batch tracking, drop-shipping, bill of materials (MRP), barcode scanning, and automated inventory replenishment rules.
                   </p>
-                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
                     <span>Launch Inventory Suite</span>
                     <ArrowRight size={16} />
-                  </a>
+                  </button>
                 </div>
               )}
 
@@ -369,10 +567,10 @@ export default function CorporateHomePage() {
                   <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
                     Lead scoring, win/loss analytics, partner deal registration, automated quotations, and AI-assisted email drafting.
                   </p>
-                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
                     <span>Open CRM Workspace</span>
                     <ArrowRight size={16} />
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
@@ -380,18 +578,27 @@ export default function CorporateHomePage() {
         </div>
       </section>
 
-      {/* ── Interactive Live ERP ROI & Time Savings Calculator ── */}
+      {/* ── Industry Presets ROI Calculator ── */}
       <section id="roi-calculator" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
               <Calculator size={18} />
               <span>Interactive ROI Estimator</span>
             </div>
             <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Calculate Your Annual Savings</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
-              See how much your organization saves by switching to UniERP's composable, all-in-one platform.
+            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
+              Select your industry vertical preset to instantly benchmark operational cost savings.
             </p>
+
+            {/* Presets Bar */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <button onClick={() => applyPreset('healthcare')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🏥 Healthcare</button>
+              <button onClick={() => applyPreset('education')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🎓 Education</button>
+              <button onClick={() => applyPreset('realestate')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🏢 Real Estate</button>
+              <button onClick={() => applyPreset('fieldservice')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🔧 Field Service</button>
+              <button onClick={() => applyPreset('retail')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🛍️ Retail & POS</button>
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '3rem', alignItems: 'center' }}>
@@ -456,17 +663,58 @@ export default function CorporateHomePage() {
                 Save roughly <strong style={{ color: '#10b981' }}>${calculatedSavings.monthly.toLocaleString()}/month</strong> in license fees and regain <strong style={{ color: '#38bdf8' }}>{calculatedSavings.hoursSavedMonth} hours/month</strong> of staff productivity.
               </p>
 
-              <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+              <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #10b981, #059669)' }}>
                 <DollarSign size={18} />
                 <span>Claim Your Savings & Start Trial</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Pricing Tiers with Discount Toggle ── */}
-      <section id="pricing" style={{ maxWidth: '1280px', margin: '0 auto', padding: '6rem 1.5rem' }}>
+      {/* ── Competitor Replacement Comparison Matrix ── */}
+      <section id="comparison" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Why Enterprises Choose <span className="text-gradient">UniERP</span></h2>
+          <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+            Compare UniERP against legacy monolithic enterprise systems.
+          </p>
+        </div>
+
+        <div className="glass-panel" style={{ padding: '2rem', overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #1e293b' }}>
+                <th style={{ padding: '1rem', color: '#f8fafc', fontSize: '1.05rem' }}>Feature / Capability</th>
+                <th style={{ padding: '1rem', color: '#38bdf8', fontSize: '1.05rem', fontWeight: 800 }}>UniERP Platform</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontSize: '0.95rem' }}>SAP S/4HANA</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontSize: '0.95rem' }}>NetSuite</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontSize: '0.95rem' }}>Odoo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { f: 'Embedded No-Code Studio & CMS', unierp: '✅ Built-in', sap: '❌ Requires ABAP', netsuite: '❌ Custom SuiteScript', odoo: '⚠️ Basic Web Editor' },
+                { f: 'Multi-Tenant PostgreSQL 16 RLS', unierp: '✅ DB-Layer Enforced', sap: '❌ Complex Instances', netsuite: '⚠️ Shared Schema', odoo: '❌ Multi-Database' },
+                { f: 'Deployment Time', unierp: '🚀 Instant (Minutes)', sap: '🐢 12-18 Months', netsuite: '🐢 6-9 Months', odoo: '⚡ Weeks' },
+                { f: 'API & Developer Swagger Docs', unierp: '✅ 1,500+ Open Endpoints', sap: '⚠️ Complex OData', netsuite: '⚠️ RESTlet Limits', odoo: '⚠️ XML-RPC' },
+                { f: 'Customizable Public Tenant Website', unierp: '✅ Native at /', sap: '❌ Requires Portal Addon', netsuite: '❌ Commerceweb Extra', odoo: '✅ Website App' },
+              ].map((row, idx) => (
+                <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <td style={{ padding: '1.25rem 1rem', fontWeight: 600, color: '#ffffff' }}>{row.f}</td>
+                  <td style={{ padding: '1.25rem 1rem', fontWeight: 800, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.05)' }}>{row.unierp}</td>
+                  <td style={{ padding: '1.25rem 1rem', color: '#94a3b8' }}>{row.sap}</td>
+                  <td style={{ padding: '1.25rem 1rem', color: '#94a3b8' }}>{row.netsuite}</td>
+                  <td style={{ padding: '1.25rem 1rem', color: '#94a3b8' }}>{row.odoo}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ── Pricing Tiers with Annual Switcher ── */}
+      <section id="pricing" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Transparent, Scalable Pricing</h2>
           <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '2rem' }}>Zero hidden fees. Deploy instantly with full API and Studio access.</p>
@@ -503,7 +751,7 @@ export default function CorporateHomePage() {
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Standard Reporting Suite</li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Up to 5 User Accounts</li>
             </ul>
-            <a href={`${ERP_APP_URL}/login`} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Start Starter Plan</a>
+            <button onClick={() => openLeadModal('trial')} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Start Starter Plan</button>
           </div>
 
           {/* Professional (Popular) */}
@@ -522,7 +770,7 @@ export default function CorporateHomePage() {
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Unlimited Users & Multi-Tenancy</li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Custom Domain & Web Portal Support</li>
             </ul>
-            <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Start 14-Day Free Trial</a>
+            <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Start 14-Day Free Trial</button>
           </div>
 
           {/* Enterprise */}
@@ -538,7 +786,7 @@ export default function CorporateHomePage() {
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Dedicated Solutions Architect</li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> 99.99% Uptime Guarantee SLA</li>
             </ul>
-            <a href={`${ERP_APP_URL}/login`} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Contact Enterprise Sales</a>
+            <button onClick={() => openLeadModal('demo')} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Contact Enterprise Sales</button>
           </div>
         </div>
       </section>
@@ -593,7 +841,7 @@ export default function CorporateHomePage() {
         </div>
       </section>
 
-      {/* ── High-Converting Bottom Conversion Banner ── */}
+      {/* ── Bottom Lead Conversion CTA Banner ── */}
       <section style={{ padding: '6rem 1.5rem', textAlign: 'center', position: 'relative' }}>
         <div className="glass-panel shine-effect" style={{ maxWidth: '1020px', margin: '0 auto', padding: '4.5rem 2rem', background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(168, 85, 247, 0.15))', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, margin: '0 0 1.25rem 0', color: '#ffffff' }}>
@@ -602,12 +850,46 @@ export default function CorporateHomePage() {
           <p style={{ color: '#94a3b8', fontSize: '1.2rem', maxWidth: '640px', margin: '0 auto 2.5rem' }}>
             Join 500+ forward-thinking organizations using UniERP to automate business workflows and eliminate legacy software bloat.
           </p>
-          <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ padding: '1.1rem 2.75rem', fontSize: '1.1rem' }}>
+          <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ padding: '1.1rem 2.75rem', fontSize: '1.1rem' }}>
             <span>Start Free 14-Day Trial</span>
             <ArrowRight size={18} />
-          </a>
+          </button>
         </div>
       </section>
+
+      {/* ── High-Converting Lead Capture Modal ── */}
+      {showModal && (
+        <div className="modal-backdrop" onClick={() => setShowModal(false)}>
+          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px', width: '100%', padding: '2.5rem', background: '#0b1329', border: '1px solid rgba(56, 189, 248, 0.3)', position: 'relative' }}>
+            <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+              <X size={20} />
+            </button>
+            <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+              {modalType === 'trial' ? 'Start Your 14-Day Trial' : 'Book an ERP Architect Session'}
+            </h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.75rem' }}>
+              {modalType === 'trial' ? 'Instant access to full 20+ ERP modules & No-Code Studio.' : 'Live 1-on-1 walkthrough with an enterprise software engineer.'}
+            </p>
+            <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, marginBottom: '0.4rem' }}>Work Email</label>
+                <input
+                  type="email"
+                  placeholder="name@company.com"
+                  value={leadEmail}
+                  onChange={(e) => setLeadEmail(e.target.value)}
+                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', background: '#1e293b', border: '1px solid #334155', color: '#ffffff', outline: 'none' }}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}>
+                <span>Launch Workspace Now</span>
+                <ArrowRight size={16} />
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* ── Footer ── */}
       <footer style={{ background: '#030712', borderTop: '1px solid #1e293b', padding: '4rem 1.5rem 2rem', color: '#64748b', fontSize: '0.9rem' }}>
