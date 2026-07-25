@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="adminGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#4338ca" />
+    </linearGradient>
+    <linearGradient id="adminAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#e879f9" />
+    </linearGradient>
+    <filter id="adminGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect x="32" y="32" width="448" height="448" rx="108" fill="#0b0f19" />
+  <rect x="32" y="32" width="448" height="448" rx="108" fill="none" stroke="#6366f1" stroke-width="8" stroke-opacity="0.4" />
+
+  <!-- Outer Shield Outline -->
+  <path d="M 256 80 L 390 130 V 260 C 390 345 330 415 256 440 C 182 415 122 345 122 260 V 130 Z"
+        fill="none" stroke="url(#adminGrad)" stroke-width="20" stroke-linejoin="round" opacity="0.35" />
+
+  <!-- Core Shield Emblem -->
+  <path d="M 256 108 L 366 150 V 256 C 366 325 316 382 256 404 C 196 382 146 325 146 256 V 150 Z"
+        fill="url(#adminGrad)" filter="url(#adminGlow)" />
+
+  <!-- Inner U Graphic -->
+  <path d="M 206 200 V 265 C 206 298 228 322 256 322 C 284 322 306 298 306 265 V 200"
+        fill="none" stroke="#ffffff" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Admin Console Crown Dot -->
+  <circle cx="256" cy="180" r="12" fill="url(#adminAccent)" />
+</svg>

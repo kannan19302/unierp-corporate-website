@@ -1,45 +1,68 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import { prisma } from '@/lib/prisma';
+import { generateReply, type ChatTurn } from '@/lib/llm-client';
+import { getSettings } from '@/lib/settings';
+import { getTenantFromRequest } from '@/lib/tenant';
+import { getSiteContent } from '@/lib/cms/queries';
+import { buildChatSystemPrompt } from '@/lib/cms/build-chat-prompt';
+
+const schema = z.object({
+  sessionId: z.string().trim().min(1).max(200),
+  query: z.string().trim().min(1).max(2000),
+});
 
 export async function POST(req: Request) {
   try {
-    const { query } = await req.json();
-    const q = (query || '').toLowerCase();
-
-    // AI Intent & Response Engine
-    if (q.includes('pricing') || q.includes('cost') || q.includes('rupee') || q.includes('inr')) {
-      return NextResponse.json({
-        reply: 'UniERP offers transparent Indian INR pricing starting at ₹1,499/user/month (Starter) and ₹3,999/user/month (Professional with GST E-Invoicing & Statutory Payroll). Billed annually, you get a 20% discount!',
-        escalateOption: true,
-      });
+    const tenant = await getTenantFromRequest(req);
+    if (!tenant) {
+      return NextResponse.json({ reply: 'This site is not configured.' }, { status: 404 });
     }
+    const tenantId = tenant.id;
 
-    if (q.includes('trial') || q.includes('free') || q.includes('30')) {
-      return NextResponse.json({
-        reply: 'UniERP includes an unrestricted 30-Day Free Trial with full 28-module access and No-Code Studio. No credit card is required!',
-        escalateOption: false,
-      });
+    const parsed = schema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ reply: 'Please enter a message.' }, { status: 400 });
     }
+    const { sessionId, query } = parsed.data;
 
-    if (q.includes('gst') || q.includes('tax') || q.includes('eway') || q.includes('gstr')) {
-      return NextResponse.json({
-        reply: 'UniERP is 100% compliant with Indian Taxation. It generates IRN E-Invoices, E-Way bills, and exports pre-formatted GSTR-1 & GSTR-3B JSON files for direct portal upload.',
-        escalateOption: false,
-      });
-    }
-
-    if (q.includes('demo') || q.includes('explore')) {
-      return NextResponse.json({
-        reply: 'You can explore our live running demo website right now without registration by clicking "Launch Demo Site" in the top bar!',
-        escalateOption: false,
-      });
-    }
-
-    // Default AI response with auto incident ticket escalation suggestion
-    return NextResponse.json({
-      reply: 'I am the UniERP AI Assistant. I can assist with pricing, GST compliance, 28+ apps, and No-Code Studio. Would you like me to escalate your query to a live human enterprise specialist?',
-      escalateOption: true,
+    const conversation = await prisma.chatConversation.upsert({
+      where: { tenantId_sessionId: { tenantId, sessionId } },
+      update: {},
+      create: { tenantId, sessionId },
+      include: { messages: { orderBy: { createdAt: 'asc' }, take: 20 } },
     });
+
+    await prisma.chatMessage.create({
+      data: { conversationId: conversation.id, role: 'USER', content: query },
+    });
+
+    const history: ChatTurn[] = [
+      ...conversation.messages.map((m) => ({
+        role: m.role === 'USER' ? ('user' as const) : ('assistant' as const),
+        content: m.content,
+      })),
+      { role: 'user', content: query },
+    ];
+
+    const [settings, siteContent] = await Promise.all([getSettings(tenantId), getSiteContent(tenantId)]);
+
+    const { content, escalateOption } = await generateReply(history, {
+      baseUrl: settings.OLLAMA_BASE_URL || 'http://localhost:11434',
+      model: settings.OLLAMA_MODEL || 'llama3.2:3b',
+      systemPrompt: buildChatSystemPrompt(tenant.name, siteContent),
+    });
+
+    await prisma.chatMessage.create({
+      data: { conversationId: conversation.id, role: 'ASSISTANT', content },
+    });
+
+    return NextResponse.json({ reply: content, escalateOption, conversationId: conversation.id });
   } catch (error) {
-    return NextResponse.json({ reply: 'An error occurred processing your request.', escalateOption: true }, { status: 500 });
+    console.error('AI chat error:', error);
+    return NextResponse.json(
+      { reply: 'An error occurred processing your request.', escalateOption: true },
+      { status: 500 }
+    );
   }
 }

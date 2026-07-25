@@ -1,7 +1,10 @@
 import { MetadataRoute } from 'next';
+import { getTenant } from '@/lib/tenant';
+import { getSiteContent } from '@/lib/cms/queries';
 
-export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002';
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const tenant = await getTenant();
+  const baseUrl = tenant ? (await getSiteContent(tenant.id)).settings.siteUrl : 'http://localhost:3002';
 
   return {
     rules: {

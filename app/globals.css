@@ -300,3 +300,364 @@ body {
 .card-3d-tilt:hover {
   transform: rotateX(3deg) rotateY(-3deg) translateY(-5px);
 }
+
+/* =====================================================
+   MOTION & ANIMATION SYSTEM — ERP Industry Standard
+   ===================================================== */
+
+/* ── Keyframes ──────────────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes float-badge {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 12px 0 rgba(37,99,235,0.25); }
+  50%       { box-shadow: 0 0 28px 6px rgba(37,99,235,0.45); }
+}
+
+@keyframes border-glow {
+  0%, 100% { border-color: var(--color-primary); box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+  50%       { border-color: var(--color-accent);  box-shadow: 0 0 0 4px rgba(79,70,229,0.15); }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.4; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Scroll-reveal base state ───────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.reveal-left {
+  transform: translateX(-32px);
+}
+
+.reveal.reveal-right {
+  transform: translateX(32px);
+}
+
+.reveal.reveal-scale {
+  transform: scale(0.92);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delays for grid children */
+.stagger-1 { transition-delay: 0ms; }
+.stagger-2 { transition-delay: 80ms; }
+.stagger-3 { transition-delay: 160ms; }
+.stagger-4 { transition-delay: 240ms; }
+.stagger-5 { transition-delay: 320ms; }
+.stagger-6 { transition-delay: 400ms; }
+
+/* ── Marquee / Logo wall ────────────────────────────── */
+.marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: marquee 28s linear infinite;
+  width: max-content;
+}
+
+.marquee-wrapper {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.marquee-wrapper:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── Badge float ────────────────────────────────────── */
+.float-badge {
+  animation: float-badge 3.2s ease-in-out infinite;
+}
+
+/* ── Highlight pricing tier ─────────────────────────── */
+.pricing-highlight {
+  animation: border-glow 3s ease-in-out infinite;
+}
+
+/* ── Stat counter entrance ──────────────────────────── */
+.stat-value.counting {
+  animation: count-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Button ripple ──────────────────────────────────── */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-ripple:active::after {
+  animation: ripple 0.5s ease-out;
+}
+
+/* ── Skeleton shimmer ───────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-hover) 50%, var(--color-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-lg);
+}
+
+/* ── CTA section pulse ──────────────────────────────── */
+.cta-glow {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ── Hero animate-in ────────────────────────────────── */
+.hero-enter {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-enter-delay-1 {
+  animation: fadeInUp 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-enter-delay-2 {
+  animation: fadeInUp 0.7s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-enter-delay-3 {
+  animation: fadeInUp 0.7s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-enter-delay-4 {
+  animation: fadeInUp 0.7s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Animated mesh background orbs ─────────────────── */
+.mesh-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: float-badge 6s ease-in-out infinite;
+}
+
+.mesh-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%);
+  top: -200px;
+  right: -100px;
+  animation-duration: 7s;
+}
+
+.mesh-orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(79,70,229,0.12) 0%, transparent 70%);
+  bottom: -100px;
+  left: -80px;
+  animation-duration: 9s;
+  animation-delay: -3s;
+}
+
+.mesh-orb-3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(5,150,105,0.1) 0%, transparent 70%);
+  top: 40%;
+  left: 30%;
+  animation-duration: 11s;
+  animation-delay: -6s;
+}
+
+/* ── Section entrance animation ─────────────────────── */
+.section-enter {
+  animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Hover lift ─────────────────────────────────────── */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Nav link underline animation ───────────────────── */
+nav a {
+  position: relative;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 9999px;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* ── Modal backdrop ─────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 1.5rem;
+  animation: fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Process step accent ─────────────────────────────── */
+.process-step-number {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+/* ── Comparison table ────────────────────────────────── */
+.comparison-table th,
+.comparison-table td {
+  padding: 0.85rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--color-card-border);
+  font-size: 0.9rem;
+}
+
+.comparison-table thead th {
+  font-weight: 800;
+  background: var(--color-surface);
+}
+
+.comparison-table .our-col {
+  background: var(--color-primary-glow);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* ── Prefers reduced motion — disable ALL animations ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
+  }
+}

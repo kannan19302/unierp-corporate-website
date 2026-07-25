@@ -1,0 +1,594 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Tenant {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  primaryDomain String
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  domains         TenantDomain[]
+  users           User[]
+  leads           Lead[]
+  tickets         Ticket[]
+  emailLogs       EmailLog[]
+  conversations   ChatConversation[]
+  analyticsEvents AnalyticsEvent[]
+  seoSettings     SeoSetting[]
+  subscribers     Subscriber[]
+  settings        Setting[]
+
+  siteSettings SiteSettings?
+  navLinks     NavLink[]
+  pages        PageContent[]
+  features     Feature[]
+  testimonials Testimonial[]
+  pricingTiers PricingTier[]
+  faqItems     FaqItem[]
+  industries   Industry[]
+  caseStudies  CaseStudy[]
+  resources    Resource[]
+  auditLogs    AuditLog[]
+  broadcastSchedules BroadcastSchedule[]
+
+  @@map("tenants")
+}
+
+model TenantDomain {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId  String
+  hostname  String   @unique
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@map("tenant_domains")
+}
+
+model Setting {
+  id              String   @id @default(cuid())
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId        String
+  key             String
+  value           String
+  isSecret        Boolean  @default(false)
+  hint            String?
+  updatedByUserId String?
+  updatedAt       DateTime @updatedAt
+
+  @@unique([tenantId, key])
+  @@map("settings")
+}
+
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+}
+
+model User {
+  id           String    @id @default(cuid())
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId     String
+  email        String
+  passwordHash String
+  role         AdminRole @default(ADMIN)
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastLoginAt  DateTime?
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@map("users")
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  PROPOSAL_SENT
+  WON
+  LOST
+}
+
+model Lead {
+  id          String     @id @default(cuid())
+  tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId    String
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  size        String?
+  budget      String?
+  modules     String[]   @default([])
+  message     String?
+  score       Int        @default(0)
+  status      LeadStatus @default(NEW)
+  source      String     @default("website")
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  isDraft     Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([tenantId, status])
+  @@index([tenantId, email])
+  @@index([tenantId, createdAt])
+  @@map("leads")
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Ticket {
+  id             String            @id @default(cuid())
+  tenant         Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId       String
+  name           String
+  email          String
+  subject        String
+  message        String
+  status         TicketStatus      @default(OPEN)
+  priority       TicketPriority    @default(MEDIUM)
+  aiEscalated    Boolean           @default(false)
+  conversation   ChatConversation? @relation(fields: [conversationId], references: [id])
+  conversationId String?           @unique
+  replies        TicketReply[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([tenantId, status])
+  @@map("tickets")
+}
+
+model TicketReply {
+  id        String   @id @default(cuid())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId  String
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@map("ticket_replies")
+}
+
+enum EmailStatus {
+  SENT
+  FAILED
+  QUEUED
+}
+
+model EmailLog {
+  id         String      @id @default(cuid())
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId   String
+  to         String
+  subject    String
+  status     EmailStatus @default(QUEUED)
+  provider   String      @default("RESEND")
+  providerId String?
+  error      String?
+  sentAt     DateTime    @default(now())
+
+  @@index([tenantId, sentAt])
+  @@map("email_logs")
+}
+
+model ChatConversation {
+  id        String        @id @default(cuid())
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId  String
+  sessionId String
+  messages  ChatMessage[]
+  ticket    Ticket?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@unique([tenantId, sessionId])
+  @@map("chat_conversations")
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+}
+
+model ChatMessage {
+  id             String           @id @default(cuid())
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  role           ChatRole
+  content        String
+  createdAt      DateTime         @default(now())
+
+  @@index([conversationId])
+  @@map("chat_messages")
+}
+
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId    String
+  path        String
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  sessionId   String
+  eventType   String   @default("pageview")
+  createdAt   DateTime @default(now())
+
+  @@index([tenantId, path])
+  @@index([tenantId, createdAt])
+  @@map("analytics_events")
+}
+
+model SeoSetting {
+  id              String   @id @default(cuid())
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId        String
+  path            String
+  metaTitle       String
+  metaDescription String?
+  schemaType      String?
+  canonicalUrl    String?
+  ogImage         String?
+  updatedAt       DateTime @updatedAt
+
+  @@unique([tenantId, path])
+  @@map("seo_settings")
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId  String
+  email     String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@unique([tenantId, email])
+  @@map("subscribers")
+}
+
+// ────────────────────────────────────────────────
+// CMS — structured content collections (Phase 3)
+// ────────────────────────────────────────────────
+
+model SiteSettings {
+  id       String @id @default(cuid())
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId String @unique
+
+  // Branding
+  brandName       String  @default("Business")
+  brandNameAccent String?
+  logoText        String? @default("B")
+  logoImageUrl    String?
+  brandTagline    String?
+
+  // Theme overrides (null = use globals.css default)
+  themePrimary String?
+  themeAccent  String?
+  themeEmerald String?
+  themePurple  String?
+
+  // Announcement bar
+  announcementEnabled  Boolean @default(true)
+  announcementIconName String? @default("Sparkles")
+  announcementText     String?
+  announcementCtaLabel String?
+  announcementCtaHref  String?
+
+  // Header CTAs
+  headerDemoLabel  String? @default("Demo")
+  headerLoginLabel String? @default("Log In")
+  headerCtaLabel   String? @default("Get Started")
+  headerCtaHref    String? @default("/contact")
+
+  // External platform URLs (business content, not secrets)
+  erpAppUrl       String @default("http://localhost:3000")
+  erpLoginPath    String @default("/login")
+  erpRegisterPath String @default("/register")
+  siteUrl         String @default("http://localhost:3002")
+
+  // Social proof
+  trustStats      Json     @default("[]")
+  logoWallHeading String?
+  logoWallNames   String[] @default([])
+
+  // Footer
+  footerBrandName       String?
+  footerBlurb           String?
+  newsletterPlaceholder String? @default("Subscribe for product updates")
+  newsletterCtaLabel    String? @default("Subscribe")
+  copyrightText         String?
+
+  // AI chat widget
+  chatEnabled         Boolean @default(true)
+  chatTitle           String? @default("AI Assistant")
+  chatLauncherLabel   String?
+  chatGreeting        String?
+  chatSystemPrompt    String?
+  chatFallbackMessage String?
+
+  // SEO defaults
+  defaultOgImage String?
+  titleTemplate  String? @default("%s")
+
+  // Demo booking
+  demoBookingUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+enum NavPlacement {
+  HEADER
+  FOOTER
+  LEGAL
+}
+
+model NavLink {
+  id           String       @id @default(cuid())
+  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId     String
+  label        String
+  href         String
+  placement    NavPlacement @default(HEADER)
+  group        String?
+  external     Boolean      @default(false)
+  openInNewTab Boolean      @default(false)
+  sortOrder    Int          @default(0)
+  visible      Boolean      @default(true)
+
+  @@index([tenantId, placement, sortOrder])
+  @@map("nav_links")
+}
+
+model PageContent {
+  id       String  @id @default(cuid())
+  tenant   Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId String
+  path     String
+  title    String?
+
+  badgeIconName         String?
+  badgeText             String?
+  heroHeadline          String?
+  heroHeadlineAccent    String?
+  heroSubheadline       String?
+  heroPrimaryCtaLabel   String?
+  heroPrimaryCtaHref    String?
+  heroSecondaryCtaLabel String?
+  heroSecondaryCtaHref  String?
+  heroBullets           String[] @default([])
+
+  sections Json  @default("[]")
+  jsonLd   Json?
+
+  visible     Boolean @default(true)
+  sortOrder   Int     @default(0)
+  seoPriority Float?  @default(0.7)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, path])
+  @@map("page_content")
+}
+
+model Feature {
+  id            String  @id @default(cuid())
+  tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId      String
+  slug          String
+  name          String
+  category      String
+  categoryLabel String?
+  iconName      String
+  description   String
+  highlighted   Boolean @default(false)
+  sortOrder     Int     @default(0)
+  visible       Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, sortOrder])
+  @@map("features")
+}
+
+model Testimonial {
+  id          String  @id @default(cuid())
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId    String
+  quote       String
+  authorName  String
+  authorTitle String?
+  company     String?
+  avatarUrl   String?
+  sortOrder   Int     @default(0)
+  visible     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId, sortOrder])
+  @@map("testimonials")
+}
+
+model PricingTier {
+  id                 String   @id @default(cuid())
+  tenant             Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId           String
+  slug               String
+  name               String
+  blurb              String?
+  priceInrAnnual     Int?
+  priceInrMonthly    Int?
+  priceUsdAnnual     Int?
+  priceUsdMonthly    Int?
+  priceLabelOverride String?
+  unitLabel          String?  @default("/ user / month")
+  ctaLabel           String
+  ctaHref            String?
+  ctaOpensLeadModal  Boolean  @default(true)
+  highlight          Boolean  @default(false)
+  features           String[] @default([])
+  sortOrder          Int      @default(0)
+  visible            Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, sortOrder])
+  @@map("pricing_tiers")
+}
+
+model FaqItem {
+  id        String  @id @default(cuid())
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId  String
+  question  String
+  answer    String
+  page      String  @default("/pricing")
+  sortOrder Int     @default(0)
+  visible   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId, page, sortOrder])
+  @@map("faq_items")
+}
+
+model Industry {
+  id        String  @id @default(cuid())
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId  String
+  slug      String
+  name      String
+  iconName  String
+  blurb     String
+  appSlug   String?
+  ctaLabel  String?
+  ctaHref   String?
+  sortOrder Int     @default(0)
+  visible   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, sortOrder])
+  @@map("industries")
+}
+
+model CaseStudy {
+  id             String  @id @default(cuid())
+  tenant         Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId       String
+  slug           String
+  company        String
+  result         String
+  detail         String
+  logoUrl        String?
+  metricIconName String? @default("TrendingUp")
+  sortOrder      Int     @default(0)
+  visible        Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, sortOrder])
+  @@map("case_studies")
+}
+
+model Resource {
+  id          String  @id @default(cuid())
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId    String
+  slug        String
+  type        String
+  title       String
+  description String
+  iconName    String
+  url         String?
+  sortOrder   Int     @default(0)
+  visible     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, sortOrder])
+  @@map("resources")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId   String
+  userId     String?
+  userEmail  String
+  action     String
+  entityType String
+  entityId   String?
+  summary    String?
+  createdAt  DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@map("audit_logs")
+}
+
+enum BroadcastStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+}
+
+model BroadcastSchedule {
+  id          String          @id @default(cuid())
+  tenant      Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenantId    String
+  subject     String
+  htmlBody    String
+  scheduledAt DateTime
+  status      BroadcastStatus @default(PENDING)
+  sentAt      DateTime?
+  recipients  Int?
+  sent        Int?
+  createdByEmail String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([tenantId, status])
+  @@index([tenantId, scheduledAt])
+  @@map("broadcast_schedules")
+}

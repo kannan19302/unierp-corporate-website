@@ -1,0 +1,66 @@
+# ============================================================
+# Local dev services for unierp-corporate-website
+#   - postgres (host port 5433 -> container 5432) — PostgreSQL 16
+#   - web      (host port 3002 -> container 3002) — Next.js dev server
+#
+# Fully independent from the sibling ERPSys repo's own docker-compose
+# stack: distinct project name (network), distinct container names
+# (unerp-marketing-*), distinct volumes, distinct ports (3002/5433 vs
+# ERPSys's 3000/3001/5432/6379/9000-9001/11434). No shared bind mounts.
+# ============================================================
+
+name: unierp-marketing
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: unerp-marketing-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: unerp_marketing
+      POSTGRES_USER: unerp_marketing
+      POSTGRES_PASSWORD: unerp_marketing_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - marketing_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unerp_marketing -d unerp_marketing"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: unerp-marketing-web
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://unerp_marketing:unerp_marketing_password@postgres:5432/unerp_marketing?schema=public
+      - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET in .env}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:?set ENCRYPTION_KEY in .env}
+      - DEV_TENANT_DOMAIN=${DEV_TENANT_DOMAIN:-localhost}
+      - ENFORCE_TENANT_HOST_MATCH=${ENFORCE_TENANT_HOST_MATCH:-true}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:3b}
+      # File watching (Windows Docker Desktop bind mounts need polling —
+      # same rationale as ERPSys/docker-compose.dev.yml)
+      - WATCHPACK_POLLING=1000
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
+    ports:
+      - "3002:3002"
+    volumes:
+      - .:/app
+      - marketing_node_modules:/app/node_modules
+      - /app/.next
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  marketing_postgres_data:
+  marketing_node_modules:
