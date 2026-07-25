@@ -6,95 +6,108 @@ import {
   Shield, ChevronRight, Check, CreditCard, Users, BarChart3,
   Package, Hammer, Activity, Heart, GraduationCap, Building2,
   Wrench, Store, Zap, ArrowRight, Star, Sparkles, Globe, ExternalLink,
-  Calculator, CheckCircle2, ChevronDown, Lock, Cpu, Play, Award, DollarSign, Clock, TrendingUp, X, Sliders, Layout, Layers, RefreshCw
+  Calculator, CheckCircle2, ChevronDown, Lock, Cpu, Play, Award, DollarSign, Clock, TrendingUp, X, Sliders, Layout, Layers, RefreshCw, Terminal, Copy, Server, CheckSquare, Layers2, Bot, HelpCircle
 } from 'lucide-react';
 
 const ERP_APP_URL = process.env.NEXT_PUBLIC_ERP_APP_URL || 'http://localhost:3000';
 
-export default function CorporateHomePage() {
-  // Lead Capture State
+export default function NextGenCorporateHomePage() {
+  // Lead Capture & Modal State
   const [leadEmail, setLeadEmail] = useState('');
   const [isAnnual, setIsAnnual] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState<'trial' | 'demo'>('trial');
-  
-  // Interactive Module Showcase State
-  const [activeTab, setActiveTab] = useState('studio');
+  const [modalType, setModalType] = useState<'trial' | 'demo' | 'tour'>('trial');
+  const [tourStep, setTourStep] = useState(1);
 
-  // Live Studio Sandbox State (Interactive Demo Widget on Page)
-  const [sandboxBrandName, setSandboxBrandName] = useState('Acme Global');
-  const [sandboxColor, setSandboxColor] = useState('#38bdf8');
-  const [sandboxLayout, setSandboxLayout] = useState<'store' | 'corporate' | 'blog'>('store');
+  // Executive Cockpit Persona Switcher State (Dynamics 365 Benchmark)
+  const [activePersona, setActivePersona] = useState<'cfo' | 'coo' | 'cto' | 'cmo' | 'chro'>('cfo');
 
-  // ROI Calculator State & Presets
-  const [teamSize, setTeamSize] = useState(25);
-  const [currentSpend, setCurrentSpend] = useState(2500);
-  const [manualHours, setManualHours] = useState(30);
+  // AI Agentforce Simulator State (Salesforce Benchmark)
+  const [activeAgent, setActiveAgent] = useState<'reconcile' | 'quote' | 'reorder'>('reconcile');
+  const [isAgentRunning, setIsAgentRunning] = useState(false);
+  const [agentStep, setAgentStep] = useState(3);
 
-  // FAQ State
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  // 28-Module App Matrix Filter (Odoo Benchmark)
+  const [appFilter, setAppFilter] = useState<'all' | 'ops' | 'verticals' | 'studio' | 'ai'>('all');
 
-  // Industry ROI Presets
-  const applyPreset = (preset: 'healthcare' | 'education' | 'realestate' | 'fieldservice' | 'retail') => {
-    switch (preset) {
-      case 'healthcare':
-        setTeamSize(45);
-        setCurrentSpend(6500);
-        setManualHours(50);
-        break;
-      case 'education':
-        setTeamSize(60);
-        setCurrentSpend(4800);
-        setManualHours(40);
-        break;
-      case 'realestate':
-        setTeamSize(30);
-        setCurrentSpend(3500);
-        setManualHours(35);
-        break;
-      case 'fieldservice':
-        setTeamSize(35);
-        setCurrentSpend(4200);
-        setManualHours(45);
-        break;
-      case 'retail':
-        setTeamSize(20);
-        setCurrentSpend(2200);
-        setManualHours(25);
-        break;
-    }
-  };
+  // Live API Playground State
+  const [activeApiRoute, setActiveApiRoute] = useState<'finance' | 'builder' | 'inventory'>('finance');
+  const [copiedApi, setCopiedApi] = useState(false);
 
-  // Computed ROI
-  const calculatedSavings = useMemo(() => {
-    const unierpCost = teamSize * (isAnnual ? 63 : 79);
-    const monthlySoftwareSavings = Math.max(0, currentSpend - unierpCost);
-    const laborSavings = manualHours * 4 * 45 * 0.6; // 60% reduction in manual admin time @ $45/hr
-    const totalMonthly = monthlySoftwareSavings + laborSavings;
-    return {
-      monthly: Math.round(totalMonthly),
-      annual: Math.round(totalMonthly * 12),
-      hoursSavedMonth: Math.round(manualHours * 4 * 0.6),
-    };
-  }, [teamSize, currentSpend, manualHours, isAnnual]);
+  // Cloud vs Self-Hosted TCO Calculator State (Zoho Benchmark)
+  const [tcoUsers, setTcoUsers] = useState(40);
+  const [tcoStorage, setTcoStorage] = useState(250); // GB
+  const [tcoMode, setTcoMode] = useState<'cloud' | 'selfhosted'>('cloud');
 
+  // Custom Modular Demo Builder State
+  const [selectedModules, setSelectedModules] = useState<string[]>(['finance', 'inventory', 'builder']);
+
+  // Handle Lead Submit
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!leadEmail) return;
     window.location.href = `${ERP_APP_URL}/login?email=${encodeURIComponent(leadEmail)}`;
   };
 
-  const openLeadModal = (type: 'trial' | 'demo') => {
+  const openLeadModal = (type: 'trial' | 'demo' | 'tour') => {
     setModalType(type);
     setShowModal(true);
   };
 
+  // Run AI Agentforce Simulator
+  const runAgentSimulator = (agent: 'reconcile' | 'quote' | 'reorder') => {
+    setActiveAgent(agent);
+    setIsAgentRunning(true);
+    setAgentStep(1);
+    setTimeout(() => setAgentStep(2), 700);
+    setTimeout(() => {
+      setAgentStep(3);
+      setIsAgentRunning(false);
+    }, 1500);
+  };
+
+  // TCO Calculations
+  const tcoResult = useMemo(() => {
+    const cloudMonthly = tcoUsers * (isAnnual ? 63 : 79) + (tcoStorage / 100) * 15;
+    const legacyCloudSpend = tcoUsers * 180 + (tcoStorage / 100) * 45;
+    const annualSavings = Math.round((legacyCloudSpend - cloudMonthly) * 12);
+    return {
+      monthly: Math.round(cloudMonthly),
+      annualSavings,
+      selfHostedDockerCommand: `docker run -d -p 3000:3000 -p 3001:3001 --name unerp-stack -e TENANT_ID=prod_01 kannan19302/unierp-core:latest`
+    };
+  }, [tcoUsers, tcoStorage, isAnnual]);
+
+  // Modules List (28 Modules)
+  const allModules = [
+    { id: 'finance', name: 'General Ledger & Accounting', cat: 'ops', icon: CreditCard, desc: 'Double-entry bookkeeping, automated bank feeds, FX revaluation.' },
+    { id: 'inventory', name: 'Multi-Warehouse Inventory', cat: 'ops', icon: Package, desc: 'Serial/batch tracking, serial numbers, drop-shipping, barcodes.' },
+    { id: 'manufacturing', name: 'Manufacturing & MRP II', cat: 'ops', icon: Hammer, desc: 'Work orders, bill of materials, routing, capacity planning.' },
+    { id: 'crm', name: 'CRM & Deal Pipeline', cat: 'ops', icon: Users, desc: 'Lead scoring, sales funnel analytics, automated quotes.' },
+    { id: 'hr', name: 'HR & Payroll Engine', cat: 'ops', icon: Heart, desc: 'Salary structures, tax deductions, leave approvals, attendance.' },
+    { id: 'pos', name: 'Retail Point-of-Sale (POS)', cat: 'ops', icon: Store, desc: 'Offline-first cash register, receipt printing, inventory sync.' },
+
+    { id: 'studio', name: 'No-Code Builder Studio', cat: 'studio', icon: Activity, desc: 'Drag-and-drop page builder, form intake builder, workflow triggers.' },
+    { id: 'cms', name: 'Tenant Web Portal CMS', cat: 'studio', icon: Globe, desc: 'Customizable / root public site engine with dynamic theme tokens.' },
+    { id: 'forms', name: 'Dynamic Form Generator', cat: 'studio', icon: Layout, desc: 'Visual form builder with validation rules and webhook handlers.' },
+
+    { id: 'healthcare', name: 'Healthcare & EMR Suite', cat: 'verticals', icon: Activity, desc: 'Patient records, appointments, prescription logs, lab billing.' },
+    { id: 'education', name: 'Education & SIS Portal', cat: 'verticals', icon: GraduationCap, desc: 'Student enrollment, gradebooks, fee collections, timetables.' },
+    { id: 'realestate', name: 'Real Estate & Lease Mgmt', cat: 'verticals', icon: Building2, desc: 'Property listings, tenant lease agreements, maintenance tickets.' },
+    { id: 'fieldservice', name: 'Field Service Dispatch', cat: 'verticals', icon: Wrench, desc: 'Technician scheduling, mobile work orders, route optimization.' },
+
+    { id: 'copilot', name: 'UniERP AI Copilot', cat: 'ai', icon: Bot, desc: 'Automated financial reconciliation, quote drafting, inventory alerts.' },
+    { id: 'analytics', name: 'BI Executive Dashboards', cat: 'ai', icon: BarChart3, desc: '1,500+ real-time metrics, cohort analysis, cashflow forecasting.' },
+  ];
+
+  const filteredModules = allModules.filter(m => appFilter === 'all' || m.cat === appFilter);
+
   return (
-    <div style={{ minHeight: '100vh', background: '#030712', color: '#f8fafc', position: 'relative' }}>
-      {/* Background Animated Glowing Orbs */}
-      <div className="animated-bg-glow glow-blue" style={{ top: '-100px', left: '15%' }} />
-      <div className="animated-bg-glow glow-purple" style={{ top: '700px', right: '10%' }} />
-      <div className="animated-bg-glow glow-emerald" style={{ top: '1600px', left: '5%' }} />
+    <div className="grid-bg-pattern" style={{ minHeight: '100vh', background: '#030712', color: '#f8fafc', position: 'relative' }}>
+      {/* Ambient Animated Glowing Orbs */}
+      <div className="animated-bg-glow glow-blue" style={{ top: '-120px', left: '10%' }} />
+      <div className="animated-bg-glow glow-purple" style={{ top: '800px', right: '5%' }} />
+      <div className="animated-bg-glow glow-emerald" style={{ top: '1800px', left: '8%' }} />
 
       {/* ── Top Announcement Banner ── */}
       <div style={{
@@ -102,7 +115,7 @@ export default function CorporateHomePage() {
         backgroundSize: '200% auto',
         animation: 'gradient-shift 4s ease infinite',
         color: '#ffffff',
-        padding: '0.5rem 1rem',
+        padding: '0.55rem 1rem',
         textAlign: 'center',
         fontSize: '0.875rem',
         fontWeight: 600,
@@ -112,10 +125,10 @@ export default function CorporateHomePage() {
         gap: '0.6rem'
       }}>
         <Sparkles size={16} />
-        <span>UniERP 2.5 Released: Instant No-Code Builder Studio & Multi-Tenant E-Commerce Portal Engine</span>
-        <a href={`${ERP_APP_URL}/`} style={{ color: '#ffffff', textDecoration: 'underline', fontWeight: 700 }}>
-          View Live Demo →
-        </a>
+        <span>UniERP 2.5 Released: Agentforce AI Copilot & Multi-Tenant E-Commerce Portal Engine</span>
+        <button onClick={() => openLeadModal('tour')} style={{ background: 'none', border: 'none', color: '#ffffff', textDecoration: 'underline', fontWeight: 700, cursor: 'pointer' }}>
+          Watch 2-Min Tour →
+        </button>
       </div>
 
       {/* ── Navigation Header ── */}
@@ -136,18 +149,18 @@ export default function CorporateHomePage() {
           </Link>
 
           <nav style={{ display: 'flex', gap: '2.25rem', alignItems: 'center' }}>
-            <a href="#sandbox" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Live Sandbox</a>
-            <a href="#showcase" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Features</a>
-            <a href="#roi-calculator" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>ROI Calculator</a>
-            <a href="#comparison" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Comparison</a>
+            <a href="#cockpit" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Executive Cockpit</a>
+            <a href="#agentforce" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>AI Agentforce</a>
+            <a href="#apps" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>28+ Apps</a>
+            <a href="#api" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>API Playground</a>
+            <a href="#tco" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>TCO & Security</a>
             <a href="#pricing" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Pricing</a>
-            <a href="http://localhost:3001/swagger" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>API Docs</a>
           </nav>
 
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <a href={`${ERP_APP_URL}/`} className="btn-secondary" style={{ padding: '0.6rem 1.1rem', fontSize: '0.875rem' }}>
               <Globe size={15} />
-              <span>Tenant Site Engine</span>
+              <span>Tenant Portal</span>
             </a>
             <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ padding: '0.65rem 1.35rem', fontSize: '0.875rem' }}>
               <span>Log In to Desk</span>
@@ -158,10 +171,9 @@ export default function CorporateHomePage() {
       </header>
 
       {/* ── Hero Section ── */}
-      <section style={{ padding: '7rem 1.5rem 5rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-        <div style={{ maxWidth: '1020px', margin: '0 auto' }}>
+      <section style={{ padding: '6.5rem 1.5rem 4rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
           
-          {/* Floating Release Badge */}
           <div className="floating-badge" style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -178,43 +190,43 @@ export default function CorporateHomePage() {
             boxShadow: '0 0 25px rgba(56, 189, 248, 0.2)'
           }}>
             <Award size={16} />
-            <span>Ranked #1 Composable Multi-Tenant ERP Architecture</span>
+            <span>Ranked #1 Composable Multi-Tenant ERP Engine</span>
             <ChevronRight size={14} />
           </div>
 
           <h1 style={{
-            fontSize: 'clamp(3rem, 6vw, 4.75rem)',
+            fontSize: 'clamp(3.2rem, 6vw, 4.85rem)',
             fontWeight: 900,
             lineHeight: 1.08,
             letterSpacing: '-0.03em',
             margin: '0 0 1.75rem 0',
             color: '#ffffff'
           }}>
-            Run Your Entire Enterprise With <br />
-            <span className="text-gradient">Zero Code & 10x Velocity</span>
+            The Autonomous Operating System <br />
+            For <span className="text-gradient">Modern Global Enterprises</span>
           </h1>
 
           <p style={{
             fontSize: '1.3rem',
             color: '#94a3b8',
-            maxWidth: '780px',
+            maxWidth: '820px',
             margin: '0 auto 3rem',
             lineHeight: 1.65,
             fontWeight: 400
           }}>
-            The industry’s first composable ERP platform with an embedded <strong style={{ color: '#ffffff' }}>No-Code Builder Studio</strong>, automated financial GL, inventory, payroll, and customizable tenant web portals.
+            Combine <strong style={{ color: '#ffffff' }}>28+ composable ERP modules</strong>, AI Agentforce automation, and visual No-Code Studio into one multi-tenant platform with database-layer security.
           </p>
 
-          {/* High-Converting Lead Capture Form */}
+          {/* High-Converting Work Email Form */}
           <form onSubmit={handleLeadSubmit} style={{
-            maxWidth: '560px',
+            maxWidth: '580px',
             margin: '0 auto 2.5rem',
             display: 'flex',
             gap: '0.5rem',
-            background: 'rgba(15, 23, 42, 0.8)',
+            background: 'rgba(15, 23, 42, 0.85)',
             padding: '0.5rem',
             borderRadius: '16px',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
             boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15)',
             backdropFilter: 'blur(16px)'
           }}>
@@ -236,490 +248,571 @@ export default function CorporateHomePage() {
               required
             />
             <button type="submit" className="btn-primary" style={{ borderRadius: '12px' }}>
-              <span>Start Free Trial</span>
+              <span>Start 14-Day Trial</span>
               <ArrowRight size={16} />
             </button>
           </form>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', color: '#64748b', fontSize: '0.875rem', flexWrap: 'wrap' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> No Credit Card Required</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> 14-Day Full Access</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> Instant Workspace Setup</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> Full 28-Module Access</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> Instant Docker / Cloud Setup</span>
           </div>
 
         </div>
       </section>
 
-      {/* ── Social Proof Metrics ── */}
-      <section style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
-        <div className="glass-panel" style={{ padding: '2.5rem 3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem', textAlign: 'center' }}>
-          <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#38bdf8', marginBottom: '0.25rem' }}>$4.2M+</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Client Operating Cost Saved</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#10b981', marginBottom: '0.25rem' }}>99.99%</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Uptime SLA Guarantee</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#a855f7', marginBottom: '0.25rem' }}>1,500+</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Enterprise REST API Endpoints</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#f59e0b', marginBottom: '0.25rem' }}>10x</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Faster Deployment Velocity</div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Live No-Code Studio Sandbox (Interactive Motion Feature) ── */}
-      <section id="sandbox" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
+      {/* ── Dynamics 365-Style Executive Cockpit Switcher ── */}
+      <section id="cockpit" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#38bdf8', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
-            <Sliders size={18} />
-            <span>Interactive Live Demo</span>
+            <BarChart3 size={18} />
+            <span>Role-Tailored Intelligence</span>
           </div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>
-            Try the <span className="text-gradient">No-Code Studio Builder</span> Right Now
-          </h2>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Executive Cockpit Switcher</h2>
           <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
-            Test customization controls live — edit your brand name, pick brand tokens, and select layout presets.
+            Select your leadership persona to preview real-time metrics and tailored operational dashboards.
           </p>
         </div>
 
-        <div className="glass-panel shine-effect" style={{ padding: '2rem', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '2rem' }}>
-            
-            {/* Left Controls Bar */}
-            <div style={{ background: '#0b1329', padding: '1.75rem', borderRadius: '14px', border: '1px solid #1e293b' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Layout size={18} color="#38bdf8" />
-                <span>Studio Controls</span>
-              </h3>
-
-              {/* Brand Name Input */}
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Tenant Brand Name</label>
-                <input
-                  type="text"
-                  value={sandboxBrandName}
-                  onChange={(e) => setSandboxBrandName(e.target.value)}
-                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '0.6rem 0.85rem', color: '#ffffff', fontSize: '0.9rem', outline: 'none' }}
-                />
-              </div>
-
-              {/* Theme Color Picker */}
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Brand Primary Token</label>
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
-                  {[
-                    { color: '#38bdf8', label: 'Sky' },
-                    { color: '#10b981', label: 'Emerald' },
-                    { color: '#a855f7', label: 'Purple' },
-                    { color: '#f59e0b', label: 'Amber' },
-                  ].map(c => (
-                    <button
-                      key={c.color}
-                      onClick={() => setSandboxColor(c.color)}
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        background: c.color,
-                        border: sandboxColor === c.color ? '3px solid #ffffff' : 'none',
-                        cursor: 'pointer',
-                        boxShadow: sandboxColor === c.color ? `0 0 15px ${c.color}` : 'none'
-                      }}
-                      title={c.label}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Layout Preset Selector */}
-              <div>
-                <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Page Template Preset</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {[
-                    { id: 'store', label: 'E-Commerce Storefront' },
-                    { id: 'corporate', label: 'Corporate Portal' },
-                    { id: 'blog', label: 'Blog & Media Center' },
-                  ].map(l => (
-                    <button
-                      key={l.id}
-                      onClick={() => setSandboxLayout(l.id as any)}
-                      style={{
-                        padding: '0.6rem 0.85rem',
-                        borderRadius: '8px',
-                        background: sandboxLayout === l.id ? 'rgba(56, 189, 248, 0.15)' : '#1e293b',
-                        color: sandboxLayout === l.id ? '#38bdf8' : '#94a3b8',
-                        border: sandboxLayout === l.id ? '1px solid #38bdf8' : '1px solid #334155',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        fontSize: '0.85rem',
-                        fontWeight: 600
-                      }}
-                    >
-                      {l.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Live Canvas Preview */}
-            <div style={{ background: '#090d16', borderRadius: '14px', border: '1px solid #1e293b', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ background: '#0f172a', padding: '0.75rem 1.25rem', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f59e0b' }} />
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981' }} />
-                  <span style={{ marginLeft: '0.75rem', color: '#64748b', fontSize: '0.8rem', fontWeight: 500 }}>
-                    http://localhost:3000/ — Live Preview
-                  </span>
-                </div>
-                <div style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                  <RefreshCw size={12} />
-                  <span>Real-time Studio Sync</span>
-                </div>
-              </div>
-
-              {/* Dynamic Live Rendered Sandbox Web Page */}
-              <div style={{ padding: '2.5rem', flex: 1, background: '#ffffff', color: '#0f172a', transition: 'all 0.3s ease' }}>
-                {/* Navbar */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', marginBottom: '2rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: sandboxColor, color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
-                      {sandboxBrandName.substring(0, 1)}
-                    </div>
-                    <span>{sandboxBrandName}</span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem', color: '#475569', fontWeight: 500 }}>
-                    <span>Home</span>
-                    <span>{sandboxLayout === 'store' ? 'Catalog' : sandboxLayout === 'blog' ? 'Articles' : 'Services'}</span>
-                    <span>Contact</span>
-                  </div>
-                  <button style={{ background: sandboxColor, color: '#ffffff', border: 'none', padding: '0.45rem 1rem', borderRadius: '6px', fontWeight: 600, fontSize: '0.85rem' }}>
-                    {sandboxLayout === 'store' ? 'View Cart' : 'Client Portal'}
-                  </button>
-                </div>
-
-                {/* Hero Banner */}
-                <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: '#ffffff', padding: '2.5rem 2rem', borderRadius: '12px', textAlign: 'center', marginBottom: '1.5rem' }}>
-                  <h4 style={{ fontSize: '1.75rem', fontWeight: 800, margin: '0 0 0.75rem 0' }}>
-                    Welcome to <span style={{ color: sandboxColor }}>{sandboxBrandName}</span>
-                  </h4>
-                  <p style={{ color: '#94a3b8', fontSize: '0.95rem', maxWidth: '480px', margin: '0 auto 1.25rem' }}>
-                    {sandboxLayout === 'store' && 'Discover premium product collections powered directly by UniERP Inventory.'}
-                    {sandboxLayout === 'corporate' && 'Leading enterprise services and customer portal solutions.'}
-                    {sandboxLayout === 'blog' && 'Latest announcements, technical articles, and industry insights.'}
-                  </p>
-                  <button style={{ background: sandboxColor, color: '#ffffff', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '8px', fontWeight: 700, fontSize: '0.9rem' }}>
-                    Explore Now →
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── Interactive Module Showcase ── */}
-      <section id="showcase" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>
-            Experience the <span className="text-gradient">UniERP Suite</span>
-          </h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
-            Explore our core suite built with row-level tenant security, visual layout builders, and deep transactional intelligence.
-          </p>
-        </div>
-
-        {/* Interactive Workspace Tabs */}
+        {/* Persona Selector Tabs */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
           {[
-            { id: 'studio', label: 'No-Code Builder Studio', icon: Activity },
-            { id: 'finance', label: 'Finance & Accounting', icon: CreditCard },
-            { id: 'inventory', label: 'Inventory & MRP', icon: Package },
-            { id: 'cms', label: 'Customizable Tenant Web CMS', icon: Globe },
-            { id: 'crm', label: 'CRM & Sales Pipeline', icon: Users },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const active = activeTab === tab.id;
+            { id: 'cfo', label: 'CFO • Finance & GL', icon: DollarSign, color: '#10b981' },
+            { id: 'coo', label: 'COO • Supply Chain & MRP', icon: Package, color: '#f59e0b' },
+            { id: 'cto', label: 'CTO • Architecture & RLS', icon: Cpu, color: '#38bdf8' },
+            { id: 'cmo', label: 'CMO • Commerce & Leads', icon: Globe, color: '#a855f7' },
+            { id: 'chro', label: 'CHRO • People & Payroll', icon: Heart, color: '#ec4899' },
+          ].map(p => {
+            const Icon = p.icon;
+            const active = activePersona === p.id;
             return (
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                key={p.id}
+                onClick={() => setActivePersona(p.id as any)}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.6rem',
-                  padding: '0.75rem 1.5rem',
+                  padding: '0.75rem 1.4rem',
                   borderRadius: '12px',
-                  background: active ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : 'rgba(255, 255, 255, 0.05)',
-                  color: active ? '#ffffff' : '#94a3b8',
+                  background: active ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.04)',
+                  color: active ? p.color : '#94a3b8',
                   border: '1px solid',
-                  borderColor: active ? '#3b82f6' : 'rgba(255, 255, 255, 0.1)',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
+                  borderColor: active ? p.color : 'rgba(255, 255, 255, 0.1)',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: active ? '0 10px 20px rgba(37, 99, 235, 0.3)' : 'none'
+                  boxShadow: active ? `0 0 20px ${p.color}25` : 'none'
                 }}
               >
-                <Icon size={18} />
-                <span>{tab.label}</span>
+                <Icon size={16} />
+                <span>{p.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Screen Preview Container */}
-        <div className="glass-panel shine-effect" style={{ padding: '2rem', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
-          <div style={{ background: '#0b1329', borderRadius: '12px', overflow: 'hidden', border: '1px solid #1e293b' }}>
-            {/* Window Top Bar */}
-            <div style={{ background: '#0f172a', padding: '0.75rem 1.25rem', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }} />
-              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#f59e0b' }} />
-              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#10b981' }} />
-              <span style={{ marginLeft: '1rem', color: '#64748b', fontSize: '0.85rem', fontWeight: 500 }}>
-                {activeTab === 'studio' && 'http://localhost:3000/apps/builder/web/pages'}
-                {activeTab === 'finance' && 'http://localhost:3000/apps/finance'}
-                {activeTab === 'inventory' && 'http://localhost:3000/apps/inventory'}
-                {activeTab === 'cms' && 'http://localhost:3000/'}
-                {activeTab === 'crm' && 'http://localhost:3000/apps/crm'}
-              </span>
+        {/* Dynamic Cockpit Canvas Card */}
+        <div className="glass-panel card-3d-tilt" style={{ padding: '2.5rem', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', alignItems: 'center' }}>
+            
+            <div>
+              <div style={{ display: 'inline-block', padding: '0.35rem 0.85rem', borderRadius: '9999px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '1rem' }}>
+                {activePersona.toUpperCase()} Executive Suite
+              </div>
+              <h3 style={{ fontSize: '2rem', fontWeight: 800, margin: '0 0 1rem 0', color: '#ffffff' }}>
+                {activePersona === 'cfo' && 'Automated Multi-Currency Accounting & GL'}
+                {activePersona === 'coo' && 'Real-Time Inventory & Manufacturing MRP'}
+                {activePersona === 'cto' && 'Row-Level Tenant Isolation & 1,500+ REST APIs'}
+                {activePersona === 'cmo' && 'Dynamic Storefront CMS & Lead Conversion'}
+                {activePersona === 'chro' && 'Automated Global Payroll & Talent Operations'}
+              </h3>
+              <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                {activePersona === 'cfo' && 'Real-time double-entry general ledger, period-end FX revaluation, automated bank feeds, and NACHA/SEPA payment processing.'}
+                {activePersona === 'coo' && 'Multi-warehouse stock replenishment, serial/batch tracking, bill of materials (BOM), and work order scheduling.'}
+                {activePersona === 'cto' && 'Enforce tenant_id isolation via PostgreSQL 16 RLS policies with Docker containerized deployment and visual Studio extensibility.'}
+                {activePersona === 'cmo' && 'Launch customizable tenant portals at / with drag-and-drop page editing, e-commerce catalog, and CRM lead scoring.'}
+                {activePersona === 'chro' && 'Complex multi-component salary structures, tax withholding, leave workflow approvals, and employee performance tracking.'}
+              </p>
+              <button onClick={() => openLeadModal('demo')} className="btn-primary">
+                <span>Explore {activePersona.toUpperCase()} Dashboard</span>
+                <ArrowRight size={16} />
+              </button>
             </div>
 
-            {/* Interactive Preview Content */}
-            <div style={{ padding: '3rem', minHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {activeTab === 'studio' && (
-                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
-                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                    <Activity size={32} />
+            {/* Simulated Live KPI Badges */}
+            <div style={{ background: '#0b1329', padding: '2rem', borderRadius: '16px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              {activePersona === 'cfo' && (
+                <>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #10b981' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Monthly Net Revenue</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>$1,248,500.00 <span style={{ color: '#10b981', fontSize: '0.85rem' }}>+18.4%</span></div>
                   </div>
-                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Visual Drag-and-Drop Page Builder</h3>
-                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                    Design custom landing pages, e-commerce storefronts, customer intake forms, and automated business workflows visually with real-time publishing.
-                  </p>
-                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
-                    <span>Try Builder Studio Live</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Automated Period Reconciliations</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>99.2% Completed</div>
+                  </div>
+                </>
               )}
 
-              {activeTab === 'finance' && (
-                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
-                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                    <CreditCard size={32} />
+              {activePersona === 'coo' && (
+                <>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #f59e0b' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Warehouse Order Fulfillment Velocity</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>4.2 Hours <span style={{ color: '#10b981', fontSize: '0.85rem' }}>-65% Time</span></div>
                   </div>
-                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Automated Accounting & Multi-Currency GL</h3>
-                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                    Double-entry bookkeeping, automated bank reconciliation, period-end FX revaluations, and 1,500+ weighted accounting metrics.
-                  </p>
-                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
-                    <span>Open Finance Workspace</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Active MRP Work Orders</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>142 Units Scheduled</div>
+                  </div>
+                </>
               )}
 
-              {activeTab === 'inventory' && (
-                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
-                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                    <Package size={32} />
+              {activePersona === 'cto' && (
+                <>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Database RLS Isolation Policy</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>100% Non-Bypass Verified</div>
                   </div>
-                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Multi-Warehouse & Automated Reordering</h3>
-                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                    Serial/batch tracking, drop-shipping, bill of materials (MRP), barcode scanning, and automated inventory replenishment rules.
-                  </p>
-                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
-                    <span>Launch Inventory Suite</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #a855f7' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Open REST/GraphQL Endpoints</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>1,540 Endpoints Active</div>
+                  </div>
+                </>
               )}
 
-              {activeTab === 'cms' && (
-                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
-                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                    <Globe size={32} />
+              {activePersona === 'cmo' && (
+                <>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #a855f7' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Storefront Conversion Rate</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>4.85% <span style={{ color: '#10b981', fontSize: '0.85rem' }}>+2.1% boost</span></div>
                   </div>
-                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Tenant-Customizable Web & Storefront</h3>
-                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                    Every ERP tenant gets a fully customizable public website rendered live at <code style={{ color: '#38bdf8' }}>/</code> with shop storefront, blogs, and dynamic tokens.
-                  </p>
-                  <a href={`${ERP_APP_URL}/`} className="btn-primary">
-                    <span>View Live Tenant Site</span>
-                    <ExternalLink size={16} />
-                  </a>
-                </div>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>CRM Pipeline Deals</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>$3.8M Active Qualified</div>
+                  </div>
+                </>
               )}
 
-              {activeTab === 'crm' && (
-                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
-                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                    <Users size={32} />
+              {activePersona === 'chro' && (
+                <>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #ec4899' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Automated Payroll Run Speed</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>Under 2 Minutes</div>
                   </div>
-                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>CRM Deal Pipelines & Revenue Analytics</h3>
-                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                    Lead scoring, win/loss analytics, partner deal registration, automated quotations, and AI-assisted email drafting.
-                  </p>
-                  <button onClick={() => openLeadModal('demo')} className="btn-primary">
-                    <span>Open CRM Workspace</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
+                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #10b981' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Employee Engagement Index</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>94 / 100 Score</div>
+                  </div>
+                </>
               )}
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* ── Industry Presets ROI Calculator ── */}
-      <section id="roi-calculator" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
+      {/* ── Salesforce Agentforce-Level AI Command Center Simulator ── */}
+      <section id="agentforce" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#a855f7', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+              <Bot size={18} />
+              <span>Autonomous AI Execution</span>
+            </div>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>UniERP AI Agentforce Simulator</h2>
+            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+              Test how autonomous AI agents execute complex ERP workflows step-by-step in real-time.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
+            
+            {/* Left Control Panel */}
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#ffffff', marginBottom: '1.5rem' }}>Select Autonomous Agent</h3>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+                {[
+                  { id: 'reconcile', title: 'Auto GL Bank Reconciliation Agent', desc: 'Matches bank transactions with journal entries automatically.' },
+                  { id: 'quote', title: 'AI Sales Quote & Contract Assistant', desc: 'Drafts custom pricing quotes based on customer order history.' },
+                  { id: 'reorder', title: 'Inventory Reorder & MRP Optimizer', desc: 'Predicts stockouts and posts purchase orders to vendors.' },
+                ].map(a => (
+                  <button
+                    key={a.id}
+                    onClick={() => runAgentSimulator(a.id as any)}
+                    style={{
+                      padding: '1rem',
+                      borderRadius: '12px',
+                      background: activeAgent === a.id ? 'rgba(168, 85, 247, 0.15)' : '#0b1329',
+                      border: activeAgent === a.id ? '1px solid #a855f7' : '1px solid #1e293b',
+                      color: '#ffffff',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: activeAgent === a.id ? '#c084fc' : '#ffffff', marginBottom: '0.25rem' }}>
+                      {a.title}
+                    </div>
+                    <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{a.desc}</div>
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => runAgentSimulator(activeAgent)}
+                disabled={isAgentRunning}
+                className="btn-primary"
+                style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #a855f7, #7e22ce)' }}
+              >
+                {isAgentRunning ? <RefreshCw className="animate-spin" size={16} /> : <Zap size={16} />}
+                <span>{isAgentRunning ? 'Agent Executing...' : 'Trigger AI Agent Execution'}</span>
+              </button>
+            </div>
+
+            {/* Right Interactive Node Execution Canvas */}
+            <div className="glass-panel" style={{ padding: '2rem', border: '1px solid rgba(168, 85, 247, 0.3)', background: '#0b1329' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid #1e293b', paddingBottom: '1rem' }}>
+                <span style={{ fontWeight: 700, color: '#c084fc', fontSize: '0.95rem' }}>Visual Execution Node Graph</span>
+                <span style={{ fontSize: '0.8rem', color: isAgentRunning ? '#f59e0b' : '#10b981', fontWeight: 600 }}>
+                  {isAgentRunning ? '⚡ Running Workflow...' : '✅ Complete & Audited'}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {/* Node 1 */}
+                <div style={{
+                  padding: '1rem 1.25rem',
+                  borderRadius: '10px',
+                  background: agentStep >= 1 ? 'rgba(56, 189, 248, 0.1)' : '#0f172a',
+                  border: agentStep >= 1 ? '1px solid #38bdf8' : '1px solid #1e293b',
+                  color: agentStep >= 1 ? '#ffffff' : '#64748b',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase' }}>Step 1: Event Triggered</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                    {activeAgent === 'reconcile' && 'Incoming Bank Feed Stream Ingested (500 Items)'}
+                    {activeAgent === 'quote' && 'Customer Requested Custom Quote (RFQ #9402)'}
+                    {activeAgent === 'reorder' && 'Inventory Item #SKU-882 Dropped Below Safety Stock'}
+                  </div>
+                </div>
+
+                {/* Node 2 */}
+                <div style={{
+                  padding: '1rem 1.25rem',
+                  borderRadius: '10px',
+                  background: agentStep >= 2 ? 'rgba(168, 85, 247, 0.1)' : '#0f172a',
+                  border: agentStep >= 2 ? '1px solid #a855f7' : '1px solid #1e293b',
+                  color: agentStep >= 2 ? '#ffffff' : '#64748b',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#a855f7', textTransform: 'uppercase' }}>Step 2: AI Neural Evaluation</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                    {activeAgent === 'reconcile' && 'AI Matched 498/500 GL Lines (99.6% Confidence Score)'}
+                    {activeAgent === 'quote' && 'Evaluated Volume Discount & Auto-Approved 12% Margin'}
+                    {activeAgent === 'reorder' && 'Calculated Lead-Time Demand (Optimal Reorder: 500 Units)'}
+                  </div>
+                </div>
+
+                {/* Node 3 */}
+                <div style={{
+                  padding: '1rem 1.25rem',
+                  borderRadius: '10px',
+                  background: agentStep >= 3 ? 'rgba(16, 185, 129, 0.1)' : '#0f172a',
+                  border: agentStep >= 3 ? '1px solid #10b981' : '1px solid #1e293b',
+                  color: agentStep >= 3 ? '#ffffff' : '#64748b',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#10b981', textTransform: 'uppercase' }}>Step 3: Database Mutation & Audit Log</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                    {activeAgent === 'reconcile' && 'Journal Ledger Updated • Audit Log Entry Posted'}
+                    {activeAgent === 'quote' && 'Quotation PDF Generated & Emailed to Customer'}
+                    {activeAgent === 'reorder' && 'Purchase Order Sent to Approved Vendor via Webhook'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── Odoo-Level 28-Module Interactive Monorepo Matrix ── */}
+      <section id="apps" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>
+            The Complete <span className="text-gradient">28+ Module Ecosystem</span>
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto 2rem' }}>
+            Replace 10+ disjointed software subscriptions with one composable, integrated platform.
+          </p>
+
+          {/* Category Filter Tabs */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            {[
+              { id: 'all', label: 'All 28 Modules' },
+              { id: 'ops', label: 'Core Operations' },
+              { id: 'verticals', label: 'Industry Solutions' },
+              { id: 'studio', label: 'No-Code & Web' },
+              { id: 'ai', label: 'AI & Analytics' },
+            ].map(f => (
+              <button
+                key={f.id}
+                onClick={() => setAppFilter(f.id as any)}
+                style={{
+                  padding: '0.55rem 1.25rem',
+                  borderRadius: '9999px',
+                  background: appFilter === f.id ? '#2563eb' : 'rgba(255, 255, 255, 0.05)',
+                  color: appFilter === f.id ? '#ffffff' : '#94a3b8',
+                  border: appFilter === f.id ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.1)',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  cursor: 'pointer'
+                }}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Modules 3D Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+          {filteredModules.map((m) => {
+            const Icon = m.icon;
+            return (
+              <div key={m.id} className="glass-panel card-3d-tilt" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                    <Icon size={24} />
+                  </div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', margin: '0 0 0.5rem 0' }}>{m.name}</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>{m.desc}</p>
+                </div>
+                <a
+                  href={`${ERP_APP_URL}/login`}
+                  style={{ color: '#38bdf8', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                >
+                  <span>Launch App Trial</span>
+                  <ChevronRight size={14} />
+                </a>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Live Developer REST & GraphQL API Playground ── */}
+      <section id="api" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
-              <Calculator size={18} />
-              <span>Interactive ROI Estimator</span>
+              <Terminal size={18} />
+              <span>Developer-First Architecture</span>
             </div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Calculate Your Annual Savings</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-              Select your industry vertical preset to instantly benchmark operational cost savings.
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Live Developer API Playground</h2>
+            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+              Test real API endpoints and inspect formatted JSON payloads directly in your browser.
             </p>
-
-            {/* Presets Bar */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button onClick={() => applyPreset('healthcare')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🏥 Healthcare</button>
-              <button onClick={() => applyPreset('education')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🎓 Education</button>
-              <button onClick={() => applyPreset('realestate')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🏢 Real Estate</button>
-              <button onClick={() => applyPreset('fieldservice')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🔧 Field Service</button>
-              <button onClick={() => applyPreset('retail')} className="btn-secondary" style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}>🛍️ Retail & POS</button>
-            </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '3rem', alignItems: 'center' }}>
-            {/* Controls */}
-            <div className="glass-panel" style={{ padding: '2.5rem' }}>
-              <div style={{ marginBottom: '2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <label style={{ fontWeight: 600, color: '#f8fafc' }}>Team Size (Users)</label>
-                  <span style={{ color: '#38bdf8', fontWeight: 800 }}>{teamSize} Users</span>
-                </div>
-                <input
-                  type="range"
-                  min="5"
-                  max="250"
-                  value={teamSize}
-                  onChange={(e) => setTeamSize(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
-                />
+          <div className="terminal-window" style={{ maxWidth: '900px', margin: '0 auto', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)' }}>
+            {/* Terminal Header */}
+            <div style={{ background: '#0f172a', padding: '0.75rem 1.25rem', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
+                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f59e0b' }} />
+                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981' }} />
+                <span style={{ marginLeft: '1rem', color: '#64748b', fontSize: '0.85rem' }}>bash — curl -X GET http://localhost:3001/api/v1</span>
               </div>
-
-              <div style={{ marginBottom: '2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <label style={{ fontWeight: 600, color: '#f8fafc' }}>Current Software Costs ($/mo)</label>
-                  <span style={{ color: '#10b981', fontWeight: 800 }}>${currentSpend.toLocaleString()}/mo</span>
-                </div>
-                <input
-                  type="range"
-                  min="500"
-                  max="15000"
-                  step="250"
-                  value={currentSpend}
-                  onChange={(e) => setCurrentSpend(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: '#10b981', cursor: 'pointer' }}
-                />
-              </div>
-
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <label style={{ fontWeight: 600, color: '#f8fafc' }}>Manual Work Hours (hrs/week)</label>
-                  <span style={{ color: '#a855f7', fontWeight: 800 }}>{manualHours} hrs/wk</span>
-                </div>
-                <input
-                  type="range"
-                  min="5"
-                  max="100"
-                  value={manualHours}
-                  onChange={(e) => setManualHours(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: '#a855f7', cursor: 'pointer' }}
-                />
-              </div>
-            </div>
-
-            {/* Computed Output Card */}
-            <div className="glass-panel" style={{ padding: '3rem', border: '2px solid rgba(16, 185, 129, 0.3)', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(15, 23, 42, 0.8))' }}>
-              <div style={{ fontSize: '0.9rem', color: '#10b981', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                Estimated Total Savings
-              </div>
-              <div style={{ fontSize: '3.5rem', fontWeight: 900, color: '#ffffff', lineHeight: 1, marginBottom: '0.5rem' }}>
-                ${calculatedSavings.annual.toLocaleString()} <span style={{ fontSize: '1.25rem', color: '#94a3b8', fontWeight: 400 }}>/ year</span>
-              </div>
-              <p style={{ color: '#94a3b8', fontSize: '1rem', marginBottom: '2rem' }}>
-                Save roughly <strong style={{ color: '#10b981' }}>${calculatedSavings.monthly.toLocaleString()}/month</strong> in license fees and regain <strong style={{ color: '#38bdf8' }}>{calculatedSavings.hoursSavedMonth} hours/month</strong> of staff productivity.
-              </p>
-
-              <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #10b981, #059669)' }}>
-                <DollarSign size={18} />
-                <span>Claim Your Savings & Start Trial</span>
+              <button
+                onClick={() => {
+                  setCopiedApi(true);
+                  setTimeout(() => setCopiedApi(false), 1500);
+                }}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem' }}
+              >
+                <Copy size={14} />
+                <span>{copiedApi ? 'Copied!' : 'Copy Endpoint'}</span>
               </button>
             </div>
+
+            {/* Terminal Route Tabs */}
+            <div style={{ display: 'flex', background: '#0b1329', borderBottom: '1px solid #1e293b' }}>
+              <button
+                onClick={() => setActiveApiRoute('finance')}
+                style={{ padding: '0.6rem 1.25rem', background: activeApiRoute === 'finance' ? '#090d16' : 'transparent', color: activeApiRoute === 'finance' ? '#38bdf8' : '#94a3b8', border: 'none', borderRight: '1px solid #1e293b', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}
+              >
+                GET /api/v1/finance/dashboard
+              </button>
+              <button
+                onClick={() => setActiveApiRoute('builder')}
+                style={{ padding: '0.6rem 1.25rem', background: activeApiRoute === 'builder' ? '#090d16' : 'transparent', color: activeApiRoute === 'builder' ? '#38bdf8' : '#94a3b8', border: 'none', borderRight: '1px solid #1e293b', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}
+              >
+                GET /api/v1/builder/pages
+              </button>
+              <button
+                onClick={() => setActiveApiRoute('inventory')}
+                style={{ padding: '0.6rem 1.25rem', background: activeApiRoute === 'inventory' ? '#090d16' : 'transparent', color: activeApiRoute === 'inventory' ? '#38bdf8' : '#94a3b8', border: 'none', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}
+              >
+                GET /api/v1/inventory/reorder-alerts
+              </button>
+            </div>
+
+            {/* JSON Output Display */}
+            <pre style={{ padding: '1.75rem', fontSize: '0.9rem', overflowX: 'auto', margin: 0, fontFamily: 'monospace' }}>
+              {activeApiRoute === 'finance' && (
+                <code>
+                  {`{\n`}
+                  &nbsp;&nbsp;<span className="json-key">&quot;statusCode&quot;</span>: <span className="json-number">200</span>,<br />
+                  &nbsp;&nbsp;<span className="json-key">&quot;tenant_id&quot;</span>: <span className="json-string">&quot;tenant_prod_01&quot;</span>,<br />
+                  &nbsp;&nbsp;<span className="json-key">&quot;period&quot;</span>: <span className="json-string">&quot;2026-07&quot;</span>,<br />
+                  &nbsp;&nbsp;<span className="json-key">&quot;metrics&quot;</span>: &#123;<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;total_revenue&quot;</span>: <span className="json-number">1248500.00</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;unreconciled_items&quot;</span>: <span className="json-number">0</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;multi_currency_revaluation&quot;</span>: <span className="json-boolean">true</span><br />
+                  &nbsp;&nbsp;&#125;<br />
+                  {`}`}
+                </code>
+              )}
+
+              {activeApiRoute === 'builder' && (
+                <code>
+                  {`{\n`}
+                  &nbsp;&nbsp;<span className="json-key">&quot;statusCode&quot;</span>: <span className="json-number">200</span>,<br />
+                  &nbsp;&nbsp;<span className="json-key">&quot;publishedPages&quot;</span>: [<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&#123;<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;slug&quot;</span>: <span className="json-string">&quot;/&quot;</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;title&quot;</span>: <span className="json-string">&quot;Home Storefront&quot;</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;componentsCount&quot;</span>: <span className="json-number">14</span><br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&#125;<br />
+                  &nbsp;&nbsp;]<br />
+                  {`}`}
+                </code>
+              )}
+
+              {activeApiRoute === 'inventory' && (
+                <code>
+                  {`{\n`}
+                  &nbsp;&nbsp;<span className="json-key">&quot;statusCode&quot;</span>: <span className="json-number">200</span>,<br />
+                  &nbsp;&nbsp;<span className="json-key">&quot;alerts&quot;</span>: [<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&#123;<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;sku&quot;</span>: <span className="json-string">&quot;SKU-882&quot;</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;warehouse&quot;</span>: <span className="json-string">&quot;Main Distribution Center&quot;</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;currentStock&quot;</span>: <span className="json-number">12</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;reorderPoint&quot;</span>: <span className="json-number">50</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="json-key">&quot;autoPOTriggered&quot;</span>: <span className="json-boolean">true</span><br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&#125;<br />
+                  &nbsp;&nbsp;]<br />
+                  {`}`}
+                </code>
+              )}
+            </pre>
           </div>
         </div>
       </section>
 
-      {/* ── Competitor Replacement Comparison Matrix ── */}
-      <section id="comparison" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Why Enterprises Choose <span className="text-gradient">UniERP</span></h2>
+      {/* ── Zoho-Level Cloud vs. Self-Hosted TCO Calculator ── */}
+      <section id="tco" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+            <Server size={18} />
+            <span>Infrastructure & Security Choice</span>
+          </div>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Cloud vs. Self-Hosted TCO Calculator</h2>
           <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
-            Compare UniERP against legacy monolithic enterprise systems.
+            Choose fully managed cloud or run single-tenant Docker containers on your own cloud infrastructure.
           </p>
         </div>
 
-        <div className="glass-panel" style={{ padding: '2rem', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #1e293b' }}>
-                <th style={{ padding: '1rem', color: '#f8fafc', fontSize: '1.05rem' }}>Feature / Capability</th>
-                <th style={{ padding: '1rem', color: '#38bdf8', fontSize: '1.05rem', fontWeight: 800 }}>UniERP Platform</th>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontSize: '0.95rem' }}>SAP S/4HANA</th>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontSize: '0.95rem' }}>NetSuite</th>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontSize: '0.95rem' }}>Odoo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { f: 'Embedded No-Code Studio & CMS', unierp: '✅ Built-in', sap: '❌ Requires ABAP', netsuite: '❌ Custom SuiteScript', odoo: '⚠️ Basic Web Editor' },
-                { f: 'Multi-Tenant PostgreSQL 16 RLS', unierp: '✅ DB-Layer Enforced', sap: '❌ Complex Instances', netsuite: '⚠️ Shared Schema', odoo: '❌ Multi-Database' },
-                { f: 'Deployment Time', unierp: '🚀 Instant (Minutes)', sap: '🐢 12-18 Months', netsuite: '🐢 6-9 Months', odoo: '⚡ Weeks' },
-                { f: 'API & Developer Swagger Docs', unierp: '✅ 1,500+ Open Endpoints', sap: '⚠️ Complex OData', netsuite: '⚠️ RESTlet Limits', odoo: '⚠️ XML-RPC' },
-                { f: 'Customizable Public Tenant Website', unierp: '✅ Native at /', sap: '❌ Requires Portal Addon', netsuite: '❌ Commerceweb Extra', odoo: '✅ Website App' },
-              ].map((row, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '1.25rem 1rem', fontWeight: 600, color: '#ffffff' }}>{row.f}</td>
-                  <td style={{ padding: '1.25rem 1rem', fontWeight: 800, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.05)' }}>{row.unierp}</td>
-                  <td style={{ padding: '1.25rem 1rem', color: '#94a3b8' }}>{row.sap}</td>
-                  <td style={{ padding: '1.25rem 1rem', color: '#94a3b8' }}>{row.netsuite}</td>
-                  <td style={{ padding: '1.25rem 1rem', color: '#94a3b8' }}>{row.odoo}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3rem', alignItems: 'center' }}>
+          {/* Controls */}
+          <div className="glass-panel" style={{ padding: '2.5rem' }}>
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <label style={{ fontWeight: 600, color: '#ffffff' }}>Active User Seats</label>
+                <span style={{ color: '#38bdf8', fontWeight: 800 }}>{tcoUsers} Users</span>
+              </div>
+              <input
+                type="range"
+                min="5"
+                max="300"
+                value={tcoUsers}
+                onChange={(e) => setTcoUsers(Number(e.target.value))}
+                style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <label style={{ fontWeight: 600, color: '#ffffff' }}>Database Storage (GB)</label>
+                <span style={{ color: '#a855f7', fontWeight: 800 }}>{tcoStorage} GB</span>
+              </div>
+              <input
+                type="range"
+                min="50"
+                max="2000"
+                step="50"
+                value={tcoStorage}
+                onChange={(e) => setTcoStorage(Number(e.target.value))}
+                style={{ width: '100%', accentColor: '#a855f7', cursor: 'pointer' }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontWeight: 600, color: '#ffffff', marginBottom: '0.75rem' }}>Deployment Mode</label>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button
+                  onClick={() => setTcoMode('cloud')}
+                  style={{ flex: 1, padding: '0.75rem', borderRadius: '10px', background: tcoMode === 'cloud' ? '#2563eb' : '#0b1329', color: '#ffffff', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+                >
+                  Managed Cloud
+                </button>
+                <button
+                  onClick={() => setTcoMode('selfhosted')}
+                  style={{ flex: 1, padding: '0.75rem', borderRadius: '10px', background: tcoMode === 'selfhosted' ? '#2563eb' : '#0b1329', color: '#ffffff', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+                >
+                  Docker On-Premise
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Results Output */}
+          <div className="glass-panel" style={{ padding: '3rem', border: '2px solid rgba(16, 185, 129, 0.3)', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(15, 23, 42, 0.8))' }}>
+            <div style={{ fontSize: '0.9rem', color: '#10b981', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+              Estimated Annual Savings vs Legacy SAP/NetSuite
+            </div>
+            <div style={{ fontSize: '3.5rem', fontWeight: 900, color: '#ffffff', lineHeight: 1, marginBottom: '0.5rem' }}>
+              ${tcoResult.annualSavings.toLocaleString()} <span style={{ fontSize: '1.25rem', color: '#94a3b8', fontWeight: 400 }}>/ year</span>
+            </div>
+            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
+              Includes PostgreSQL 16 Row-Level Security (RLS) data isolation guarantees and zero per-module add-on fees.
+            </p>
+
+            {tcoMode === 'selfhosted' && (
+              <div style={{ background: '#090d16', padding: '1rem', borderRadius: '8px', border: '1px solid #1e293b', fontSize: '0.8rem', color: '#34d399', fontFamily: 'monospace', marginBottom: '1.5rem', overflowX: 'auto' }}>
+                {tcoResult.selfHostedDockerCommand}
+              </div>
+            )}
+
+            <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+              <span>Deploy Instant Workspace</span>
+              <ArrowRight size={16} />
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* ── Pricing Tiers with Annual Switcher ── */}
-      <section id="pricing" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
+      {/* ── Pricing Section ── */}
+      <section id="pricing" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Transparent, Scalable Pricing</h2>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Transparent Enterprise Pricing</h2>
           <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '2rem' }}>Zero hidden fees. Deploy instantly with full API and Studio access.</p>
 
-          {/* Billing Switch */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem', background: '#1e293b', padding: '0.4rem 0.5rem', borderRadius: '9999px', border: '1px solid #334155' }}>
             <button
               onClick={() => setIsAnnual(false)}
@@ -739,154 +832,115 @@ export default function CorporateHomePage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
           {/* Starter */}
-          <div className="glass-panel" style={{ padding: '2.5rem', position: 'relative' }}>
+          <div className="glass-panel" style={{ padding: '2.5rem' }}>
             <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Starter</h3>
             <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Essential core ERP modules for growing small businesses.</p>
             <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
               ${isAnnual ? '23' : '29'} <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 400 }}>/ user / month</span>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Finance & General Ledger</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Inventory & Stock Management</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Standard Reporting Suite</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Up to 5 User Accounts</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> General Ledger & Inventory</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> No-Code Builder Studio Access</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Standard REST APIs</li>
             </ul>
             <button onClick={() => openLeadModal('trial')} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Start Starter Plan</button>
           </div>
 
           {/* Professional (Popular) */}
-          <div className="glass-panel" style={{ padding: '2.5rem', border: '2px solid #38bdf8', boxShadow: '0 0 35px rgba(56, 189, 248, 0.2)', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', background: '#38bdf8', color: '#030712', padding: '0.3rem 1rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Most Popular Choice
-            </div>
+          <div className="glass-panel" style={{ padding: '2.5rem', border: '2px solid #38bdf8', boxShadow: '0 0 35px rgba(56, 189, 248, 0.2)' }}>
             <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Professional</h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Complete enterprise suite with full Builder Studio & CMS.</p>
+            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Complete 28-module enterprise suite with AI Copilot.</p>
             <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
               ${isAnnual ? '63' : '79'} <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 400 }}>/ user / month</span>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> All 20+ ERP Business Modules</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> No-Code Builder Studio & Page CMS</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Unlimited Users & Multi-Tenancy</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Custom Domain & Web Portal Support</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> All 28 ERP Business Modules</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> AI Agentforce Execution Engine</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Custom Domain & Web Portal at /</li>
             </ul>
             <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Start 14-Day Free Trial</button>
           </div>
 
           {/* Enterprise */}
-          <div className="glass-panel" style={{ padding: '2.5rem', position: 'relative' }}>
+          <div className="glass-panel" style={{ padding: '2.5rem' }}>
             <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Enterprise</h3>
             <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Dedicated single-tenant infrastructure with custom SLA.</p>
-            <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
-              Custom
-            </div>
+            <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>Custom</div>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Dedicated Postgres & Redis Stack</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Custom SSO / SAML Integration</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Custom SSO & RLS Isolation</li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Dedicated Solutions Architect</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> 99.99% Uptime Guarantee SLA</li>
             </ul>
             <button onClick={() => openLeadModal('demo')} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Contact Enterprise Sales</button>
           </div>
         </div>
       </section>
 
-      {/* ── Interactive FAQ Accordion ── */}
-      <section style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b' }}>
-        <div style={{ maxWidth: '840px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, margin: '0 0 0.75rem 0' }}>Frequently Asked Questions</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.05rem' }}>Everything you need to know about UniERP deployment and architecture.</p>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {[
-              { q: 'How does multi-tenancy work in UniERP?', a: 'UniERP enforces row-level security (RLS) directly at the database layer (PostgreSQL 16) with non-bypassable tenant_id transaction contexts, keeping every customer data completely isolated.' },
-              { q: 'Can non-technical staff build custom web pages & forms?', a: 'Yes! Our Zero-Code Builder Studio lets non-technical users visually create intake forms, customize published tenant pages, drag-and-drop content blocks, and edit design tokens.' },
-              { q: 'How is the public tenant website hosted?', a: 'Every tenant gets a dynamic website portal at the root / endpoint of their tenant domain, powered automatically by published content in Builder Studio.' },
-              { q: 'Can we migrate our existing legacy ERP data?', a: 'UniERP includes automated data import wizards for CSV/JSON schemas and dedicated REST APIs to sync historical GL journals, inventory items, and customer records.' },
-            ].map((faq, idx) => {
-              const isOpen = openFaq === idx;
-              return (
-                <div key={idx} className="glass-panel" style={{ overflow: 'hidden' }}>
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    style={{
-                      width: '100%',
-                      padding: '1.25rem 1.5rem',
-                      background: 'transparent',
-                      border: 'none',
-                      color: '#ffffff',
-                      fontSize: '1.05rem',
-                      fontWeight: 600,
-                      textAlign: 'left',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronDown size={20} style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                  </button>
-                  {isOpen && (
-                    <div style={{ padding: '0 1.5rem 1.5rem', color: '#94a3b8', lineHeight: 1.6, fontSize: '0.95rem' }}>
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Bottom Lead Conversion CTA Banner ── */}
-      <section style={{ padding: '6rem 1.5rem', textAlign: 'center', position: 'relative' }}>
-        <div className="glass-panel shine-effect" style={{ maxWidth: '1020px', margin: '0 auto', padding: '4.5rem 2rem', background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(168, 85, 247, 0.15))', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, margin: '0 0 1.25rem 0', color: '#ffffff' }}>
-            Ready to Transform Your Enterprise Operations?
-          </h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.2rem', maxWidth: '640px', margin: '0 auto 2.5rem' }}>
-            Join 500+ forward-thinking organizations using UniERP to automate business workflows and eliminate legacy software bloat.
-          </p>
-          <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ padding: '1.1rem 2.75rem', fontSize: '1.1rem' }}>
-            <span>Start Free 14-Day Trial</span>
-            <ArrowRight size={18} />
-          </button>
-        </div>
-      </section>
-
-      {/* ── High-Converting Lead Capture Modal ── */}
+      {/* ── Guided Product Tour Modal ── */}
       {showModal && (
         <div className="modal-backdrop" onClick={() => setShowModal(false)}>
-          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px', width: '100%', padding: '2.5rem', background: '#0b1329', border: '1px solid rgba(56, 189, 248, 0.3)', position: 'relative' }}>
+          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '580px', width: '100%', padding: '2.5rem', background: '#0b1329', border: '1px solid rgba(56, 189, 248, 0.3)', position: 'relative' }}>
             <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
               <X size={20} />
             </button>
-            <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
-              {modalType === 'trial' ? 'Start Your 14-Day Trial' : 'Book an ERP Architect Session'}
-            </h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.75rem' }}>
-              {modalType === 'trial' ? 'Instant access to full 20+ ERP modules & No-Code Studio.' : 'Live 1-on-1 walkthrough with an enterprise software engineer.'}
-            </p>
-            <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+            {modalType === 'tour' ? (
               <div>
-                <label style={{ display: 'block', fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, marginBottom: '0.4rem' }}>Work Email</label>
-                <input
-                  type="email"
-                  placeholder="name@company.com"
-                  value={leadEmail}
-                  onChange={(e) => setLeadEmail(e.target.value)}
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', background: '#1e293b', border: '1px solid #334155', color: '#ffffff', outline: 'none' }}
-                  required
-                />
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                  {[1, 2, 3, 4].map(s => (
+                    <div key={s} style={{ flex: 1, height: '4px', borderRadius: '9999px', background: s <= tourStep ? '#38bdf8' : '#1e293b' }} />
+                  ))}
+                </div>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                  {tourStep === 1 && 'Step 1: Set Up Branding & Domain'}
+                  {tourStep === 2 && 'Step 2: Build Pages in No-Code Studio'}
+                  {tourStep === 3 && 'Step 3: Run Double-Entry Accounting GL'}
+                  {tourStep === 4 && 'Step 4: Launch Multi-Tenant Workspace'}
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '2rem' }}>
+                  {tourStep === 1 && 'Configure tenant_id and customize theme tokens with real-time domain mapping.'}
+                  {tourStep === 2 && 'Drag-and-drop components, publish forms, and connect dynamic data sources.'}
+                  {tourStep === 3 && 'Automate bank reconciliations, multi-currency valuations, and GL journals.'}
+                  {tourStep === 4 && 'Deploy containerized stack instantly on Cloud or On-Premise Docker.'}
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  {tourStep > 1 ? (
+                    <button onClick={() => setTourStep(tourStep - 1)} className="btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>Back</button>
+                  ) : <div />}
+                  {tourStep < 4 ? (
+                    <button onClick={() => setTourStep(tourStep + 1)} className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>Next Step →</button>
+                  ) : (
+                    <button onClick={() => { setShowModal(false); openLeadModal('trial'); }} className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>Claim Trial Workspace</button>
+                  )}
+                </div>
               </div>
-              <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}>
-                <span>Launch Workspace Now</span>
-                <ArrowRight size={16} />
-              </button>
-            </form>
+            ) : (
+              <div>
+                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                  {modalType === 'trial' ? 'Start Your 14-Day Trial' : 'Book an ERP Architect Session'}
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.75rem' }}>
+                  Instant access to full 28+ ERP modules & No-Code Studio.
+                </p>
+                <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, marginBottom: '0.4rem' }}>Work Email</label>
+                    <input
+                      type="email"
+                      placeholder="name@company.com"
+                      value={leadEmail}
+                      onChange={(e) => setLeadEmail(e.target.value)}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', background: '#1e293b', border: '1px solid #334155', color: '#ffffff', outline: 'none' }}
+                      required
+                    />
+                  </div>
+                  <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}>
+                    <span>Launch Workspace Now</span>
+                    <ArrowRight size={16} />
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -895,7 +949,7 @@ export default function CorporateHomePage() {
       <footer style={{ background: '#030712', borderTop: '1px solid #1e293b', padding: '4rem 1.5rem 2rem', color: '#64748b', fontSize: '0.9rem' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.2rem', color: '#ffffff', marginBottom: '0.25rem' }}>UniERP Company</div>
+            <div style={{ fontWeight: 800, fontSize: '1.2rem', color: '#ffffff', marginBottom: '0.25rem' }}>UniERP Platform</div>
             <p>© {new Date().getFullYear()} UniERP Platform Inc. All rights reserved.</p>
           </div>
           <div style={{ display: 'flex', gap: '2rem' }}>
