@@ -6,12 +6,15 @@ import {
   Shield, ChevronRight, Check, CreditCard, Users, BarChart3,
   Package, Hammer, Activity, Heart, GraduationCap, Building2,
   Wrench, Store, Zap, ArrowRight, Star, Sparkles, Globe, ExternalLink,
-  Calculator, CheckCircle2, ChevronDown, Lock, Cpu, Play, Award, DollarSign, Clock, TrendingUp, X, Sliders, Layout, Layers, RefreshCw, Terminal, Copy, Server, CheckSquare, Layers2, Bot, HelpCircle, FileText, UserPlus, LogIn, Compass
+  Calculator, CheckCircle2, ChevronDown, Lock, Cpu, Play, Award, DollarSign, Clock, TrendingUp, X, Sliders, Layout, Layers, RefreshCw, Terminal, Copy, Server, CheckSquare, Layers2, Bot, HelpCircle, FileText, UserPlus, LogIn, Compass, Sun, Moon
 } from 'lucide-react';
 
 const ERP_APP_URL = process.env.NEXT_PUBLIC_ERP_APP_URL || 'http://localhost:3000';
 
-export default function LocalizedCorporateHomePage() {
+export default function ThemeableCorporateHomePage() {
+  // Default Light Mode + Toggle to Dark Mode
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
   // Lead Capture & Modal State
   const [leadEmail, setLeadEmail] = useState('');
   const [isAnnual, setIsAnnual] = useState(true);
@@ -20,25 +23,30 @@ export default function LocalizedCorporateHomePage() {
   const [modalType, setModalType] = useState<'trial' | 'demo' | 'tour'>('trial');
   const [tourStep, setTourStep] = useState(1);
 
-  // Executive Cockpit Persona Switcher State (Dynamics 365 Benchmark)
+  // Executive Cockpit Persona Switcher State
   const [activePersona, setActivePersona] = useState<'cfo' | 'coo' | 'cto' | 'cmo' | 'chro'>('cfo');
 
-  // AI Agentforce Simulator State (Salesforce Benchmark)
+  // AI Agentforce Simulator State
   const [activeAgent, setActiveAgent] = useState<'reconcile' | 'quote' | 'reorder'>('reconcile');
   const [isAgentRunning, setIsAgentRunning] = useState(false);
   const [agentStep, setAgentStep] = useState(3);
 
-  // 28-Module App Matrix Filter (Odoo Benchmark)
+  // 28-Module App Matrix Filter
   const [appFilter, setAppFilter] = useState<'all' | 'ops' | 'verticals' | 'studio' | 'ai'>('all');
 
   // Live API Playground State
   const [activeApiRoute, setActiveApiRoute] = useState<'finance' | 'builder' | 'inventory'>('finance');
   const [copiedApi, setCopiedApi] = useState(false);
 
-  // Cloud vs Self-Hosted TCO Calculator State (Zoho Benchmark)
+  // Cloud vs Self-Hosted TCO Calculator State
   const [tcoUsers, setTcoUsers] = useState(40);
   const [tcoStorage, setTcoStorage] = useState(250); // GB
   const [tcoMode, setTcoMode] = useState<'cloud' | 'selfhosted'>('cloud');
+
+  // Toggle Theme Function
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   // Handle Lead Submit
   const handleLeadSubmit = (e: React.FormEvent) => {
@@ -102,7 +110,7 @@ export default function LocalizedCorporateHomePage() {
   const filteredModules = allModules.filter(m => appFilter === 'all' || m.cat === appFilter);
 
   return (
-    <div className="grid-bg-pattern" style={{ minHeight: '100vh', background: '#030712', color: '#f8fafc', position: 'relative' }}>
+    <div data-theme={theme} className="grid-bg-pattern" style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg)', color: 'var(--color-text-main)', position: 'relative' }}>
       {/* Ambient Animated Glowing Orbs */}
       <div className="animated-bg-glow glow-blue" style={{ top: '-120px', left: '10%' }} />
       <div className="animated-bg-glow glow-purple" style={{ top: '800px', right: '5%' }} />
@@ -130,17 +138,18 @@ export default function LocalizedCorporateHomePage() {
         </a>
       </div>
 
-      {/* ── Navigation Header with Explicit Log In & Register Buttons ── */}
+      {/* ── Navigation Header with Light/Dark Mode Switcher & Auth Buttons ── */}
       <header style={{
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        background: 'rgba(3, 7, 18, 0.85)',
+        background: 'var(--header-bg)',
         backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+        borderBottom: '1px solid var(--glass-border)',
+        transition: 'background-color 0.3s ease, border-color 0.3s ease'
       }}>
         <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '0 1.5rem', height: '76px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 800, fontSize: '1.4rem', color: '#ffffff', textDecoration: 'none' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 800, fontSize: '1.4rem', color: 'var(--color-text-main)', textDecoration: 'none' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'linear-gradient(135deg, #38bdf8, #2563eb)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: 900, boxShadow: '0 0 20px rgba(56, 189, 248, 0.4)' }}>
               U
             </div>
@@ -148,22 +157,43 @@ export default function LocalizedCorporateHomePage() {
           </Link>
 
           <nav style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-            <a href="#cockpit" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>Executive Cockpit</a>
-            <a href="#agentforce" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>AI Agentforce</a>
-            <a href="#apps" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>28+ Apps</a>
-            <a href="#gst-compliance" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>GST & Payroll</a>
-            <a href="#pricing" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>India Pricing</a>
+            <a href="#cockpit" style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>Executive Cockpit</a>
+            <a href="#agentforce" style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>AI Agentforce</a>
+            <a href="#apps" style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>28+ Apps</a>
+            <a href="#gst-compliance" style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>GST & Payroll</a>
+            <a href="#pricing" style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', fontWeight: 500 }}>India Pricing</a>
           </nav>
 
-          {/* Action Buttons: Instant Demo + Login + Register */}
+          {/* Action Buttons + Theme Toggle (Light Default -> Dark) */}
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '38px',
+                height: '38px',
+                borderRadius: '10px',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--glass-border)',
+                color: 'var(--color-text-main)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} color="#f59e0b" />}
+            </button>
+
             {/* 1-Click Instant Demo Launcher Button */}
             <a
               href={`${ERP_APP_URL}/`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary"
-              style={{ padding: '0.55rem 1rem', fontSize: '0.85rem', borderColor: '#38bdf8', color: '#38bdf8' }}
+              style={{ padding: '0.55rem 1rem', fontSize: '0.85rem', borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
               title="Explore live running demo website instantly without registration"
             >
               <Compass size={15} />
@@ -203,14 +233,13 @@ export default function LocalizedCorporateHomePage() {
             gap: '0.6rem',
             padding: '0.45rem 1.25rem',
             borderRadius: '9999px',
-            background: 'rgba(56, 189, 248, 0.1)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
-            color: '#38bdf8',
+            background: 'var(--color-primary-glow)',
+            border: '1px solid var(--color-primary)',
+            color: 'var(--color-primary)',
             fontSize: '0.875rem',
             fontWeight: 600,
             marginBottom: '2rem',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 0 25px rgba(56, 189, 248, 0.2)'
+            backdropFilter: 'blur(8px)'
           }}>
             <Award size={16} />
             <span>30-Day Free Trial • No Credit Card Required</span>
@@ -223,7 +252,7 @@ export default function LocalizedCorporateHomePage() {
             lineHeight: 1.08,
             letterSpacing: '-0.03em',
             margin: '0 0 1.75rem 0',
-            color: '#ffffff'
+            color: 'var(--color-text-main)'
           }}>
             The Universal ERP Operating System <br />
             For <span className="text-gradient">Indian & Global Enterprises</span>
@@ -231,13 +260,13 @@ export default function LocalizedCorporateHomePage() {
 
           <p style={{
             fontSize: '1.3rem',
-            color: '#94a3b8',
+            color: 'var(--color-text-muted)',
             maxWidth: '820px',
             margin: '0 auto 3rem',
             lineHeight: 1.65,
             fontWeight: 400
           }}>
-            Seamlessly combine <strong style={{ color: '#ffffff' }}>28+ composable ERP modules</strong>, Indian GST E-Invoicing & E-Way Bills, Statutory PF/ESI Payroll, and visual No-Code Builder Studio with database-layer multi-tenancy.
+            Seamlessly combine <strong style={{ color: 'var(--color-text-main)' }}>28+ composable ERP modules</strong>, Indian GST E-Invoicing & E-Way Bills, Statutory PF/ESI Payroll, and visual No-Code Builder Studio with database-layer multi-tenancy.
           </p>
 
           {/* Primary Action Buttons: Start Trial & Launch Live Instant Demo */}
@@ -245,11 +274,11 @@ export default function LocalizedCorporateHomePage() {
             <form onSubmit={handleLeadSubmit} style={{
               display: 'flex',
               gap: '0.5rem',
-              background: 'rgba(15, 23, 42, 0.85)',
+              background: 'var(--glass-bg)',
               padding: '0.45rem',
               borderRadius: '16px',
-              border: '1px solid rgba(56, 189, 248, 0.35)',
-              boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.6)',
+              border: '1px solid var(--glass-border)',
+              boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.08)',
               maxWidth: '480px',
               width: '100%'
             }}>
@@ -264,7 +293,7 @@ export default function LocalizedCorporateHomePage() {
                   border: 'none',
                   outline: 'none',
                   padding: '0.75rem 1rem',
-                  color: '#ffffff',
+                  color: 'var(--color-text-main)',
                   fontSize: '0.95rem',
                   fontFamily: 'inherit'
                 }}
@@ -282,7 +311,7 @@ export default function LocalizedCorporateHomePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary"
-              style={{ padding: '0.9rem 1.75rem', borderRadius: '14px', fontSize: '1rem', background: 'rgba(56, 189, 248, 0.1)', borderColor: '#38bdf8', color: '#38bdf8' }}
+              style={{ padding: '0.9rem 1.75rem', borderRadius: '14px', fontSize: '1rem', borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
             >
               <Compass size={18} />
               <span>Explore Instant Demo Site</span>
@@ -290,78 +319,78 @@ export default function LocalizedCorporateHomePage() {
             </a>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', color: '#64748b', fontSize: '0.875rem', flexWrap: 'wrap' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> 30 Days Full Access</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> No Credit Card Required</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> GST & Statutory Ready</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', color: 'var(--color-text-subtle)', fontSize: '0.875rem', flexWrap: 'wrap' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="var(--color-emerald)" /> 30 Days Full Access</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="var(--color-emerald)" /> No Credit Card Required</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="var(--color-emerald)" /> GST & Statutory Ready</span>
           </div>
 
         </div>
       </section>
 
-      {/* ── Social Proof & Indian Enterprise Metrics ── */}
+      {/* ── Social Proof Metrics ── */}
       <section style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
         <div className="glass-panel" style={{ padding: '2.5rem 3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem', textAlign: 'center' }}>
           <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#38bdf8', marginBottom: '0.25rem' }}>100%</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>GSTIN & E-Way Bill Compliant</div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: 'var(--color-primary)', marginBottom: '0.25rem' }}>100%</div>
+            <div style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>GSTIN & E-Way Bill Compliant</div>
           </div>
           <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#10b981', marginBottom: '0.25rem' }}>₹4.2 Cr+</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Annual Software License Saved</div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: 'var(--color-emerald)', marginBottom: '0.25rem' }}>₹4.2 Cr+</div>
+            <div style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>Annual Software License Saved</div>
           </div>
           <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#a855f7', marginBottom: '0.25rem' }}>1,500+</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Enterprise REST API Endpoints</div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: 'var(--color-purple)', marginBottom: '0.25rem' }}>1,500+</div>
+            <div style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>Enterprise REST API Endpoints</div>
           </div>
           <div>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#f59e0b', marginBottom: '0.25rem' }}>30 Days</div>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Full Unrestricted Free Trial</div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: 'var(--color-amber)', marginBottom: '0.25rem' }}>30 Days</div>
+            <div style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>Full Unrestricted Free Trial</div>
           </div>
         </div>
       </section>
 
       {/* ── Indian GST Compliance & Statutory Feature Showcase ── */}
-      <section id="gst-compliance" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
+      <section id="gst-compliance" style={{ background: 'var(--color-surface)', padding: '6rem 1.5rem', borderTop: '1px solid var(--glass-border)', borderBottom: '1px solid var(--glass-border)' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-emerald)', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
               <Shield size={18} />
               <span>Built For Indian Enterprise Taxation</span>
             </div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Indian GST, E-Invoicing & Statutory Payroll</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--color-text-main)' }}>Indian GST, E-Invoicing & Statutory Payroll</h2>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
               Built-in compliance engine for GSTIN verification, E-Way Bill generation, GSTR filing, and Indian Statutory Payroll.
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             <div className="glass-panel" style={{ padding: '2rem' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(5, 150, 105, 0.1)', color: 'var(--color-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                 <FileText size={24} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.5rem' }}>Automated E-Invoicing & E-Way Bills</h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-main)', marginBottom: '0.5rem' }}>Automated E-Invoicing & E-Way Bills</h3>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
                 Generate QR-coded GST E-Invoices and E-Way bills directly from sales orders with automatic IRN generation and NIC portal synchronization.
               </p>
             </div>
 
             <div className="glass-panel" style={{ padding: '2rem' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(37, 99, 235, 0.1)', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                 <BarChart3 size={24} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.5rem' }}>GSTR-1 & GSTR-3B Tax Filing Reports</h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-main)', marginBottom: '0.5rem' }}>GSTR-1 & GSTR-3B Tax Filing Reports</h3>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
                 Export monthly B2B, B2C, HSN summary, and Input Tax Credit (ITC) reconciliation JSON/Excel reports pre-formatted for GST portal uploads.
               </p>
             </div>
 
             <div className="glass-panel" style={{ padding: '2rem' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(147, 51, 234, 0.1)', color: 'var(--color-purple)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                 <Heart size={24} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.5rem' }}>Indian Statutory Payroll (EPF, ESI, TDS)</h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: 1.6 }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-main)', marginBottom: '0.5rem' }}>Indian Statutory Payroll (EPF, ESI, TDS)</h3>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
                 Automate Employee Provident Fund (EPF 12%), ESI (3.25%), Professional Tax state-wise tables, and Form 16 TDS tax withholding calculations.
               </p>
             </div>
@@ -372,12 +401,12 @@ export default function LocalizedCorporateHomePage() {
       {/* ── Dynamics 365-Style Executive Cockpit Switcher ── */}
       <section id="cockpit" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#38bdf8', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-primary)', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
             <BarChart3 size={18} />
             <span>Role-Tailored Intelligence</span>
           </div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Executive Cockpit Switcher</h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--color-text-main)' }}>Executive Cockpit Switcher</h2>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
             Select your leadership persona to preview real-time metrics and tailored operational dashboards.
           </p>
         </div>
@@ -385,10 +414,10 @@ export default function LocalizedCorporateHomePage() {
         {/* Persona Selector Tabs */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
           {[
-            { id: 'cfo', label: 'CFO • Finance & GST GL', icon: DollarSign, color: '#10b981' },
-            { id: 'coo', label: 'COO • Supply Chain & MRP', icon: Package, color: '#f59e0b' },
-            { id: 'cto', label: 'CTO • Architecture & RLS', icon: Cpu, color: '#38bdf8' },
-            { id: 'cmo', label: 'CMO • Commerce & Leads', icon: Globe, color: '#a855f7' },
+            { id: 'cfo', label: 'CFO • Finance & GST GL', icon: DollarSign, color: 'var(--color-emerald)' },
+            { id: 'coo', label: 'COO • Supply Chain & MRP', icon: Package, color: 'var(--color-amber)' },
+            { id: 'cto', label: 'CTO • Architecture & RLS', icon: Cpu, color: 'var(--color-primary)' },
+            { id: 'cmo', label: 'CMO • Commerce & Leads', icon: Globe, color: 'var(--color-purple)' },
             { id: 'chro', label: 'CHRO • Indian Payroll & EPF', icon: Heart, color: '#ec4899' },
           ].map(p => {
             const Icon = p.icon;
@@ -403,15 +432,14 @@ export default function LocalizedCorporateHomePage() {
                   gap: '0.6rem',
                   padding: '0.75rem 1.4rem',
                   borderRadius: '12px',
-                  background: active ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.04)',
-                  color: active ? p.color : '#94a3b8',
+                  background: active ? 'var(--color-surface)' : 'transparent',
+                  color: active ? p.color : 'var(--color-text-muted)',
                   border: '1px solid',
-                  borderColor: active ? p.color : 'rgba(255, 255, 255, 0.1)',
+                  borderColor: active ? p.color : 'var(--glass-border)',
                   fontWeight: 700,
                   fontSize: '0.9rem',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: active ? `0 0 20px ${p.color}25` : 'none'
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <Icon size={16} />
@@ -422,21 +450,21 @@ export default function LocalizedCorporateHomePage() {
         </div>
 
         {/* Dynamic Cockpit Canvas Card */}
-        <div className="glass-panel card-3d-tilt" style={{ padding: '2.5rem', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+        <div className="glass-panel card-3d-tilt" style={{ padding: '2.5rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', alignItems: 'center' }}>
             
             <div>
-              <div style={{ display: 'inline-block', padding: '0.35rem 0.85rem', borderRadius: '9999px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '1rem' }}>
+              <div style={{ display: 'inline-block', padding: '0.35rem 0.85rem', borderRadius: '9999px', background: 'rgba(37, 99, 235, 0.1)', color: 'var(--color-primary)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '1rem' }}>
                 {activePersona.toUpperCase()} Executive Suite
               </div>
-              <h3 style={{ fontSize: '2rem', fontWeight: 800, margin: '0 0 1rem 0', color: '#ffffff' }}>
+              <h3 style={{ fontSize: '2rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--color-text-main)' }}>
                 {activePersona === 'cfo' && 'Automated Multi-Currency Accounting & GST GL'}
                 {activePersona === 'coo' && 'Real-Time Inventory & Manufacturing MRP'}
                 {activePersona === 'cto' && 'Row-Level Tenant Isolation & 1,500+ REST APIs'}
                 {activePersona === 'cmo' && 'Dynamic Storefront CMS & Lead Conversion'}
                 {activePersona === 'chro' && 'Automated Statutory Indian Payroll & EPF'}
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
                 {activePersona === 'cfo' && 'Double-entry general ledger with GSTR-1/3B filing exports, automated bank feeds, and IRN E-Way Bill generation.'}
                 {activePersona === 'coo' && 'Multi-warehouse stock replenishment, HSN/SAC code tracking, bill of materials (BOM), and work order scheduling.'}
                 {activePersona === 'cto' && 'Enforce tenant_id isolation via PostgreSQL 16 RLS policies with Docker containerized deployment and visual Studio extensibility.'}
@@ -450,68 +478,68 @@ export default function LocalizedCorporateHomePage() {
             </div>
 
             {/* Simulated Live KPI Badges */}
-            <div style={{ background: '#0b1329', padding: '2rem', borderRadius: '16px', border: '1px solid #1e293b', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div style={{ background: 'var(--color-surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               {activePersona === 'cfo' && (
                 <>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #10b981' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Monthly Net Revenue</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>₹1,24,85,000.00 <span style={{ color: '#10b981', fontSize: '0.85rem' }}>+18.4%</span></div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-emerald)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Monthly Net Revenue</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>₹1,24,85,000.00 <span style={{ color: 'var(--color-emerald)', fontSize: '0.85rem' }}>+18.4%</span></div>
                   </div>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Automated GST Reconciliations</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>99.8% GSTR-1 Verified</div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-primary)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Automated GST Reconciliations</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>99.8% GSTR-1 Verified</div>
                   </div>
                 </>
               )}
 
               {activePersona === 'coo' && (
                 <>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #f59e0b' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Warehouse Order Fulfillment Velocity</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>4.2 Hours <span style={{ color: '#10b981', fontSize: '0.85rem' }}>-65% Time</span></div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-amber)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Warehouse Order Fulfillment Velocity</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>4.2 Hours <span style={{ color: 'var(--color-emerald)', fontSize: '0.85rem' }}>-65% Time</span></div>
                   </div>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Active MRP Work Orders</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>142 Units Scheduled</div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-primary)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Active MRP Work Orders</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>142 Units Scheduled</div>
                   </div>
                 </>
               )}
 
               {activePersona === 'cto' && (
                 <>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Database RLS Isolation Policy</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>100% Non-Bypass Verified</div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-primary)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Database RLS Isolation Policy</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-emerald)' }}>100% Non-Bypass Verified</div>
                   </div>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #a855f7' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Open REST/GraphQL Endpoints</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>1,540 Endpoints Active</div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-purple)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Open REST/GraphQL Endpoints</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>1,540 Endpoints Active</div>
                   </div>
                 </>
               )}
 
               {activePersona === 'cmo' && (
                 <>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #a855f7' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Storefront Conversion Rate</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>4.85% <span style={{ color: '#10b981', fontSize: '0.85rem' }}>+2.1% boost</span></div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-purple)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Storefront Conversion Rate</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>4.85% <span style={{ color: 'var(--color-emerald)', fontSize: '0.85rem' }}>+2.1% boost</span></div>
                   </div>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>CRM Pipeline Deals</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>₹3.8 Cr Qualified</div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-primary)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>CRM Pipeline Deals</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>₹3.8 Cr Qualified</div>
                   </div>
                 </>
               )}
 
               {activePersona === 'chro' && (
                 <>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #ec4899' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Automated Payroll Run Speed</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>Under 2 Minutes</div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #ec4899' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>Automated Payroll Run Speed</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>Under 2 Minutes</div>
                   </div>
-                  <div style={{ background: '#0f172a', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid #10b981' }}>
-                    <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>EPF & ESI Compliance Rate</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff' }}>100% Audit Clean</div>
+                  <div style={{ background: 'var(--color-bg)', padding: '1rem 1.25rem', borderRadius: '10px', borderLeft: '4px solid var(--color-emerald)' }}>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>EPF & ESI Compliance Rate</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)' }}>100% Audit Clean</div>
                   </div>
                 </>
               )}
@@ -522,15 +550,15 @@ export default function LocalizedCorporateHomePage() {
       </section>
 
       {/* ── Salesforce Agentforce-Level AI Command Center Simulator ── */}
-      <section id="agentforce" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
+      <section id="agentforce" style={{ background: 'var(--color-surface)', padding: '6rem 1.5rem', borderTop: '1px solid var(--glass-border)', borderBottom: '1px solid var(--glass-border)' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#a855f7', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-purple)', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
               <Bot size={18} />
               <span>Autonomous AI Execution</span>
             </div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>UniERP AI Agentforce Simulator</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--color-text-main)' }}>UniERP AI Agentforce Simulator</h2>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
               Test how autonomous AI agents execute complex ERP workflows step-by-step in real-time.
             </p>
           </div>
@@ -539,7 +567,7 @@ export default function LocalizedCorporateHomePage() {
             
             {/* Left Control Panel */}
             <div className="glass-panel" style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#ffffff', marginBottom: '1.5rem' }}>Select Autonomous Agent</h3>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-text-main)', marginBottom: '1.5rem' }}>Select Autonomous Agent</h3>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
                 {[
@@ -553,18 +581,18 @@ export default function LocalizedCorporateHomePage() {
                     style={{
                       padding: '1rem',
                       borderRadius: '12px',
-                      background: activeAgent === a.id ? 'rgba(168, 85, 247, 0.15)' : '#0b1329',
-                      border: activeAgent === a.id ? '1px solid #a855f7' : '1px solid #1e293b',
-                      color: '#ffffff',
+                      background: activeAgent === a.id ? 'rgba(147, 51, 234, 0.1)' : 'var(--color-bg)',
+                      border: activeAgent === a.id ? '1px solid var(--color-purple)' : '1px solid var(--glass-border)',
+                      color: 'var(--color-text-main)',
                       textAlign: 'left',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
                   >
-                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: activeAgent === a.id ? '#c084fc' : '#ffffff', marginBottom: '0.25rem' }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: activeAgent === a.id ? 'var(--color-purple)' : 'var(--color-text-main)', marginBottom: '0.25rem' }}>
                       {a.title}
                     </div>
-                    <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{a.desc}</div>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>{a.desc}</div>
                   </button>
                 ))}
               </div>
@@ -581,10 +609,10 @@ export default function LocalizedCorporateHomePage() {
             </div>
 
             {/* Right Interactive Node Execution Canvas */}
-            <div className="glass-panel" style={{ padding: '2rem', border: '1px solid rgba(168, 85, 247, 0.3)', background: '#0b1329' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid #1e293b', paddingBottom: '1rem' }}>
-                <span style={{ fontWeight: 700, color: '#c084fc', fontSize: '0.95rem' }}>Visual Execution Node Graph</span>
-                <span style={{ fontSize: '0.8rem', color: isAgentRunning ? '#f59e0b' : '#10b981', fontWeight: 600 }}>
+            <div className="glass-panel" style={{ padding: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem' }}>
+                <span style={{ fontWeight: 700, color: 'var(--color-purple)', fontSize: '0.95rem' }}>Visual Execution Node Graph</span>
+                <span style={{ fontSize: '0.8rem', color: isAgentRunning ? 'var(--color-amber)' : 'var(--color-emerald)', fontWeight: 600 }}>
                   {isAgentRunning ? '⚡ Running Workflow...' : '✅ Complete & Audited'}
                 </span>
               </div>
@@ -594,12 +622,12 @@ export default function LocalizedCorporateHomePage() {
                 <div style={{
                   padding: '1rem 1.25rem',
                   borderRadius: '10px',
-                  background: agentStep >= 1 ? 'rgba(56, 189, 248, 0.1)' : '#0f172a',
-                  border: agentStep >= 1 ? '1px solid #38bdf8' : '1px solid #1e293b',
-                  color: agentStep >= 1 ? '#ffffff' : '#64748b',
+                  background: agentStep >= 1 ? 'rgba(37, 99, 235, 0.08)' : 'var(--color-bg)',
+                  border: agentStep >= 1 ? '1px solid var(--color-primary)' : '1px solid var(--glass-border)',
+                  color: 'var(--color-text-main)',
                   transition: 'all 0.3s ease'
                 }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase' }}>Step 1: Event Triggered</div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-primary)', textTransform: 'uppercase' }}>Step 1: Event Triggered</div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
                     {activeAgent === 'reconcile' && 'Incoming Bank Stream & GSTR-2B Ingested (500 Lines)'}
                     {activeAgent === 'quote' && 'Customer Requested Custom Quote (RFQ #9402)'}
@@ -611,12 +639,12 @@ export default function LocalizedCorporateHomePage() {
                 <div style={{
                   padding: '1rem 1.25rem',
                   borderRadius: '10px',
-                  background: agentStep >= 2 ? 'rgba(168, 85, 247, 0.1)' : '#0f172a',
-                  border: agentStep >= 2 ? '1px solid #a855f7' : '1px solid #1e293b',
-                  color: agentStep >= 2 ? '#ffffff' : '#64748b',
+                  background: agentStep >= 2 ? 'rgba(147, 51, 234, 0.08)' : 'var(--color-bg)',
+                  border: agentStep >= 2 ? '1px solid var(--color-purple)' : '1px solid var(--glass-border)',
+                  color: 'var(--color-text-main)',
                   transition: 'all 0.3s ease'
                 }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#a855f7', textTransform: 'uppercase' }}>Step 2: AI Neural Evaluation</div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-purple)', textTransform: 'uppercase' }}>Step 2: AI Neural Evaluation</div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
                     {activeAgent === 'reconcile' && 'Matched 498/500 GST & GL Lines (99.6% Confidence Score)'}
                     {activeAgent === 'quote' && 'Evaluated HSN 8471 GST Rate (18%) & Approved 12% Margin'}
@@ -628,12 +656,12 @@ export default function LocalizedCorporateHomePage() {
                 <div style={{
                   padding: '1rem 1.25rem',
                   borderRadius: '10px',
-                  background: agentStep >= 3 ? 'rgba(16, 185, 129, 0.1)' : '#0f172a',
-                  border: agentStep >= 3 ? '1px solid #10b981' : '1px solid #1e293b',
-                  color: agentStep >= 3 ? '#ffffff' : '#64748b',
+                  background: agentStep >= 3 ? 'rgba(5, 150, 105, 0.08)' : 'var(--color-bg)',
+                  border: agentStep >= 3 ? '1px solid var(--color-emerald)' : '1px solid var(--glass-border)',
+                  color: 'var(--color-text-main)',
                   transition: 'all 0.3s ease'
                 }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#10b981', textTransform: 'uppercase' }}>Step 3: Database Mutation & Audit Log</div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-emerald)', textTransform: 'uppercase' }}>Step 3: Database Mutation & Audit Log</div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
                     {activeAgent === 'reconcile' && 'Journal Ledger Updated • GSTR-1 Audit Log Posted'}
                     {activeAgent === 'quote' && 'GST E-Invoice Draft Generated & Emailed to Customer'}
@@ -650,10 +678,10 @@ export default function LocalizedCorporateHomePage() {
       {/* ── Odoo-Level 28-Module Interactive Monorepo Matrix ── */}
       <section id="apps" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--color-text-main)' }}>
             The Complete <span className="text-gradient">28+ Module Ecosystem</span>
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto 2rem' }}>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto 2rem' }}>
             Replace 10+ disjointed software subscriptions with one composable, integrated platform.
           </p>
 
@@ -672,9 +700,10 @@ export default function LocalizedCorporateHomePage() {
                 style={{
                   padding: '0.55rem 1.25rem',
                   borderRadius: '9999px',
-                  background: appFilter === f.id ? '#2563eb' : 'rgba(255, 255, 255, 0.05)',
-                  color: appFilter === f.id ? '#ffffff' : '#94a3b8',
-                  border: appFilter === f.id ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.1)',
+                  background: appFilter === f.id ? 'var(--color-primary)' : 'var(--color-surface)',
+                  color: appFilter === f.id ? '#ffffff' : 'var(--color-text-muted)',
+                  border: '1px solid',
+                  borderColor: appFilter === f.id ? 'var(--color-primary)' : 'var(--glass-border)',
                   fontWeight: 600,
                   fontSize: '0.875rem',
                   cursor: 'pointer'
@@ -693,15 +722,15 @@ export default function LocalizedCorporateHomePage() {
             return (
               <div key={m.id} className="glass-panel card-3d-tilt" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(37, 99, 235, 0.1)', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                     <Icon size={24} />
                   </div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', margin: '0 0 0.5rem 0' }}>{m.name}</h3>
-                  <p style={{ color: '#94a3b8', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>{m.desc}</p>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--color-text-main)', margin: '0 0 0.5rem 0' }}>{m.name}</h3>
+                  <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>{m.desc}</p>
                 </div>
                 <a
                   href={`${ERP_APP_URL}/login`}
-                  style={{ color: '#38bdf8', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                  style={{ color: 'var(--color-primary)', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
                 >
                   <span>Launch App Trial</span>
                   <ChevronRight size={14} />
@@ -715,24 +744,24 @@ export default function LocalizedCorporateHomePage() {
       {/* ── Localized India Pricing Tiers with INR (₹) Toggle ── */}
       <section id="pricing" style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '6rem 1.5rem 0' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-emerald)', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
             <DollarSign size={18} />
             <span>Transparent Pricing • 30-Day Free Trial</span>
           </div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Transparent Enterprise Pricing</h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '2rem' }}>Zero hidden fees. Full 30-day unrestricted trial with GST and statutory payroll ready.</p>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--color-text-main)' }}>Transparent Enterprise Pricing</h2>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', marginBottom: '2rem' }}>Zero hidden fees. Full 30-day unrestricted trial with GST and statutory payroll ready.</p>
 
           {/* Currency Switcher (INR vs USD) */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <div style={{ display: 'inline-flex', background: '#0b1329', padding: '0.3rem', borderRadius: '10px', border: '1px solid #1e293b' }}>
+            <div style={{ display: 'inline-flex', background: 'var(--color-surface)', padding: '0.3rem', borderRadius: '10px', border: '1px solid var(--glass-border)' }}>
               <button
                 onClick={() => setCurrency('INR')}
                 style={{
                   padding: '0.45rem 1rem',
                   borderRadius: '8px',
                   border: 'none',
-                  background: currency === 'INR' ? '#10b981' : 'transparent',
-                  color: currency === 'INR' ? '#ffffff' : '#94a3b8',
+                  background: currency === 'INR' ? 'var(--color-emerald)' : 'transparent',
+                  color: currency === 'INR' ? '#ffffff' : 'var(--color-text-muted)',
                   fontWeight: 700,
                   fontSize: '0.85rem',
                   cursor: 'pointer'
@@ -746,8 +775,8 @@ export default function LocalizedCorporateHomePage() {
                   padding: '0.45rem 1rem',
                   borderRadius: '8px',
                   border: 'none',
-                  background: currency === 'USD' ? '#2563eb' : 'transparent',
-                  color: currency === 'USD' ? '#ffffff' : '#94a3b8',
+                  background: currency === 'USD' ? 'var(--color-primary)' : 'transparent',
+                  color: currency === 'USD' ? '#ffffff' : 'var(--color-text-muted)',
                   fontWeight: 700,
                   fontSize: '0.85rem',
                   cursor: 'pointer'
@@ -758,19 +787,19 @@ export default function LocalizedCorporateHomePage() {
             </div>
 
             {/* Annual Billing Switch */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#1e293b', padding: '0.35rem 0.5rem', borderRadius: '9999px', border: '1px solid #334155' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-surface)', padding: '0.35rem 0.5rem', borderRadius: '9999px', border: '1px solid var(--glass-border)' }}>
               <button
                 onClick={() => setIsAnnual(false)}
-                style={{ padding: '0.4rem 1rem', borderRadius: '9999px', border: 'none', background: !isAnnual ? '#2563eb' : 'transparent', color: !isAnnual ? '#ffffff' : '#94a3b8', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
+                style={{ padding: '0.4rem 1rem', borderRadius: '9999px', border: 'none', background: !isAnnual ? 'var(--color-primary)' : 'transparent', color: !isAnnual ? '#ffffff' : 'var(--color-text-muted)', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
               >
                 Monthly
               </button>
               <button
                 onClick={() => setIsAnnual(true)}
-                style={{ padding: '0.4rem 1rem', borderRadius: '9999px', border: 'none', background: isAnnual ? '#2563eb' : 'transparent', color: isAnnual ? '#ffffff' : '#94a3b8', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                style={{ padding: '0.4rem 1rem', borderRadius: '9999px', border: 'none', background: isAnnual ? 'var(--color-primary)' : 'transparent', color: isAnnual ? '#ffffff' : 'var(--color-text-muted)', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
               >
                 <span>Annual</span>
-                <span style={{ background: '#10b981', color: '#ffffff', fontSize: '0.7rem', padding: '0.15rem 0.45rem', borderRadius: '9999px', fontWeight: 800 }}>Save 20%</span>
+                <span style={{ background: 'var(--color-emerald)', color: '#ffffff', fontSize: '0.7rem', padding: '0.15rem 0.45rem', borderRadius: '9999px', fontWeight: 800 }}>Save 20%</span>
               </button>
             </div>
           </div>
@@ -779,47 +808,47 @@ export default function LocalizedCorporateHomePage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
           {/* Starter */}
           <div className="glass-panel" style={{ padding: '2.5rem' }}>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Starter</h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Essential ERP modules for growing Indian small businesses.</p>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--color-text-main)' }}>Starter</h3>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Essential ERP modules for growing Indian small businesses.</p>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: 'var(--color-text-main)', marginBottom: '1.5rem' }}>
               {currency === 'INR' ? (isAnnual ? '₹1,199' : '₹1,499') : (isAnnual ? '$23' : '$29')}
-              <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 400 }}> / user / month</span>
+              <span style={{ fontSize: '1rem', color: 'var(--color-text-muted)', fontWeight: 400 }}> / user / month</span>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> General Ledger & Basic GST</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Multi-Warehouse Stock</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> No-Code Builder Studio Access</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> 30-Day Free Unrestricted Trial</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-emerald)" /> General Ledger & Basic GST</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-emerald)" /> Multi-Warehouse Stock</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-emerald)" /> No-Code Builder Studio Access</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-emerald)" /> 30-Day Free Unrestricted Trial</li>
             </ul>
             <button onClick={() => openLeadModal('trial')} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Start 30-Day Trial</button>
           </div>
 
           {/* Professional (Popular) */}
-          <div className="glass-panel" style={{ padding: '2.5rem', border: '2px solid #38bdf8', boxShadow: '0 0 35px rgba(56, 189, 248, 0.2)' }}>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Professional</h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Complete 28-module suite with full GST E-Invoicing & Statutory Payroll.</p>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
+          <div className="glass-panel" style={{ padding: '2.5rem', border: '2px solid var(--color-primary)', boxShadow: 'var(--glass-shadow)' }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--color-text-main)' }}>Professional</h3>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Complete 28-module suite with full GST E-Invoicing & Statutory Payroll.</p>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: 'var(--color-text-main)', marginBottom: '1.5rem' }}>
               {currency === 'INR' ? (isAnnual ? '₹3,199' : '₹3,999') : (isAnnual ? '$63' : '$79')}
-              <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 400 }}> / user / month</span>
+              <span style={{ fontSize: '1rem', color: 'var(--color-text-muted)', fontWeight: 400 }}> / user / month</span>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> All 28 ERP Business Modules</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> GST E-Invoices, GSTR-1/3B & E-Way Bills</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Indian Statutory Payroll (EPF/ESI/TDS)</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Custom Tenant Domain & Website at /</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-primary)" /> All 28 ERP Business Modules</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-primary)" /> GST E-Invoices, GSTR-1/3B & E-Way Bills</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-primary)" /> Indian Statutory Payroll (EPF/ESI/TDS)</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-primary)" /> Custom Tenant Domain & Website at /</li>
             </ul>
             <button onClick={() => openLeadModal('trial')} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Start 30-Day Free Trial</button>
           </div>
 
           {/* Enterprise */}
           <div className="glass-panel" style={{ padding: '2.5rem' }}>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Enterprise</h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Dedicated single-tenant infrastructure with custom SLA.</p>
-            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>Custom Quote</div>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--color-text-main)' }}>Enterprise</h3>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Dedicated single-tenant infrastructure with custom SLA.</p>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: 'var(--color-text-main)', marginBottom: '1.5rem' }}>Custom Quote</div>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Dedicated Postgres & Redis Stack</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Custom SSO & RLS Tenant Isolation</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Dedicated Indian Solutions Architect</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-purple)" /> Dedicated Postgres & Redis Stack</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-purple)" /> Custom SSO & RLS Tenant Isolation</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="var(--color-purple)" /> Dedicated Indian Solutions Architect</li>
             </ul>
             <button onClick={() => openLeadModal('demo')} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Contact Sales</button>
           </div>
@@ -829,8 +858,8 @@ export default function LocalizedCorporateHomePage() {
       {/* ── Guided Product Tour & Trial Modal ── */}
       {showModal && (
         <div className="modal-backdrop" onClick={() => setShowModal(false)}>
-          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '580px', width: '100%', padding: '2.5rem', background: '#0b1329', border: '1px solid rgba(56, 189, 248, 0.3)', position: 'relative' }}>
-            <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '580px', width: '100%', padding: '2.5rem', position: 'relative' }}>
+            <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'none', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer' }}>
               <X size={20} />
             </button>
 
@@ -838,16 +867,16 @@ export default function LocalizedCorporateHomePage() {
               <div>
                 <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
                   {[1, 2, 3, 4].map(s => (
-                    <div key={s} style={{ flex: 1, height: '4px', borderRadius: '9999px', background: s <= tourStep ? '#38bdf8' : '#1e293b' }} />
+                    <div key={s} style={{ flex: 1, height: '4px', borderRadius: '9999px', background: s <= tourStep ? 'var(--color-primary)' : 'var(--glass-border)' }} />
                   ))}
                 </div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-main)', margin: '0 0 0.5rem 0' }}>
                   {tourStep === 1 && 'Step 1: Set Up Branding & GSTIN'}
                   {tourStep === 2 && 'Step 2: Build Pages in No-Code Studio'}
                   {tourStep === 3 && 'Step 3: Run Double-Entry Accounting GL'}
                   {tourStep === 4 && 'Step 4: Launch Multi-Tenant Workspace'}
                 </h3>
-                <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '2rem' }}>
+                <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', marginBottom: '2rem' }}>
                   {tourStep === 1 && 'Configure tenant_id and customize theme tokens with real-time domain mapping.'}
                   {tourStep === 2 && 'Drag-and-drop components, publish forms, and connect dynamic data sources.'}
                   {tourStep === 3 && 'Automate bank reconciliations, multi-currency valuations, and GL journals.'}
@@ -866,21 +895,21 @@ export default function LocalizedCorporateHomePage() {
               </div>
             ) : (
               <div>
-                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--color-text-main)', margin: '0 0 0.5rem 0' }}>
                   {modalType === 'trial' ? 'Start Your 30-Day Free Trial' : 'Book an ERP Architect Session'}
                 </h3>
-                <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.75rem' }}>
+                <p style={{ color: 'var(--color-text-muted)', fontSize: '0.95rem', marginBottom: '1.75rem' }}>
                   Unrestricted access to all 28+ ERP modules, GST E-Invoicing & No-Code Studio.
                 </p>
                 <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, marginBottom: '0.4rem' }}>Work Email</label>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 600, marginBottom: '0.4rem' }}>Work Email</label>
                     <input
                       type="email"
                       placeholder="name@company.com"
                       value={leadEmail}
                       onChange={(e) => setLeadEmail(e.target.value)}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', background: '#1e293b', border: '1px solid #334155', color: '#ffffff', outline: 'none' }}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', background: 'var(--color-surface)', border: '1px solid var(--glass-border)', color: 'var(--color-text-main)', outline: 'none' }}
                       required
                     />
                   </div>
@@ -896,17 +925,17 @@ export default function LocalizedCorporateHomePage() {
       )}
 
       {/* ── Footer ── */}
-      <footer style={{ background: '#030712', borderTop: '1px solid #1e293b', padding: '4rem 1.5rem 2rem', color: '#64748b', fontSize: '0.9rem' }}>
+      <footer style={{ background: 'var(--color-bg)', borderTop: '1px solid var(--glass-border)', padding: '4rem 1.5rem 2rem', color: 'var(--color-text-subtle)', fontSize: '0.9rem' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.2rem', color: '#ffffff', marginBottom: '0.25rem' }}>UniERP Platform</div>
+            <div style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--color-text-main)', marginBottom: '0.25rem' }}>UniERP Platform</div>
             <p>© {new Date().getFullYear()} UniERP Platform Inc. All rights reserved.</p>
           </div>
           <div style={{ display: 'flex', gap: '2rem' }}>
-            <a href={`${ERP_APP_URL}/login`} style={{ color: '#94a3b8' }}>Log In to Desk</a>
-            <a href={`${ERP_APP_URL}/register`} style={{ color: '#94a3b8' }}>Register Account</a>
-            <a href={`${ERP_APP_URL}/`} target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8' }}>Explore Live Demo</a>
-            <a href="http://localhost:3001/swagger" style={{ color: '#94a3b8' }}>Swagger API Docs</a>
+            <a href={`${ERP_APP_URL}/login`} style={{ color: 'var(--color-text-muted)' }}>Log In to Desk</a>
+            <a href={`${ERP_APP_URL}/register`} style={{ color: 'var(--color-text-muted)' }}>Register Account</a>
+            <a href={`${ERP_APP_URL}/`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-muted)' }}>Explore Live Demo</a>
+            <a href="http://localhost:3001/swagger" style={{ color: 'var(--color-text-muted)' }}>Swagger API Docs</a>
           </div>
         </div>
       </footer>
