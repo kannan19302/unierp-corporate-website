@@ -1,233 +1,624 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Shield, ChevronRight, Check, CreditCard, Users, BarChart3,
   Package, Hammer, Activity, Heart, GraduationCap, Building2,
-  Wrench, Store, Zap, ArrowRight, Star, Sparkles, Globe, ExternalLink
+  Wrench, Store, Zap, ArrowRight, Star, Sparkles, Globe, ExternalLink,
+  Calculator, CheckCircle2, ChevronDown, Lock, Cpu, Play, Award, DollarSign, Clock, TrendingUp
 } from 'lucide-react';
 
 const ERP_APP_URL = process.env.NEXT_PUBLIC_ERP_APP_URL || 'http://localhost:3000';
 
-const NAV_LINKS = [
-  { label: 'Features', href: '#features' },
-  { label: 'Industries', href: '#industries' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'API Docs', href: 'http://localhost:3001/swagger' },
-];
-
-const FEATURES = [
-  { icon: CreditCard, title: 'Finance & Accounting', desc: 'Double-entry bookkeeping, multi-currency, automated reconciliation, and real-time P&L reports.', color: '#6366f1' },
-  { icon: Users, title: 'Human Resources', desc: 'Payroll, leave management, performance reviews, attendance tracking, and org charts.', color: '#10b981' },
-  { icon: Users, title: 'CRM & Sales', desc: 'Contact management, deal pipelines, quotations, sales orders, and revenue analytics.', color: '#f59e0b' },
-  { icon: Package, title: 'Inventory & Warehouse', desc: 'Multi-warehouse, serial/batch tracking, reorder automation, and barcode scanning.', color: '#0ea5e9' },
-  { icon: Hammer, title: 'Manufacturing (MRP)', desc: 'Bill of materials, work orders, production planning, quality control, and scrap tracking.', color: '#f43f5e' },
-  { icon: Activity, title: 'No-Code Builder Studio', desc: 'Custom page builder, form builder, dynamic workflow engine, and e-commerce CMS.', color: '#8b5cf6' },
-];
-
-const INDUSTRIES = [
-  { id: 'healthcare', icon: Heart, label: 'Healthcare', title: 'Complete Hospital & Clinic Management', desc: 'Patient records, appointments, pharmacy inventory, EHR, and billing in one platform.' },
-  { id: 'education', icon: GraduationCap, label: 'Education', title: 'Smart Campus & Student Information System', desc: 'Admissions, timetable scheduling, fee collection, gradebooks, and library management.' },
-  { id: 'realestate', icon: Building2, label: 'Real Estate', title: 'Property & Lease Management Suite', desc: 'Unit listings, tenant onboarding, rent collection, maintenance requests, and contract management.' },
-  { id: 'fieldservice', icon: Wrench, label: 'Field Service', title: 'Dispatch & Work Order Automation', desc: 'Technician scheduling, GPS routing, mobile job sign-offs, and spare parts tracking.' },
-  { id: 'retail', icon: Store, label: 'Retail & POS', title: 'Multi-Store Point of Sale & Storefront', desc: 'Cloud POS, barcode checkout, loyalty rewards, e-commerce sync, and inventory management.' },
-];
-
-const PRICING = [
-  { name: 'Starter', price: '$29', period: '/user/mo', desc: 'Ideal for small growing businesses needing core ERP modules.', features: ['Up to 5 users', 'Finance & Accounting', 'Basic Inventory', 'Standard Reports', 'Community Support'], popular: false },
-  { name: 'Professional', price: '$79', period: '/user/mo', desc: 'Complete enterprise suite with Builder Studio and automations.', features: ['Unlimited users', 'All 20+ ERP Modules', 'Full Builder Studio & CMS', 'Advanced BI Analytics', '24/7 Priority Support'], popular: true },
-  { name: 'Enterprise', price: 'Custom', period: '', desc: 'Dedicated cloud deployment with custom SLA and security guarantees.', features: ['Dedicated Postgres & Redis', 'Custom Domain & SSO', 'Unlimited Storage & API', 'Dedicated Solutions Engineer', 'SLA Guarantee'], popular: false },
-];
-
 export default function CorporateHomePage() {
-  const [activeIndustry, setActiveIndustry] = useState('healthcare');
-  const industryData = INDUSTRIES.find(i => i.id === activeIndustry) || INDUSTRIES[0];
+  // Lead Capture State
+  const [leadEmail, setLeadEmail] = useState('');
+  const [isAnnual, setIsAnnual] = useState(true);
+  
+  // Interactive Module Showcase State
+  const [activeTab, setActiveTab] = useState('studio');
+
+  // ROI Calculator State
+  const [teamSize, setTeamSize] = useState(25);
+  const [currentSpend, setCurrentSpend] = useState(2500);
+  const [manualHours, setManualHours] = useState(30);
+
+  // FAQ State
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  // Computed ROI
+  const calculatedSavings = useMemo(() => {
+    const unierpCost = teamSize * (isAnnual ? 63 : 79);
+    const monthlySoftwareSavings = Math.max(0, currentSpend - unierpCost);
+    const laborSavings = manualHours * 4 * 45 * 0.6; // 60% reduction in manual admin time @ $45/hr
+    const totalMonthly = monthlySoftwareSavings + laborSavings;
+    return {
+      monthly: Math.round(totalMonthly),
+      annual: Math.round(totalMonthly * 12),
+      hoursSavedMonth: Math.round(manualHours * 4 * 0.6),
+    };
+  }, [teamSize, currentSpend, manualHours, isAnnual]);
+
+  const handleLeadSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leadEmail) return;
+    window.location.href = `${ERP_APP_URL}/login?email=${encodeURIComponent(leadEmail)}`;
+  };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f172a', color: '#f8fafc' }}>
-      {/* Header */}
+    <div style={{ minHeight: '100vh', background: '#030712', color: '#f8fafc', position: 'relative' }}>
+      {/* Background Animated Glowing Orbs */}
+      <div className="animated-bg-glow glow-blue" style={{ top: '-100px', left: '20%' }} />
+      <div className="animated-bg-glow glow-purple" style={{ top: '600px', right: '10%' }} />
+
+      {/* ── Top Announcement Banner ── */}
+      <div style={{
+        background: 'linear-gradient(90deg, #1d4ed8, #7e22ce, #1d4ed8)',
+        backgroundSize: '200% auto',
+        animation: 'gradient-shift 4s ease infinite',
+        color: '#ffffff',
+        padding: '0.5rem 1rem',
+        textAlign: 'center',
+        fontSize: '0.875rem',
+        fontWeight: 600,
+        display: 'flex',
+        align-items: 'center',
+        justifyContent: 'center',
+        gap: '0.6rem'
+      }}>
+        <Sparkles size={16} />
+        <span>UniERP 2.5 Released: Instant No-Code Builder Studio & Multi-Tenant E-Commerce Portal Engine</span>
+        <a href={`${ERP_APP_URL}/`} style={{ color: '#ffffff', textDecoration: 'underline', fontWeight: 700 }}>
+          View Live Demo →
+        </a>
+      </div>
+
+      {/* ── Navigation Header ── */}
       <header style={{
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        background: 'rgba(15, 23, 42, 0.9)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid #1e293b'
+        background: 'rgba(3, 7, 18, 0.85)',
+        backdropFilter: 'blur(16px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
       }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: 800, fontSize: '1.4rem', color: '#ffffff' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: 900 }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', height: '76px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 800, fontSize: '1.4rem', color: '#ffffff', textDecoration: 'none' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'linear-gradient(135deg, #38bdf8, #2563eb)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: 900, boxShadow: '0 0 20px rgba(56, 189, 248, 0.4)' }}>
               U
             </div>
-            <span>Uni<span style={{ color: '#38bdf8' }}>ERP</span></span>
+            <span style={{ letterSpacing: '-0.02em' }}>Uni<span className="text-gradient">ERP</span></span>
           </Link>
 
-          <nav style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-            {NAV_LINKS.map((link, idx) => (
-              <a key={idx} href={link.href} style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>
-                {link.label}
-              </a>
-            ))}
+          <nav style={{ display: 'flex', gap: '2.25rem', alignItems: 'center' }}>
+            <a href="#showcase" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>Features</a>
+            <a href="#roi-calculator" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>ROI Calculator</a>
+            <a href="#industries" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>Solutions</a>
+            <a href="#pricing" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>Pricing</a>
+            <a href="http://localhost:3001/swagger" style={{ color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500, transition: 'color 0.2s' }}>API Docs</a>
           </nav>
 
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <a href={`${ERP_APP_URL}/`} style={{ color: '#38bdf8', fontSize: '0.9rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+            <a href={`${ERP_APP_URL}/`} className="btn-secondary" style={{ padding: '0.6rem 1.1rem', fontSize: '0.875rem' }}>
               <Globe size={15} />
               <span>Tenant Site Engine</span>
             </a>
-            <a href={`${ERP_APP_URL}/login`} style={{ padding: '0.5rem 1.25rem', borderRadius: '8px', background: '#2563eb', color: '#ffffff', fontSize: '0.9rem', fontWeight: 600 }}>
-              Log In to ERP Desk
+            <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ padding: '0.65rem 1.35rem', fontSize: '0.875rem' }}>
+              <span>Log In to Desk</span>
+              <ArrowRight size={15} />
             </a>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section style={{ padding: '7rem 1.5rem 5rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ maxWidth: '960px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 1rem', borderRadius: '9999px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38bdf8', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1.5rem' }}>
-            <Sparkles size={16} />
-            <span>Universal Multi-Tenant ERP Platform</span>
+      {/* ── Hero Section ── */}
+      <section style={{ padding: '7rem 1.5rem 5rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1020px', margin: '0 auto' }}>
+          
+          {/* Floating Release Badge */}
+          <div className="floating-badge" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.6rem',
+            padding: '0.45rem 1.25rem',
+            borderRadius: '9999px',
+            background: 'rgba(56, 189, 248, 0.1)',
+            border: '1px solid rgba(56, 189, 248, 0.3)',
+            color: '#38bdf8',
+            fontSize: '0.875rem',
+            fontWeight: 600,
+            marginBottom: '2rem',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 0 25px rgba(56, 189, 248, 0.2)'
+          }}>
+            <Award size={16} />
+            <span>Ranked #1 Composable Multi-Tenant ERP Architecture</span>
+            <ChevronRight size={14} />
           </div>
 
-          <h1 style={{ fontSize: 'clamp(2.75rem, 6vw, 4.5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 1.5rem 0' }}>
-            One Platform to Run Your Entire <span style={{ background: 'linear-gradient(135deg, #38bdf8, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Enterprise</span>
+          <h1 style={{
+            fontSize: 'clamp(3rem, 6vw, 4.75rem)',
+            fontWeight: 900,
+            lineHeight: 1.08,
+            letterSpacing: '-0.03em',
+            margin: '0 0 1.75rem 0',
+            color: '#ffffff'
+          }}>
+            Run Your Entire Enterprise With <br />
+            <span className="text-gradient">Zero Code & 10x Velocity</span>
           </h1>
 
-          <p style={{ fontSize: '1.25rem', color: '#94a3b8', maxWidth: '720px', margin: '0 auto 2.5rem', lineHeight: 1.6 }}>
-            Composable, industry-agnostic SaaS ERP system with visual No-Code Builder Studio, dynamic website CMS, automated accounting, HR, and supply chain.
+          <p style={{
+            fontSize: '1.3rem',
+            color: '#94a3b8',
+            maxWidth: '780px',
+            margin: '0 auto 3rem',
+            lineHeight: 1.65,
+            fontWeight: 400
+          }}>
+            The industry’s first composable ERP platform with an embedded <strong style={{ color: '#ffffff' }}>No-Code Builder Studio</strong>, automated financial GL, inventory, payroll, and customizable tenant web portals.
           </p>
 
-          <div style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href={`${ERP_APP_URL}/login`} style={{ padding: '0.95rem 2rem', borderRadius: '10px', background: '#2563eb', color: '#ffffff', fontWeight: 700, fontSize: '1.05rem', display: 'inline-flex', alignItems: 'center', gap: '0.6rem', boxShadow: '0 10px 20px -5px rgba(37, 99, 235, 0.5)' }}>
-              <span>Launch ERP Platform</span>
-              <ArrowRight size={18} />
-            </a>
+          {/* High-Converting Lead Capture Bar */}
+          <form onSubmit={handleLeadSubmit} style={{
+            maxWidth: '560px',
+            margin: '0 auto 2.5rem',
+            display: 'flex',
+            gap: '0.5rem',
+            background: 'rgba(15, 23, 42, 0.8)',
+            padding: '0.5rem',
+            borderRadius: '16px',
+            border: '1px solid rgba(56, 189, 248, 0.3)',
+            boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15)',
+            backdropFilter: 'blur(16px)'
+          }}>
+            <input
+              type="email"
+              placeholder="Enter your work email..."
+              value={leadEmail}
+              onChange={(e) => setLeadEmail(e.target.value)}
+              style={{
+                flex: 1,
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                padding: '0.75rem 1rem',
+                color: '#ffffff',
+                fontSize: '1rem',
+                fontFamily: 'inherit'
+              }}
+              required
+            />
+            <button type="submit" className="btn-primary" style={{ borderRadius: '12px' }}>
+              <span>Start Free Trial</span>
+              <ArrowRight size={16} />
+            </button>
+          </form>
 
-            <a href={`${ERP_APP_URL}/`} style={{ padding: '0.95rem 2rem', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.08)', border: '1px solid #334155', color: '#ffffff', fontWeight: 600, fontSize: '1.05rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span>View Tenant Website Demo</span>
-              <ExternalLink size={16} />
-            </a>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', color: '#64748b', fontSize: '0.875rem', flexWrap: 'wrap' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> No Credit Card Required</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> 14-Day Full Access</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><CheckCircle2 size={16} color="#10b981" /> Instant Workspace Setup</span>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── Social Proof & Trust Metrics Bar ── */}
+      <section style={{ maxWidth: '1280px', margin: '0 auto 6rem', padding: '0 1.5rem' }}>
+        <div className="glass-panel" style={{ padding: '2.5rem 3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem', textAlign: 'center' }}>
+          <div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#38bdf8', marginBottom: '0.25rem' }}>$4.2M+</div>
+            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Client Operating Cost Saved</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#10b981', marginBottom: '0.25rem' }}>99.99%</div>
+            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Uptime SLA Guarantee</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#a855f7', marginBottom: '0.25rem' }}>1,500+</div>
+            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Enterprise REST API Endpoints</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '2.75rem', fontWeight: 900, color: '#f59e0b', marginBottom: '0.25rem' }}>10x</div>
+            <div style={{ color: '#94a3b8', fontSize: '0.9rem', fontWeight: 500 }}>Faster Deployment Velocity</div>
           </div>
         </div>
       </section>
 
-      {/* Core Features */}
-      <section id="features" style={{ maxWidth: '1280px', margin: '0 auto', padding: '5rem 1.5rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h2 style={{ fontSize: '2.25rem', fontWeight: 800, margin: '0 0 0.75rem 0' }}>Comprehensive Module Ecosystem</h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>20+ deeply integrated ERP modules designed for high-scale enterprise operations.</p>
+      {/* ── Interactive Module Showcase ── */}
+      <section id="showcase" style={{ maxWidth: '1280px', margin: '0 auto', padding: '5rem 1.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>
+            Experience the <span className="text-gradient">UniERP Platform</span>
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', margin: '0 auto' }}>
+            Explore our core suite built with row-level tenant security, visual layout builders, and deep transactional intelligence.
+          </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-          {FEATURES.map((f, idx) => {
-            const Icon = f.icon;
+        {/* Interactive Workspace Tabs */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+          {[
+            { id: 'studio', label: 'No-Code Builder Studio', icon: Activity },
+            { id: 'finance', label: 'Finance & Accounting', icon: CreditCard },
+            { id: 'inventory', label: 'Inventory & MRP', icon: Package },
+            { id: 'cms', label: 'Customizable Tenant Web CMS', icon: Globe },
+            { id: 'crm', label: 'CRM & Sales Pipeline', icon: Users },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
             return (
-              <div key={idx} style={{ background: '#1e293b', borderRadius: '16px', padding: '2rem', border: '1px solid #334155' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
-                  <Icon size={24} />
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>{f.title}</h3>
-                <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: 1.6 }}>{f.desc}</p>
-              </div>
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.6rem',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '12px',
+                  background: active ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : 'rgba(255, 255, 255, 0.05)',
+                  color: active ? '#ffffff' : '#94a3b8',
+                  border: '1px solid',
+                  borderColor: active ? '#3b82f6' : 'rgba(255, 255, 255, 0.1)',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: active ? '0 10px 20px rgba(37, 99, 235, 0.3)' : 'none'
+                }}
+              >
+                <Icon size={18} />
+                <span>{tab.label}</span>
+              </button>
             );
           })}
         </div>
+
+        {/* Screen Preview Container */}
+        <div className="glass-panel shine-effect" style={{ padding: '2rem', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+          <div style={{ background: '#0b1329', borderRadius: '12px', overflow: 'hidden', border: '1px solid #1e293b' }}>
+            {/* Window Top Bar */}
+            <div style={{ background: '#0f172a', padding: '0.75rem 1.25rem', borderBottom: '1px solid #1e293b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }} />
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#f59e0b' }} />
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#10b981' }} />
+              <span style={{ marginLeft: '1rem', color: '#64748b', fontSize: '0.85rem', fontWeight: 500 }}>
+                {activeTab === 'studio' && 'http://localhost:3000/apps/builder/web/pages'}
+                {activeTab === 'finance' && 'http://localhost:3000/apps/finance'}
+                {activeTab === 'inventory' && 'http://localhost:3000/apps/inventory'}
+                {activeTab === 'cms' && 'http://localhost:3000/'}
+                {activeTab === 'crm' && 'http://localhost:3000/apps/crm'}
+              </span>
+            </div>
+
+            {/* Interactive Preview Content */}
+            <div style={{ padding: '3rem', minHeight: '360px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {activeTab === 'studio' && (
+                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <Activity size={32} />
+                  </div>
+                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Visual Drag-and-Drop Page Builder</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                    Design custom landing pages, e-commerce storefronts, customer intake forms, and automated business workflows visually with real-time publishing.
+                  </p>
+                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                    <span>Try Builder Studio Live</span>
+                    <ArrowRight size={16} />
+                  </a>
+                </div>
+              )}
+
+              {activeTab === 'finance' && (
+                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <CreditCard size={32} />
+                  </div>
+                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Automated Accounting & Multi-Currency GL</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                    Double-entry bookkeeping, automated bank reconciliation, period-end FX revaluations, and 1,500+ weighted accounting metrics.
+                  </p>
+                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                    <span>Open Finance Workspace</span>
+                    <ArrowRight size={16} />
+                  </a>
+                </div>
+              )}
+
+              {activeTab === 'inventory' && (
+                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <Package size={32} />
+                  </div>
+                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Multi-Warehouse & Automated Reordering</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                    Serial/batch tracking, drop-shipping, bill of materials (MRP), barcode scanning, and automated inventory replenishment rules.
+                  </p>
+                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                    <span>Launch Inventory Suite</span>
+                    <ArrowRight size={16} />
+                  </a>
+                </div>
+              )}
+
+              {activeTab === 'cms' && (
+                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <Globe size={32} />
+                  </div>
+                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>Tenant-Customizable Web & Storefront</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                    Every ERP tenant gets a fully customizable public website rendered live at <code style={{ color: '#38bdf8' }}>/</code> with shop storefront, blogs, and dynamic tokens.
+                  </p>
+                  <a href={`${ERP_APP_URL}/`} className="btn-primary">
+                    <span>View Live Tenant Site</span>
+                    <ExternalLink size={16} />
+                  </a>
+                </div>
+              )}
+
+              {activeTab === 'crm' && (
+                <div style={{ textAlign: 'center', maxWidth: '600px' }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <Users size={32} />
+                  </div>
+                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff' }}>CRM Deal Pipelines & Revenue Analytics</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                    Lead scoring, win/loss analytics, partner deal registration, automated quotations, and AI-assisted email drafting.
+                  </p>
+                  <a href={`${ERP_APP_URL}/login`} className="btn-primary">
+                    <span>Open CRM Workspace</span>
+                    <ArrowRight size={16} />
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Industry Solutions */}
-      <section id="industries" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
+      {/* ── Interactive Live ERP ROI & Time Savings Calculator ── */}
+      <section id="roi-calculator" style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, margin: '0 0 0.75rem 0' }}>Tailored for Your Industry</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>Pre-configured industry vertical apps ready for instant deployment.</p>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+              <Calculator size={18} />
+              <span>Interactive ROI Estimator</span>
+            </div>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Calculate Your Annual Savings</h2>
+            <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
+              See how much your organization saves by switching to UniERP's composable, all-in-one platform.
+            </p>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
-            {INDUSTRIES.map(i => {
-              const Icon = i.icon;
-              const active = i.id === activeIndustry;
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '3rem', alignItems: 'center' }}>
+            {/* Controls */}
+            <div className="glass-panel" style={{ padding: '2.5rem' }}>
+              <div style={{ marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label style={{ fontWeight: 600, color: '#f8fafc' }}>Team Size (Users)</label>
+                  <span style={{ color: '#38bdf8', fontWeight: 800 }}>{teamSize} Users</span>
+                </div>
+                <input
+                  type="range"
+                  min="5"
+                  max="250"
+                  value={teamSize}
+                  onChange={(e) => setTeamSize(Number(e.target.value))}
+                  style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label style={{ fontWeight: 600, color: '#f8fafc' }}>Current Software Costs ($/mo)</label>
+                  <span style={{ color: '#10b981', fontWeight: 800 }}>${currentSpend.toLocaleString()}/mo</span>
+                </div>
+                <input
+                  type="range"
+                  min="500"
+                  max="15000"
+                  step="250"
+                  value={currentSpend}
+                  onChange={(e) => setCurrentSpend(Number(e.target.value))}
+                  style={{ width: '100%', accentColor: '#10b981', cursor: 'pointer' }}
+                />
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label style={{ fontWeight: 600, color: '#f8fafc' }}>Manual Work Hours (hrs/week)</label>
+                  <span style={{ color: '#a855f7', fontWeight: 800 }}>{manualHours} hrs/wk</span>
+                </div>
+                <input
+                  type="range"
+                  min="5"
+                  max="100"
+                  value={manualHours}
+                  onChange={(e) => setManualHours(Number(e.target.value))}
+                  style={{ width: '100%', accentColor: '#a855f7', cursor: 'pointer' }}
+                />
+              </div>
+            </div>
+
+            {/* Computed Output Card */}
+            <div className="glass-panel" style={{ padding: '3rem', border: '2px solid rgba(16, 185, 129, 0.3)', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(15, 23, 42, 0.8))' }}>
+              <div style={{ fontSize: '0.9rem', color: '#10b981', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+                Estimated Total Savings
+              </div>
+              <div style={{ fontSize: '3.5rem', fontWeight: 900, color: '#ffffff', lineHeight: 1, marginBottom: '0.5rem' }}>
+                ${calculatedSavings.annual.toLocaleString()} <span style={{ fontSize: '1.25rem', color: '#94a3b8', fontWeight: 400 }}>/ year</span>
+              </div>
+              <p style={{ color: '#94a3b8', fontSize: '1rem', marginBottom: '2rem' }}>
+                Save roughly <strong style={{ color: '#10b981' }}>${calculatedSavings.monthly.toLocaleString()}/month</strong> in license fees and regain <strong style={{ color: '#38bdf8' }}>{calculatedSavings.hoursSavedMonth} hours/month</strong> of staff productivity.
+              </p>
+
+              <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                <DollarSign size={18} />
+                <span>Claim Your Savings & Start Trial</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pricing Tiers with Discount Toggle ── */}
+      <section id="pricing" style={{ maxWidth: '1280px', margin: '0 auto', padding: '6rem 1.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 1rem 0' }}>Transparent, Scalable Pricing</h2>
+          <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '2rem' }}>Zero hidden fees. Deploy instantly with full API and Studio access.</p>
+
+          {/* Billing Switch */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem', background: '#1e293b', padding: '0.4rem 0.5rem', borderRadius: '9999px', border: '1px solid #334155' }}>
+            <button
+              onClick={() => setIsAnnual(false)}
+              style={{ padding: '0.5rem 1.25rem', borderRadius: '9999px', border: 'none', background: !isAnnual ? '#2563eb' : 'transparent', color: !isAnnual ? '#ffffff' : '#94a3b8', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}
+            >
+              Monthly Billing
+            </button>
+            <button
+              onClick={() => setIsAnnual(true)}
+              style={{ padding: '0.5rem 1.25rem', borderRadius: '9999px', border: 'none', background: isAnnual ? '#2563eb' : 'transparent', color: isAnnual ? '#ffffff' : '#94a3b8', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              <span>Annual Billing</span>
+              <span style={{ background: '#10b981', color: '#ffffff', fontSize: '0.75rem', padding: '0.15rem 0.5rem', borderRadius: '9999px', fontWeight: 800 }}>Save 20%</span>
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
+          {/* Starter */}
+          <div className="glass-panel" style={{ padding: '2.5rem', position: 'relative' }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Starter</h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Essential core ERP modules for growing small businesses.</p>
+            <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
+              ${isAnnual ? '23' : '29'} <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 400 }}>/ user / month</span>
+            </div>
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Finance & General Ledger</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Inventory & Stock Management</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Standard Reporting Suite</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#10b981" /> Up to 5 User Accounts</li>
+            </ul>
+            <a href={`${ERP_APP_URL}/login`} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Start Starter Plan</a>
+          </div>
+
+          {/* Professional (Popular) */}
+          <div className="glass-panel" style={{ padding: '2.5rem', border: '2px solid #38bdf8', boxShadow: '0 0 35px rgba(56, 189, 248, 0.2)', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', background: '#38bdf8', color: '#030712', padding: '0.3rem 1rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Most Popular Choice
+            </div>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Professional</h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Complete enterprise suite with full Builder Studio & CMS.</p>
+            <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
+              ${isAnnual ? '63' : '79'} <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 400 }}>/ user / month</span>
+            </div>
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> All 20+ ERP Business Modules</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> No-Code Builder Studio & Page CMS</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Unlimited Users & Multi-Tenancy</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#38bdf8" /> Custom Domain & Web Portal Support</li>
+            </ul>
+            <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Start 14-Day Free Trial</a>
+          </div>
+
+          {/* Enterprise */}
+          <div className="glass-panel" style={{ padding: '2.5rem', position: 'relative' }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Enterprise</h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '44px' }}>Dedicated single-tenant infrastructure with custom SLA.</p>
+            <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ffffff', marginBottom: '1.5rem' }}>
+              Custom
+            </div>
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Dedicated Postgres & Redis Stack</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Custom SSO / SAML Integration</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> Dedicated Solutions Architect</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#cbd5e1', fontSize: '0.95rem' }}><CheckCircle2 size={18} color="#a855f7" /> 99.99% Uptime Guarantee SLA</li>
+            </ul>
+            <a href={`${ERP_APP_URL}/login`} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Contact Enterprise Sales</a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Interactive FAQ Accordion ── */}
+      <section style={{ background: '#090d16', padding: '6rem 1.5rem', borderTop: '1px solid #1e293b' }}>
+        <div style={{ maxWidth: '840px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, margin: '0 0 0.75rem 0' }}>Frequently Asked Questions</h2>
+            <p style={{ color: '#94a3b8', fontSize: '1.05rem' }}>Everything you need to know about UniERP deployment and architecture.</p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {[
+              { q: 'How does multi-tenancy work in UniERP?', a: 'UniERP enforces row-level security (RLS) directly at the database layer (PostgreSQL 16) with non-bypassable tenant_id transaction contexts, keeping every customer data completely isolated.' },
+              { q: 'Can non-technical staff build custom web pages & forms?', a: 'Yes! Our Zero-Code Builder Studio lets non-technical users visually create intake forms, customize published tenant pages, drag-and-drop content blocks, and edit design tokens.' },
+              { q: 'How is the public tenant website hosted?', a: 'Every tenant gets a dynamic website portal at the root / endpoint of their tenant domain, powered automatically by published content in Builder Studio.' },
+              { q: 'Can we migrate our existing legacy ERP data?', a: 'UniERP includes automated data import wizards for CSV/JSON schemas and dedicated REST APIs to sync historical GL journals, inventory items, and customer records.' },
+            ].map((faq, idx) => {
+              const isOpen = openFaq === idx;
               return (
-                <button
-                  key={i.id}
-                  onClick={() => setActiveIndustry(i.id)}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '12px',
-                    background: active ? '#2563eb' : '#1e293b',
-                    color: active ? '#ffffff' : '#94a3b8',
-                    border: '1px solid',
-                    borderColor: active ? '#3b82f6' : '#334155',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  <Icon size={18} />
-                  <span>{i.label}</span>
-                </button>
+                <div key={idx} className="glass-panel" style={{ overflow: 'hidden' }}>
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    style={{
+                      width: '100%',
+                      padding: '1.25rem 1.5rem',
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#ffffff',
+                      fontSize: '1.05rem',
+                      fontWeight: 600,
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <span>{faq.q}</span>
+                    <ChevronDown size={20} style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+                  {isOpen && (
+                    <div style={{ padding: '0 1.5rem 1.5rem', color: '#94a3b8', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
+        </div>
+      </section>
 
-          <div style={{ background: '#1e293b', borderRadius: '20px', padding: '3rem', border: '1px solid #334155', maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <h3 style={{ fontSize: '1.75rem', fontWeight: 800, margin: '0 0 1rem 0', color: '#ffffff' }}>{industryData.title}</h3>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '2rem' }}>{industryData.desc}</p>
-            <a href={`${ERP_APP_URL}/login`} style={{ padding: '0.85rem 1.75rem', borderRadius: '10px', background: '#2563eb', color: '#ffffff', fontWeight: 600, fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span>Explore {industryData.label} Solution</span>
-              <ArrowRight size={16} />
-            </a>
+      {/* ── High-Converting Bottom Conversion Banner ── */}
+      <section style={{ padding: '6rem 1.5rem', textAlign: 'center', position: 'relative' }}>
+        <div className="glass-panel shine-effect" style={{ maxWidth: '1020px', margin: '0 auto', padding: '4.5rem 2rem', background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(168, 85, 247, 0.15))', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, margin: '0 0 1.25rem 0', color: '#ffffff' }}>
+            Ready to Transform Your Enterprise Operations?
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '1.2rem', maxWidth: '640px', margin: '0 auto 2.5rem' }}>
+            Join 500+ forward-thinking organizations using UniERP to automate business workflows and eliminate legacy software bloat.
+          </p>
+          <a href={`${ERP_APP_URL}/login`} className="btn-primary" style={{ padding: '1.1rem 2.75rem', fontSize: '1.1rem' }}>
+            <span>Start Free 14-Day Trial</span>
+            <ArrowRight size={18} />
+          </a>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer style={{ background: '#030712', borderTop: '1px solid #1e293b', padding: '4rem 1.5rem 2rem', color: '#64748b', fontSize: '0.9rem' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: '1.2rem', color: '#ffffff', marginBottom: '0.25rem' }}>UniERP Company</div>
+            <p>© {new Date().getFullYear()} UniERP Platform Inc. All rights reserved.</p>
           </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" style={{ maxWidth: '1280px', margin: '0 auto', padding: '6rem 1.5rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h2 style={{ fontSize: '2.25rem', fontWeight: 800, margin: '0 0 0.75rem 0' }}>Simple, Transparent Pricing</h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>Deploy in minutes. Upgrade or scale anytime.</p>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-          {PRICING.map((p, idx) => (
-            <div key={idx} style={{ background: p.popular ? '#1e293b' : '#0f172a', borderRadius: '20px', padding: '2.5rem', border: p.popular ? '2px solid #2563eb' : '1px solid #334155', position: 'relative' }}>
-              {p.popular && (
-                <div style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', background: '#2563eb', color: '#ffffff', padding: '0.25rem 0.85rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Most Popular
-                </div>
-              )}
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>{p.name}</h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem', minHeight: '40px' }}>{p.desc}</p>
-              <div style={{ fontSize: '2.75rem', fontWeight: 800, color: '#ffffff', marginBottom: '1.5rem' }}>
-                {p.price} <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: 400 }}>{p.period}</span>
-              </div>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {p.features.map((feat, fidx) => (
-                  <li key={fidx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#cbd5e1', fontSize: '0.95rem' }}>
-                    <Check size={16} color="#38bdf8" />
-                    <span>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-              <a href={`${ERP_APP_URL}/login`} style={{ display: 'block', textAlign: 'center', padding: '0.85rem', borderRadius: '10px', background: p.popular ? '#2563eb' : 'rgba(255,255,255,0.08)', color: '#ffffff', fontWeight: 600, fontSize: '0.95rem' }}>
-                Start {p.name} Plan
-              </a>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer style={{ background: '#090d16', borderTop: '1px solid #1e293b', padding: '4rem 1.5rem 2rem', textAlign: 'center', color: '#64748b', fontSize: '0.9rem' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <p>© {new Date().getFullYear()} UniERP Company. All rights reserved.</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1rem' }}>
+          <div style={{ display: 'flex', gap: '2rem' }}>
             <a href={`${ERP_APP_URL}/login`} style={{ color: '#94a3b8' }}>ERP Platform Desk</a>
-            <a href={`${ERP_APP_URL}/`} style={{ color: '#94a3b8' }}>Tenant Website Portal</a>
+            <a href={`${ERP_APP_URL}/`} style={{ color: '#94a3b8' }}>Tenant Site Portal</a>
             <a href="http://localhost:3001/swagger" style={{ color: '#94a3b8' }}>Swagger API Docs</a>
           </div>
         </div>
