@@ -1,4 +1,4 @@
-:root, [data-theme="light"] {
+﻿:root, [data-theme="light"] {
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
   --color-bg: #f8fafc;
@@ -302,10 +302,10 @@ body {
 }
 
 /* =====================================================
-   MOTION & ANIMATION SYSTEM — ERP Industry Standard
+   MOTION & ANIMATION SYSTEM â€” ERP Industry Standard
    ===================================================== */
 
-/* ── Keyframes ──────────────────────────────────────── */
+/* â”€â”€ Keyframes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -396,7 +396,7 @@ body {
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* ── Scroll-reveal base state ───────────────────────── */
+/* â”€â”€ Scroll-reveal base state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -430,7 +430,7 @@ body {
 .stagger-5 { transition-delay: 320ms; }
 .stagger-6 { transition-delay: 400ms; }
 
-/* ── Marquee / Logo wall ────────────────────────────── */
+/* â”€â”€ Marquee / Logo wall â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .marquee-track {
   display: flex;
   gap: 3rem;
@@ -447,22 +447,22 @@ body {
   animation-play-state: paused;
 }
 
-/* ── Badge float ────────────────────────────────────── */
+/* â”€â”€ Badge float â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .float-badge {
   animation: float-badge 3.2s ease-in-out infinite;
 }
 
-/* ── Highlight pricing tier ─────────────────────────── */
+/* â”€â”€ Highlight pricing tier â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .pricing-highlight {
   animation: border-glow 3s ease-in-out infinite;
 }
 
-/* ── Stat counter entrance ──────────────────────────── */
+/* â”€â”€ Stat counter entrance â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .stat-value.counting {
   animation: count-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* ── Button ripple ──────────────────────────────────── */
+/* â”€â”€ Button ripple â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn-ripple {
   position: relative;
   overflow: hidden;
@@ -485,7 +485,7 @@ body {
   animation: ripple 0.5s ease-out;
 }
 
-/* ── Skeleton shimmer ───────────────────────────────── */
+/* â”€â”€ Skeleton shimmer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .skeleton {
   background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-hover) 50%, var(--color-surface) 75%);
   background-size: 200% 100%;
@@ -493,12 +493,12 @@ body {
   border-radius: var(--radius-lg);
 }
 
-/* ── CTA section pulse ──────────────────────────────── */
+/* â”€â”€ CTA section pulse â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .cta-glow {
   animation: glow-pulse 3s ease-in-out infinite;
 }
 
-/* ── Hero animate-in ────────────────────────────────── */
+/* â”€â”€ Hero animate-in â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hero-enter {
   animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -519,7 +519,7 @@ body {
   animation: fadeInUp 0.7s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* ── Animated mesh background orbs ─────────────────── */
+/* â”€â”€ Animated mesh background orbs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mesh-orb {
   position: absolute;
   border-radius: 50%;
@@ -557,12 +557,12 @@ body {
   animation-delay: -6s;
 }
 
-/* ── Section entrance animation ─────────────────────── */
+/* â”€â”€ Section entrance animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .section-enter {
   animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* ── Hover lift ─────────────────────────────────────── */
+/* â”€â”€ Hover lift â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hover-lift {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
 }
@@ -572,7 +572,7 @@ body {
   box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.15);
 }
 
-/* ── Nav link underline animation ───────────────────── */
+/* â”€â”€ Nav link underline animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 nav a {
   position: relative;
 }
@@ -593,7 +593,7 @@ nav a:hover::after {
   width: 100%;
 }
 
-/* ── Modal backdrop ─────────────────────────────────── */
+/* â”€â”€ Modal backdrop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -606,7 +606,7 @@ nav a:hover::after {
   animation: fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Process step accent ─────────────────────────────── */
+/* â”€â”€ Process step accent â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .process-step-number {
   width: 48px;
   height: 48px;
@@ -622,7 +622,7 @@ nav a:hover::after {
   box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
 }
 
-/* ── Comparison table ────────────────────────────────── */
+/* â”€â”€ Comparison table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .comparison-table th,
 .comparison-table td {
   padding: 0.85rem 1rem;
@@ -642,7 +642,7 @@ nav a:hover::after {
   font-weight: 700;
 }
 
-/* ── Prefers reduced motion — disable ALL animations ─── */
+/* â”€â”€ Prefers reduced motion â€” disable ALL animations â”€â”€â”€ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
