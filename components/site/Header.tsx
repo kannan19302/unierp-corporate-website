@@ -77,7 +77,7 @@ const COMPANY_MENU = [
 
 // ─── MegaMenu Dropdown ───────────────────────────────────────────────────────
 
-function MegaMenuProducts({ visible }: { visible: boolean }) {
+function MegaMenuProducts({ visible = true }: { visible?: boolean }) {
   return (
     <div className={`mega-menu mega-menu-wide ${visible ? 'mega-menu-visible' : ''}`}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0' }}>
@@ -115,7 +115,7 @@ function MegaMenuProducts({ visible }: { visible: boolean }) {
   );
 }
 
-function MegaMenuSimple({ items, visible }: { items: typeof SOLUTIONS_MENU; visible: boolean }) {
+function MegaMenuSimple({ items, visible = true }: { items: typeof SOLUTIONS_MENU; visible?: boolean }) {
   return (
     <div className={`mega-menu mega-menu-medium ${visible ? 'mega-menu-visible' : ''}`}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
@@ -176,11 +176,12 @@ function NavDropdown({
         className={`nav-link-btn ${active || open ? 'nav-link-active' : ''}`}
         aria-expanded={open}
         aria-haspopup="true"
+        onClick={() => setOpen((prev) => !prev)}
       >
         {label}
         <ChevronDown size={14} className={`nav-chevron ${open ? 'nav-chevron-open' : ''}`} />
       </button>
-      {children}
+      {open && children}
     </div>
   );
 }
@@ -299,19 +300,19 @@ export function Header() {
           {/* Desktop nav */}
           <nav className="header-nav" role="navigation" aria-label="Main navigation">
             <NavDropdown label="Products" active={isProducts}>
-              <MegaMenuProducts visible={false} />
+              <MegaMenuProducts visible={true} />
             </NavDropdown>
             <NavDropdown label="Solutions" active={isSolutions}>
-              <MegaMenuSimple items={SOLUTIONS_MENU} visible={false} />
+              <MegaMenuSimple items={SOLUTIONS_MENU} visible={true} />
             </NavDropdown>
             <Link href="/pricing" className={`nav-link ${pathname === '/pricing' ? 'nav-link-active' : ''}`}>
               Pricing
             </Link>
             <NavDropdown label="Resources" active={isResources}>
-              <MegaMenuSimple items={RESOURCES_MENU} visible={false} />
+              <MegaMenuSimple items={RESOURCES_MENU} visible={true} />
             </NavDropdown>
             <NavDropdown label="Company" active={isCompany}>
-              <MegaMenuSimple items={COMPANY_MENU} visible={false} />
+              <MegaMenuSimple items={COMPANY_MENU} visible={true} />
             </NavDropdown>
           </nav>
 

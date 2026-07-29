@@ -70,23 +70,24 @@ export function ChatWidget() {
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
+          aria-label={settings.chatLauncherLabel || 'Ask AI Assistant'}
+          title={settings.chatLauncherLabel || 'Ask AI Assistant'}
           style={{
-            padding: '0.85rem 1.35rem',
-            borderRadius: '9999px',
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
             background: 'linear-gradient(135deg, #2563eb, #7e22ce)',
             color: '#ffffff',
             border: 'none',
-            fontWeight: 700,
-            fontSize: '0.95rem',
             cursor: 'pointer',
             boxShadow: '0 10px 25px rgba(37, 99, 235, 0.4)',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.6rem',
+            justifyContent: 'center',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
           }}
         >
-          <Bot size={20} />
-          <span>{settings.chatLauncherLabel}</span>
+          <Bot size={26} />
         </button>
       ) : (
         <div className="glass-panel" style={{ width: '360px', height: '480px', display: 'flex', flexDirection: 'column', background: 'var(--header-bg)', border: '1px solid var(--color-primary)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.3)' }}>
