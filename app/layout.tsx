@@ -1,8 +1,12 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import './enterprise.css';
 import { getSeoMetadata } from '@/lib/seo';
+
+const geistSans = Geist({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
 
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className="grid-bg-pattern" suppressHydrationWarning style={{ position: 'relative', minHeight: '100vh' }}>
+      <body className={`grid-bg-pattern ${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning style={{ position: 'relative', minHeight: '100vh' }}>
         {children}
       </body>
     </html>

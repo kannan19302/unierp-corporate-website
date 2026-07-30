@@ -25,7 +25,7 @@ const TEAM = [
 
 const STATS = [
   { num: '2,500+', label: 'Businesses served' },
-  { num: '45+', label: 'ERP modules' },
+  { num: '24', label: 'ERP modules' },
   { num: '19', label: 'Countries' },
   { num: '99.97%', label: 'Uptime SLA' },
 ];

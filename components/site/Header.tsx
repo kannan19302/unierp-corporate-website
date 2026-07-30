@@ -11,7 +11,7 @@ import {
   Cpu, FileText, Globe, Activity, Zap, Shield,
   LogIn, UserPlus, Compass, BookOpen, HelpCircle,
   Star, ArrowRight, Phone, MessageSquare, Layers,
-  PieChart, Settings2, Code2, Rocket
+  PieChart, Settings2, Code2
 } from 'lucide-react';
 import { useTheme } from '@/lib/useTheme';
 import { useSiteContent } from './SiteContentProvider';
@@ -36,24 +36,20 @@ const PRODUCTS_MENU = {
     { icon: FileText, label: 'Documents & Drive', href: '/products/documents', desc: 'Templates, approvals, OCR, version' },
   ],
   industry: [
-    { icon: Heart, label: 'Healthcare', href: '/products/healthcare', desc: 'EHR, pharmacy, insurance, scheduling' },
-    { icon: GraduationCap, label: 'Education', href: '/products/education', desc: 'Students, grades, timetable, library' },
-    { icon: Building2, label: 'Real Estate', href: '/products/real-estate', desc: 'Properties, leases, CRM, maintenance' },
-    { icon: Wrench, label: 'Field Service', href: '/products/field-service', desc: 'Work orders, dispatch, mobile crews' },
-    { icon: Globe, label: 'E-Commerce Plus', href: '/marketplace', desc: 'Explore the full apps marketplace' },
-    { icon: Cpu, label: 'API Platform', href: '/products/api-platform', desc: 'REST, webhooks, developer tools' },
+    { icon: Heart, label: 'Healthcare', href: '/products/healthcare', desc: 'Early access — clinical & scheduling' },
+    { icon: GraduationCap, label: 'Education', href: '/products/education', desc: 'Early access — student & campus' },
+    { icon: Building2, label: 'Real Estate', href: '/products/real-estate', desc: 'Early access — property & leases' },
+    { icon: Wrench, label: 'Field Service', href: '/products/field-service', desc: 'Early access — dispatch & crews' },
+    { icon: Globe, label: 'Marketplace', href: '/marketplace', desc: 'Browse third-party apps & integrations' },
+    { icon: Cpu, label: 'API Platform', href: '/products/api-platform', desc: 'Early access — REST & webhooks' },
   ],
 };
 
 const SOLUTIONS_MENU = [
-  { icon: Building2, label: 'Enterprise', href: '/industries/enterprise', desc: 'Large-scale multi-entity operations' },
-  { icon: Rocket, label: 'Startups', href: '/industries/startups', desc: 'Fast setup, grow as you scale' },
-  { icon: Heart, label: 'Healthcare', href: '/industries/healthcare', desc: 'HIPAA-aware patient & billing flows' },
-  { icon: GraduationCap, label: 'Education', href: '/industries/education', desc: 'Campus management end-to-end' },
-  { icon: Hammer, label: 'Manufacturing', href: '/industries/manufacturing', desc: 'MRP, quality, shop-floor control' },
-  { icon: ShoppingBag, label: 'Retail & E-Com', href: '/industries/retail', desc: 'POS, inventory, online storefront' },
-  { icon: Wrench, label: 'Field Services', href: '/industries/field-service', desc: 'Dispatch, contracts, crew tracking' },
-  { icon: Building2, label: 'Real Estate', href: '/industries/real-estate', desc: 'Leases, maintenance, REIT portfolio' },
+  { icon: Heart, label: 'Healthcare', href: '/industries/healthcare', desc: 'Early access — clinical & scheduling' },
+  { icon: GraduationCap, label: 'Education', href: '/industries/education', desc: 'Early access — student & campus' },
+  { icon: Building2, label: 'Real Estate', href: '/industries/real-estate', desc: 'Early access — property & leases' },
+  { icon: Wrench, label: 'Field Service', href: '/industries/field-service', desc: 'Early access — dispatch & work orders' },
 ];
 
 const RESOURCES_MENU = [
@@ -102,7 +98,7 @@ function MegaMenuProducts({ visible = true }: { visible?: boolean }) {
       </div>
       <div className="mega-footer">
         <Link href="/products" className="mega-footer-link">
-          <Layers size={15} /> View all 45+ modules <ArrowRight size={14} />
+          <Layers size={15} /> View all modules <ArrowRight size={14} />
         </Link>
         <Link href="/marketplace" className="mega-footer-link">
           <Store size={15} /> Browse Marketplace <ArrowRight size={14} />

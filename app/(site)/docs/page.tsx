@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { BookOpen, Terminal, FileCode2, PlayCircle, Search, ArrowRight } from 'lucide-react';
+import { Reveal } from '@/components/site/Reveal';
 
 export default function DocsPage() {
   return (
@@ -24,7 +25,7 @@ export default function DocsPage() {
       </section>
 
       <section className="page-section" style={{ paddingTop: '1rem', paddingBottom: '5rem' }}>
-        <div className="module-grid">
+        <Reveal as="div" className="module-grid">
           {[
             { icon: PlayCircle, title: 'Quickstart Guide', desc: 'Get your first tenant up and running in 5 minutes.', href: '/docs/quickstart' },
             { icon: BookOpen, title: 'User Guides', desc: 'Detailed manuals for every core ERP module.', href: '/docs/guides' },
@@ -40,7 +41,7 @@ export default function DocsPage() {
               </div>
             </Link>
           ))}
-        </div>
+        </Reveal>
       </section>
     </div>
   );

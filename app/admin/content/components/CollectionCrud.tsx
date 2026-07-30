@@ -6,6 +6,7 @@ import { useContentData } from '../ContentDataContext';
 import { COLLECTION_FIELDS, ICON_NAMES, type FieldDef } from '../fields';
 import { DynamicIcon } from '@/components/site/DynamicIcon';
 import { useToast } from '@/app/admin/components/ToastContext';
+import { FilePicker } from './FilePicker';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -214,6 +215,9 @@ export function CollectionCrud({ collectionId }: { collectionId: string }) {
               )}
               {field.type === 'text' && (
                 <input type="text" placeholder={field.placeholder} value={form[field.name] ?? ''} onChange={(e) => update(field.name, e.target.value)} style={inputStyle} />
+              )}
+              {field.type === 'image' && (
+                <FilePicker value={form[field.name] ?? ''} onChange={(url) => update(field.name, url)} placeholder={field.placeholder || 'Image URL, or upload a file'} />
               )}
               {field.type === 'number' && (
                 <input type="number" value={form[field.name] ?? ''} onChange={(e) => update(field.name, e.target.value)} style={inputStyle} />

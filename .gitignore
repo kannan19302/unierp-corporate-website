@@ -22,6 +22,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# admin-uploaded media (local disk storage, not committed)
+/public/uploads/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

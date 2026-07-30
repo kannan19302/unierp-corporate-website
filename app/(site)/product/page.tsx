@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { useAnalytics } from '@/lib/useAnalytics';
 import { useSiteContent } from '@/components/site/SiteContentProvider';
 import { DynamicIcon } from '@/components/site/DynamicIcon';
@@ -53,6 +53,55 @@ export default function ProductPage() {
           </div>
         ))}
         {filtered.length === 0 && <p style={{ color: 'var(--color-text-muted)' }}>No features published yet.</p>}
+      </div>
+
+      {/* Product walkthrough video */}
+      <div style={{ marginBottom: '4rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--color-text-main)', marginBottom: '0.75rem' }}>See the platform in action</h2>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '1.05rem' }}>A 3-minute walkthrough of how modules connect across finance, HR, CRM, and inventory.</p>
+        </div>
+        <div
+          className="hover-lift"
+          style={{
+            maxWidth: '900px',
+            margin: '0 auto',
+            position: 'relative',
+            paddingBottom: `${(9 / 16) * 100}%`,
+            borderRadius: 'var(--radius-xl)',
+            overflow: 'hidden',
+            boxShadow: 'var(--glass-shadow)',
+            border: '1px solid var(--glass-border)',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(135deg, var(--color-surface), var(--color-card))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <div
+              style={{
+                width: '72px',
+                height: '72px',
+                borderRadius: '50%',
+                background: 'var(--color-primary)',
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 8px 32px rgba(37, 99, 235, 0.4)',
+              }}
+            >
+              <Play size={28} fill="currentColor" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="glass-panel" style={{ padding: '3rem 2rem', textAlign: 'center' }}>

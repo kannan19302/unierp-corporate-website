@@ -6,6 +6,7 @@ import { useAnalytics } from '@/lib/useAnalytics';
 import { useSiteContent } from '@/components/site/SiteContentProvider';
 import { DynamicIcon } from '@/components/site/DynamicIcon';
 import { TestimonialGrid, LogoWall } from '@/components/site/SocialProof';
+import { CardScroller } from '@/components/site/CardScroller';
 
 export default function CustomersPage() {
   useAnalytics('/customers');
@@ -18,9 +19,23 @@ export default function CustomersPage() {
         <p style={{ fontSize: '1.15rem', color: 'var(--color-text-muted)', maxWidth: '700px', margin: '0 auto' }}>Real results from businesses running on this platform.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-        {caseStudies.map((c) => (
-          <div key={c.id} className="glass-panel" style={{ padding: '2rem' }}>
+      <CardScroller style={{ marginBottom: '4rem' }}>
+        {caseStudies.map((c, i) => (
+          <div
+            key={c.id}
+            className={`glass-panel hover-lift reveal visible stagger-${Math.min(i + 1, 6)}`}
+            style={{ padding: '2rem', position: 'relative', overflow: 'hidden' }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '4px',
+                background: 'linear-gradient(90deg, var(--color-emerald), var(--color-primary))',
+              }}
+            />
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-emerald)', fontWeight: 800, fontSize: '1.4rem', marginBottom: '0.75rem' }}>
               <DynamicIcon name={c.metricIconName || 'TrendingUp'} size={22} />
               {c.result}
@@ -30,7 +45,7 @@ export default function CustomersPage() {
           </div>
         ))}
         {caseStudies.length === 0 && <p style={{ color: 'var(--color-text-muted)' }}>No case studies published yet.</p>}
-      </div>
+      </CardScroller>
 
       <LogoWall />
 

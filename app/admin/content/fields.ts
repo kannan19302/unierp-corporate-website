@@ -3,7 +3,7 @@ import { ICON_NAMES } from '@/lib/icon-registry';
 export interface FieldDef {
   name: string;
   label: string;
-  type: 'text' | 'textarea' | 'number' | 'boolean' | 'icon' | 'string-list' | 'select';
+  type: 'text' | 'textarea' | 'number' | 'boolean' | 'icon' | 'string-list' | 'select' | 'image';
   required?: boolean;
   options?: string[];
   placeholder?: string;
@@ -34,7 +34,7 @@ export const COLLECTION_FIELDS: Record<string, FieldDef[]> = {
     { name: 'authorName', label: 'Author name', type: 'text', required: true },
     { name: 'authorTitle', label: 'Author title', type: 'text' },
     { name: 'company', label: 'Company', type: 'text' },
-    { name: 'avatarUrl', label: 'Avatar URL', type: 'text' },
+    { name: 'avatarUrl', label: 'Avatar', type: 'image' },
     { name: 'visible', label: 'Visible', type: 'boolean' },
   ],
   pricing: [
@@ -74,7 +74,7 @@ export const COLLECTION_FIELDS: Record<string, FieldDef[]> = {
     { name: 'company', label: 'Company', type: 'text', required: true },
     { name: 'result', label: 'Result headline', type: 'text', required: true, placeholder: '60% faster GST reconciliation' },
     { name: 'detail', label: 'Detail', type: 'textarea', required: true },
-    { name: 'logoUrl', label: 'Logo URL', type: 'text' },
+    { name: 'logoUrl', label: 'Logo', type: 'image' },
     { name: 'metricIconName', label: 'Metric icon', type: 'icon' },
     { name: 'visible', label: 'Visible', type: 'boolean' },
   ],

@@ -9,55 +9,53 @@ import {
   Shield, MessageSquare, Code2, Layers, PieChart, Star, ArrowRight, Search
 } from 'lucide-react';
 
+// Module list and tiers audited directly against ERPSys source
+// (apps/api/src/modules/*). "sourceFiles" = actual .ts file count per module —
+// used instead of invented "feature counts" so the number on screen is checkable.
 const ALL_MODULES = [
   // Core ERP
-  { icon: CreditCard, name: 'Finance & Accounting', slug: 'finance', desc: 'General ledger, AR/AP, bank reconciliation, budgeting, multi-currency, tax compliance, cash flow forecasting, and advanced financial reporting.', category: 'Core ERP', tier: 'deep', features: '1,634+' },
-  { icon: Users, name: 'Human Resources', slug: 'hr', desc: 'Employee records, payroll, leave management, attendance, performance reviews, recruitment pipeline, and org chart.', category: 'Core ERP', tier: 'deep', features: '1,521+' },
-  { icon: BarChart3, name: 'CRM & Sales', slug: 'crm', desc: 'Lead management, opportunity pipeline, CPQ, commissions, territory management, forecasting, and 360° customer view.', category: 'Core ERP', tier: 'deep', features: '1,508+' },
-  { icon: Package, name: 'Inventory & Warehouse', slug: 'inventory', desc: 'Multi-location stock, barcode/RFID, serial & batch tracking, cycle counting, replenishment rules, and 3PL integration.', category: 'Core ERP', tier: 'deep', features: '1,588+' },
-  { icon: ShoppingCart, name: 'Procurement', slug: 'procurement', desc: 'RFQ, purchase orders, vendor management, 3-way matching, blanket orders, and spend analytics.', category: 'Core ERP', tier: 'deep', features: '1,530+' },
-  { icon: Truck, name: 'Supply Chain', slug: 'supply-chain', desc: 'Demand planning, DRP, container tracking, ASN, cross-docking, carrier management, and route optimization.', category: 'Core ERP', tier: 'deep', features: '1,541+' },
+  { icon: CreditCard, name: 'Finance & Accounting', slug: 'finance', desc: 'General ledger, AR/AP, bank reconciliation, budgeting, and multi-currency.', category: 'Core ERP', tier: 'deep', sourceFiles: '141+' },
+  { icon: Users, name: 'Human Resources', slug: 'hr', desc: 'Employee records, payroll, leave management, attendance, performance reviews.', category: 'Core ERP', tier: 'deep', sourceFiles: '45+' },
+  { icon: BarChart3, name: 'CRM & Sales', slug: 'crm', desc: 'Lead management, opportunity pipeline, forecasting, and customer records.', category: 'Core ERP', tier: 'deep', sourceFiles: '247+' },
+  { icon: Package, name: 'Inventory & Warehouse', slug: 'inventory', desc: 'Multi-location stock, barcode tracking, serial & batch tracking.', category: 'Core ERP', tier: 'deep', sourceFiles: '186+' },
+  { icon: ShoppingCart, name: 'Procurement', slug: 'procurement', desc: 'RFQ, purchase orders, vendor management, 3-way matching.', category: 'Core ERP', tier: 'deep', sourceFiles: '48+' },
+  { icon: Truck, name: 'Supply Chain', slug: 'supply-chain', desc: 'Demand planning, distribution, and carrier coordination.', category: 'Core ERP', tier: 'deep', sourceFiles: '77+' },
   // Advanced
-  { icon: Hammer, name: 'Manufacturing (MRP)', slug: 'manufacturing', desc: 'BOM management, work orders, production scheduling, quality control, scrap tracking, and shop-floor control.', category: 'Advanced', tier: 'deep', features: '1,507+' },
-  { icon: Briefcase, name: 'Project Management', slug: 'projects', desc: 'Gantt charts, Agile/Scrum, EVM, resource management, CAPEX tracking, claims & changes, and PMO dashboards.', category: 'Advanced', tier: 'deep', features: '1,506+' },
-  { icon: MessageSquare, name: 'Communication Hub', slug: 'communication', desc: 'Unified inbox, team messaging, video calls, document collaboration, announcements, and notification center.', category: 'Advanced', tier: 'deep', features: '1,511+' },
-  { icon: Code2, name: 'Visual Page Builder', slug: 'builder', desc: 'Drag-and-drop page editor, custom widgets, form builder, workflow automation, and low-code app creation.', category: 'Advanced', tier: 'deep', features: '1,518+' },
-  { icon: PieChart, name: 'Analytics & BI', slug: 'analytics', desc: 'Real-time dashboards, KPI tracking, predictive analytics, custom reports, and data export to Excel/CSV.', category: 'Advanced', tier: 'functional', features: '63+' },
-  { icon: ShoppingBag, name: 'E-Commerce', slug: 'ecommerce', desc: 'Online storefront, product catalog, cart & checkout, Stripe payments, promotions, and order management.', category: 'Advanced', tier: 'functional', features: '70+' },
-  { icon: Store, name: 'Point of Sale', slug: 'pos', desc: 'Offline-first POS, cash management, receipt printing, barcode scanning, split payments, and customer loyalty.', category: 'Advanced', tier: 'functional', features: '115+' },
-  { icon: FileText, name: 'Documents & Drive', slug: 'documents', desc: 'Document templates, e-signatures, version control, OCR, approval workflows, and cloud file storage.', category: 'Advanced', tier: 'functional', features: '41+' },
+  { icon: Hammer, name: 'Manufacturing (MRP)', slug: 'manufacturing', desc: 'BOM management, work orders, production scheduling, quality control.', category: 'Advanced', tier: 'deep', sourceFiles: '34+' },
+  { icon: Briefcase, name: 'Project Management', slug: 'projects', desc: 'Planning, tracking, resource management, and budgets.', category: 'Advanced', tier: 'deep', sourceFiles: '35+' },
+  { icon: MessageSquare, name: 'Communication Hub', slug: 'communication', desc: 'In-app messaging, notifications, and announcements.', category: 'Advanced', tier: 'deep', sourceFiles: '36+' },
+  { icon: Code2, name: 'Visual Page Builder', slug: 'builder', desc: 'No-code page editor, custom forms, and workflow building blocks.', category: 'Advanced', tier: 'deep', sourceFiles: '50+' },
+  { icon: PieChart, name: 'Analytics & BI', slug: 'analytics', desc: 'Real-time dashboards, KPI tracking, and cross-module reporting.', category: 'Advanced', tier: 'deep', sourceFiles: '36+' },
+  { icon: ShoppingBag, name: 'E-Commerce', slug: 'ecommerce', desc: 'Online storefront, cart & checkout, and order management.', category: 'Advanced', tier: 'functional', sourceFiles: '23+' },
+  { icon: Store, name: 'Point of Sale', slug: 'pos', desc: 'In-store checkout, receipts, and cash management.', category: 'Advanced', tier: 'functional', sourceFiles: '18+' },
+  { icon: FileText, name: 'Documents & Drive', slug: 'documents', desc: 'Document templates and approval workflows.', category: 'Advanced', tier: 'early-access', sourceFiles: '11+' },
   // SaaS & Platform
-  { icon: Layers, name: 'SaaS Portal', slug: 'saas', desc: 'Multi-tenant management, plan billing, usage metering, tenant analytics, SSO, and white-label branding.', category: 'Platform', tier: 'deep', features: '1,517+' },
-  { icon: Cpu, name: 'API Platform', slug: 'api-platform', desc: 'REST APIs, webhook subscriptions, API keys, rate limiting, developer portal, and third-party integrations.', category: 'Platform', tier: 'functional', features: '19+' },
-  { icon: Shield, name: 'Authentication', slug: 'auth', desc: 'SSO, SAML 2.0, OAuth, MFA, session management, RBAC, and GDPR erasure.', category: 'Platform', tier: 'functional', features: '52+' },
-  { icon: Zap, name: 'Workflow Engine', slug: 'workflow', desc: 'Visual workflow builder, approval chains, SLA timers, conditional branching, and audit logs.', category: 'Platform', tier: 'functional', features: '31+' },
-  // Industry
-  { icon: Heart, name: 'Healthcare', slug: 'healthcare', desc: 'Patient records, appointment scheduling, pharmacy management, insurance billing, and clinical notes.', category: 'Industry', tier: 'functional', features: '90+' },
-  { icon: GraduationCap, name: 'Education', slug: 'education', desc: 'Student enrollment, grade management, timetable scheduling, library catalog, and fee management.', category: 'Industry', tier: 'functional', features: '95+' },
-  { icon: Building2, name: 'Real Estate', slug: 'real-estate', desc: 'Property listings, lease management, tenant CRM, maintenance requests, and REIT portfolio analytics.', category: 'Industry', tier: 'functional', features: '118+' },
-  { icon: Wrench, name: 'Field Service', slug: 'field-service', desc: 'Work order management, crew dispatch, mobile app, service contracts, and SLA tracking.', category: 'Industry', tier: 'functional', features: '108+' },
-  { icon: Globe, name: 'Localization', slug: 'localization', desc: 'Multi-language UI, regional date/number formats, VAT/GST compliance, and locale-specific workflows.', category: 'Platform', tier: 'functional', features: '20+' },
-  { icon: Activity, name: 'Notifications', slug: 'notifications', desc: 'Email, SMS, push, in-app, and webhook notifications with templates and delivery tracking.', category: 'Platform', tier: 'functional', features: '25+' },
-  { icon: Star, name: 'Reporting Engine', slug: 'reporting', desc: 'Custom report builder, scheduled exports, data visualization, and embed-ready charts.', category: 'Advanced', tier: 'functional', features: '30+' },
-  { icon: Globe, name: 'Marketplace', slug: 'marketplace', desc: 'Install third-party apps, community modules, and integrations directly from the app store.', category: 'Platform', tier: 'functional', features: '62+' },
+  { icon: Layers, name: 'SaaS Billing', slug: 'saas', desc: 'Multi-tenant subscription billing and plan management.', category: 'Platform', tier: 'deep', sourceFiles: '154+' },
+  { icon: Cpu, name: 'API Platform', slug: 'api-platform', desc: 'REST APIs and webhooks for integrations.', category: 'Platform', tier: 'early-access', sourceFiles: '10+' },
+  { icon: Shield, name: 'Authentication', slug: 'auth', desc: 'Session management, RBAC, and multi-tenant access control.', category: 'Platform', tier: 'functional', sourceFiles: '22+' },
+  { icon: Zap, name: 'Workflow Engine', slug: 'workflow', desc: 'Cross-module workflow automation rules.', category: 'Platform', tier: 'early-access', sourceFiles: '12+' },
+  // Industry (early access)
+  { icon: Heart, name: 'Healthcare', slug: 'healthcare', desc: 'Early-access clinical and scheduling foundations.', category: 'Industry', tier: 'early-access', sourceFiles: '24+' },
+  { icon: GraduationCap, name: 'Education', slug: 'education', desc: 'Early-access student and campus foundations.', category: 'Industry', tier: 'early-access', sourceFiles: '26+' },
+  { icon: Building2, name: 'Real Estate', slug: 'real-estate', desc: 'Early-access property and lease foundations.', category: 'Industry', tier: 'early-access', sourceFiles: '20+' },
+  { icon: Wrench, name: 'Field Service', slug: 'field-service', desc: 'Early-access dispatch and work order foundations.', category: 'Industry', tier: 'early-access', sourceFiles: '20+' },
+  { icon: Activity, name: 'Notifications', slug: 'notifications', desc: 'Email, SMS, push, and in-app notifications.', category: 'Platform', tier: 'functional', sourceFiles: '20+' },
+  { icon: Star, name: 'Reporting Engine', slug: 'reporting', desc: 'Custom report building and scheduled exports.', category: 'Advanced', tier: 'functional', sourceFiles: '32+' },
+  { icon: Globe, name: 'Marketplace', slug: 'marketplace', desc: 'Install third-party apps and integrations.', category: 'Platform', tier: 'functional', sourceFiles: '21+' },
 ];
 
 const CATEGORIES = ['All', 'Core ERP', 'Advanced', 'Industry', 'Platform'];
 
 const TIER_MAP: Record<string, string> = {
-  deep: 'DEEP',
-  complete: 'COMPLETE',
-  advanced: 'ADVANCED',
+  deep: 'CORE',
   functional: 'FUNCTIONAL',
-  competitive: 'COMPETITIVE',
+  'early-access': 'EARLY ACCESS',
 };
 
 const TIER_BADGE: Record<string, string> = {
   deep: 'badge-deep',
-  complete: 'badge-complete',
-  advanced: 'badge-advanced',
   functional: 'badge-functional',
-  competitive: 'badge-functional',
+  'early-access': 'badge-early-access',
 };
 
 const MODULE_COLORS: Record<string, string> = {
@@ -90,7 +88,7 @@ export function ProductsClient() {
       <section className="page-hero">
         <div className="mesh-orb mesh-orb-1" />
         <div className="mesh-orb mesh-orb-2" />
-        <div className="page-hero-badge hero-enter"><Layers size={13} /> 45+ Enterprise Modules</div>
+        <div className="page-hero-badge hero-enter"><Layers size={13} /> {ALL_MODULES.length} Modules — Core &amp; Early Access</div>
         <h1 className="hero-enter-delay-1">
           Every tool your business needs,<br />
           <span className="text-gradient">in one unified platform</span>
@@ -98,6 +96,7 @@ export function ProductsClient() {
         <p className="hero-enter-delay-2">
           Finance, HR, CRM, Inventory, Manufacturing, Projects, Supply Chain, and more.
           Install only what you need — all modules share one database, one login.
+          Modules marked <strong>Early Access</strong> are newer and actively being built out.
         </p>
       </section>
 
@@ -150,7 +149,7 @@ export function ProductsClient() {
               <div className="module-card-desc">{m.desc}</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span className={`module-status-badge ${TIER_BADGE[m.tier]}`}>{TIER_MAP[m.tier]}</span>
-                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)' }}>{m.features} features</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)' }}>{m.sourceFiles} source files</span>
               </div>
             </Link>
           ))}

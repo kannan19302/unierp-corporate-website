@@ -447,6 +447,35 @@ body {
   animation-play-state: paused;
 }
 
+/* â”€â”€ Card scroller â€” grid on desktop, horizontal snap-scroll on mobile â”€â”€ */
+.card-scroller {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 720px) {
+  .card-scroller {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.1rem;
+    padding-bottom: 0.75rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .card-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card-scroller > * {
+    scroll-snap-align: start;
+    flex: 0 0 82%;
+    min-width: 0;
+  }
+}
+
 /* â”€â”€ Badge float â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .float-badge {
   animation: float-badge 3.2s ease-in-out infinite;

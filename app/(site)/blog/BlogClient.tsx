@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { FileText, ArrowRight, Clock, Tag } from 'lucide-react';
+import { Reveal } from '@/components/site/Reveal';
 
 const POSTS = [
   {
@@ -16,7 +17,7 @@ const POSTS = [
   {
     category: 'Best Practice',
     title: 'The 8 Most Common ERP Implementation Mistakes (and How to Avoid Them)',
-    excerpt: 'After helping 2,500+ companies go live, we've identified the key failure patterns. Here\'s what separates successful ERP implementations from costly disasters.',
+    excerpt: 'After helping companies go live, we\'ve identified the key failure patterns. Here\'s what separates successful ERP implementations from costly disasters.',
     date: 'July 18, 2026',
     readTime: '9 min',
     slug: 'erp-implementation-mistakes',
@@ -92,6 +93,7 @@ export function BlogClient() {
         </div>
 
         {/* Featured post */}
+        <Reveal as="div">
         <Link href={`/blog/${POSTS[0].slug}`} style={{ textDecoration: 'none', display: 'block', marginBottom: '2rem' }}>
           <div className="blog-card" style={{ flexDirection: 'row', borderRadius: '20px', overflow: 'hidden', maxHeight: '280px' }}>
             <div style={{ width: '380px', flexShrink: 0, background: POSTS[0].gradient, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', minHeight: '200px' }}>
@@ -110,9 +112,10 @@ export function BlogClient() {
             </div>
           </div>
         </Link>
+        </Reveal>
 
         {/* Grid */}
-        <div className="blog-grid">
+        <Reveal as="div" className="blog-grid" delay={80}>
           {POSTS.slice(1).map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-card">
               <div style={{ height: '160px', background: post.gradient, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -128,7 +131,7 @@ export function BlogClient() {
               </div>
             </Link>
           ))}
-        </div>
+        </Reveal>
 
         {/* Load more */}
         <div style={{ textAlign: 'center', margin: '3rem 0' }}>
@@ -139,7 +142,7 @@ export function BlogClient() {
       </div>
 
       {/* Newsletter CTA */}
-      <section style={{ background: 'var(--color-surface)', padding: '4rem 1.5rem', textAlign: 'center', marginBottom: '3rem' }}>
+      <Reveal as="section" style={{ background: 'var(--color-surface)', padding: '4rem 1.5rem', textAlign: 'center', marginBottom: '3rem' }}>
         <div style={{ maxWidth: '520px', margin: '0 auto' }}>
           <Tag size={28} style={{ color: 'var(--color-primary)', marginBottom: '1rem' }} />
           <h2 style={{ fontSize: '1.7rem', fontWeight: 800, marginBottom: '0.75rem' }}>
@@ -158,7 +161,7 @@ export function BlogClient() {
             <button type="submit" className="footer-newsletter-btn">Subscribe</button>
           </form>
         </div>
-      </section>
+      </Reveal>
     </div>
   );
 }

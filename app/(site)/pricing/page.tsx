@@ -54,7 +54,7 @@ const PLANS = [
     color: '#7c3aed',
     features: [
       'Unlimited users',
-      'All 45+ modules included',
+      'All modules included',
       'Multi-entity & multi-currency',
       'Dedicated infrastructure',
       'Unlimited storage',

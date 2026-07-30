@@ -5,6 +5,7 @@ import { Plus, Trash2, ArrowUp, ArrowDown, PlusCircle, X } from 'lucide-react';
 import { useContentData } from '../ContentDataContext';
 import { SECTION_TYPES, defaultSection, type Section } from '@/lib/cms/section-schema';
 import { SectionPreview } from './SectionPreview';
+import { FilePicker } from './FilePicker';
 import { ICON_NAMES } from '../fields';
 import { useToast } from '@/app/admin/components/ToastContext';
 import { AutoResizeTextArea } from '@/app/admin/components/AutoResizeTextArea';
@@ -275,7 +276,7 @@ export function PagesEditor() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
                   <input style={inputStyle} placeholder="CTA label" value={section.ctaLabel || ''} onChange={(e) => updateSection(idx, { ctaLabel: e.target.value })} />
                   <input style={inputStyle} placeholder="CTA href" value={section.ctaHref || ''} onChange={(e) => updateSection(idx, { ctaHref: e.target.value })} />
-                  <input style={inputStyle} placeholder="Image URL" value={section.imageUrl || ''} onChange={(e) => updateSection(idx, { imageUrl: e.target.value })} />
+                  <FilePicker value={section.imageUrl || ''} onChange={(url) => updateSection(idx, { imageUrl: url })} placeholder="Image URL" />
                   <select style={inputStyle} value={section.imagePosition} onChange={(e) => updateSection(idx, { imagePosition: e.target.value as 'left' | 'right' })}>
                     <option value="right">Image Right</option>
                     <option value="left">Image Left</option>

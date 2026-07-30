@@ -1,12 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { Award, ChevronRight, CheckCircle2, Compass, ExternalLink } from 'lucide-react';
+import { Award, ChevronRight, CheckCircle2, Compass, ExternalLink, Globe2, Apple, Smartphone } from 'lucide-react';
 import { useAnalytics } from '@/lib/useAnalytics';
 import { HeroLeadForm } from '@/components/site/HeroLeadForm';
 import { useSiteContent } from '@/components/site/SiteContentProvider';
 import { SectionRenderer } from '@/components/site/sections/SectionRenderer';
 import type { Section } from '@/lib/cms/section-schema';
+
+const PLATFORM_CARDS = [
+  { icon: Globe2, label: 'Web', desc: 'Full-featured, responsive web app — works in any modern browser.' },
+  { icon: Apple, label: 'iOS', desc: 'Native mobile app built with Flutter, for phones and tablets.' },
+  { icon: Smartphone, label: 'Android', desc: 'Native mobile app built with Flutter, for phones and tablets.' },
+];
 
 interface PageContentShape {
   badgeText?: string | null;
@@ -103,6 +109,27 @@ export default function HomeClient({ page }: { page: PageContentShape | null }) 
               </span>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Platform availability */}
+      <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <h2 style={{ fontSize: '1.9rem', fontWeight: 800, color: 'var(--color-text-main)', marginBottom: '0.5rem' }}>
+            One platform, everywhere your team works
+          </h2>
+          <p style={{ color: 'var(--color-text-muted)' }}>Available on Web and native Mobile apps.</p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
+          {PLATFORM_CARDS.map((p) => (
+            <div key={p.label} className="glass-panel hover-lift" style={{ padding: '1.75rem', textAlign: 'center' }}>
+              <div style={{ width: '48px', height: '48px', margin: '0 auto 1rem', borderRadius: '12px', background: 'var(--color-primary-glow)', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <p.icon size={24} />
+              </div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-main)', marginBottom: '0.4rem' }}>{p.label}</h3>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem', lineHeight: 1.5 }}>{p.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { Activity, CheckCircle2, AlertTriangle, XCircle, Clock } from 'lucide-react';
+import { Reveal } from '@/components/site/Reveal';
 
 const SERVICES = [
   { name: 'Core API', status: 'operational', uptime: '99.99%' },
@@ -15,12 +16,12 @@ export default function StatusPage() {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '5rem 1.5rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <div className="page-hero-badge"><Activity size={13} /> System Status</div>
-        <h1 className="section-title">All systems operational</h1>
-        <p style={{ color: 'var(--color-text-muted)' }}>Last updated: Just now</p>
+        <div className="page-hero-badge hero-enter"><Activity size={13} /> System Status</div>
+        <h1 className="section-title hero-enter-delay-1">All systems operational</h1>
+        <p className="hero-enter-delay-2" style={{ color: 'var(--color-text-muted)' }}>Last updated: Just now</p>
       </div>
 
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '3rem', border: '1px solid var(--color-emerald)' }}>
+      <Reveal className="glass-panel" style={{ padding: '2rem', marginBottom: '3rem', border: '1px solid var(--color-emerald)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{ background: 'var(--color-emerald)', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
             <CheckCircle2 size={24} />
@@ -30,7 +31,7 @@ export default function StatusPage() {
             <p style={{ color: 'var(--color-text-muted)', margin: 0 }}>All services are running normally.</p>
           </div>
         </div>
-      </div>
+      </Reveal>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {SERVICES.map(s => (

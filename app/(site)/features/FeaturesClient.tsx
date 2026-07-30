@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import { Layers, ArrowRight, Check, X, Shield, Cpu, Zap, Search } from 'lucide-react';
+import { Reveal } from '@/components/site/Reveal';
 
 const MODULES = [
   {
@@ -96,7 +97,7 @@ export function FeaturesClient() {
       </section>
 
       <section className="page-section" style={{ paddingTop: '1rem' }}>
-        <div style={{ overflowX: 'auto' }}>
+        <Reveal as="div" style={{ overflowX: 'auto' }}>
           <table className="compare-table" style={{ width: '100%', minWidth: '800px' }}>
             <thead>
               <tr>
@@ -108,7 +109,7 @@ export function FeaturesClient() {
             </thead>
             <tbody>
               {filteredModules.map((mod, modIdx) => (
-                <React.Fragment key={mod.name}>
+                <Fragment key={mod.name}>
                   {/* Category Header */}
                   <tr>
                     <td colSpan={4} style={{ 
@@ -135,16 +136,16 @@ export function FeaturesClient() {
                       </td>
                     </tr>
                   ))}
-                </React.Fragment>
+                </Fragment>
               ))}
             </tbody>
           </table>
-        </div>
+        </Reveal>
       </section>
 
       {/* Security Teaser */}
       <section className="page-section" style={{ paddingTop: '2rem' }}>
-        <div className="glass-panel" style={{ padding: '3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
+        <Reveal as="div" className="glass-panel" style={{ padding: '3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
           <div>
             <div className="page-hero-badge" style={{ marginBottom: '1rem' }}><Shield size={13} /> Enterprise Security</div>
             <h2 className="section-title" style={{ fontSize: '1.75rem' }}>Bank-grade security on every plan</h2>
@@ -162,12 +163,12 @@ export function FeaturesClient() {
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* CTA */}
       <section style={{ textAlign: 'center', padding: '2rem 1.5rem 6rem' }}>
-        <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+        <Reveal as="div" style={{ maxWidth: '680px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '1.7rem', fontWeight: 800, marginBottom: '1rem' }}>
             Don't see a specific feature?
           </h2>
@@ -178,7 +179,7 @@ export function FeaturesClient() {
             <Link href="/marketplace" className="btn-secondary">Explore Marketplace</Link>
             <Link href="/docs/api" className="btn-secondary"><Cpu size={15} /> API Reference</Link>
           </div>
-        </div>
+        </Reveal>
       </section>
     </div>
   );

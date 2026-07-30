@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Shield, Lock, FileCheck, CheckCircle2, Server, Eye } from 'lucide-react';
+import { Reveal } from '@/components/site/Reveal';
 
 export default function SecurityPage() {
   return (
@@ -23,18 +24,18 @@ export default function SecurityPage() {
             { icon: CheckCircle2, title: 'GDPR & CCPA', desc: 'Full compliance with global privacy frameworks. You own your data.' },
             { icon: Shield, title: 'Penetration Testing', desc: 'Continuous vulnerability scanning and bi-annual third-party penetration tests.' },
             { icon: Eye, title: 'Audit Logging', desc: 'Comprehensive audit trails for all user actions, available for export and analysis.' },
-          ].map(f => (
-            <div key={f.title} className="glass-panel hover-lift" style={{ padding: '2rem' }}>
+          ].map((f, i) => (
+            <Reveal key={f.title} as="div" className="glass-panel hover-lift" delay={i * 60} style={{ padding: '2rem' }}>
               <f.icon size={28} color="var(--color-primary)" style={{ marginBottom: '1.25rem' }} />
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--color-text-main)' }}>{f.title}</h3>
               <p style={{ color: 'var(--color-text-muted)', lineHeight: 1.6 }}>{f.desc}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       <section className="page-section">
-        <div className="glass-panel" style={{ padding: '3rem 2rem', textAlign: 'center', background: 'var(--color-surface)' }}>
+        <Reveal as="div" className="glass-panel" style={{ padding: '3rem 2rem', textAlign: 'center', background: 'var(--color-surface)' }}>
           <h2 className="section-title">Need our compliance documents?</h2>
           <p style={{ color: 'var(--color-text-muted)', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
             Enterprise customers can request our full security whitepaper, SOC 2 report, and penetration testing summaries.
@@ -42,7 +43,7 @@ export default function SecurityPage() {
           <Link href="/contact" className="btn-primary btn-ripple">
             Request Security Pack
           </Link>
-        </div>
+        </Reveal>
       </section>
     </div>
   );
