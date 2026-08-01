@@ -1,0 +1,39 @@
+/* ═══════════════════════════════════════════════════════════════
+   COSMIC TAILWIND ENTRY — "Universal Business Operating System"
+   Tailwind is consumed with preflight DISABLED so the existing
+   design-token system and component styles are never reset.
+   Theme values are mapped `inline` to the runtime CSS variables,
+   so utility classes (text-primary, bg-surface, …) follow theme
+   toggles automatically.
+   ═══════════════════════════════════════════════════════════════ */
+@import "tailwindcss" preflight(none);
+
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-accent: var(--color-accent);
+  --color-emerald: var(--color-emerald);
+  --color-purple: var(--color-purple);
+  --color-amber: var(--color-amber);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-ink: var(--color-text-main);
+  --color-muted: var(--color-text-muted);
+  --color-subtle: var(--color-text-subtle);
+  --color-glass: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* ── Extra utility helpers used only by the cosmic components ── */
+@utility glass-3d {
+  background: var(--glass-bg);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--glass-border);
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}

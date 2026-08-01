@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { PageHero } from '@/components/site/anim/PageHero';
 import {
   CreditCard, Users, BarChart3, Package, ShoppingCart, Truck,
   Hammer, Briefcase, Activity, ShoppingBag, Store, FileText,
@@ -85,20 +86,17 @@ export function ProductsClient() {
   return (
     <div>
       {/* Hero */}
-      <section className="page-hero">
-        <div className="mesh-orb mesh-orb-1" />
-        <div className="mesh-orb mesh-orb-2" />
-        <div className="page-hero-badge hero-enter"><Layers size={13} /> {ALL_MODULES.length} Modules — Core &amp; Early Access</div>
-        <h1 className="hero-enter-delay-1">
-          Every tool your business needs,<br />
-          <span className="text-gradient">in one unified platform</span>
-        </h1>
-        <p className="hero-enter-delay-2">
-          Finance, HR, CRM, Inventory, Manufacturing, Projects, Supply Chain, and more.
-          Install only what you need — all modules share one database, one login.
-          Modules marked <strong>Early Access</strong> are newer and actively being built out.
-        </p>
-      </section>
+      <PageHero
+        eyebrow={<><Layers size={13} /> {ALL_MODULES.length} Modules — Core &amp; Early Access</>}
+        title={<>Every tool your business needs,<br /><span className="cosmic-text">in one unified platform</span></>}
+        sub={
+          <>
+            Finance, HR, CRM, Inventory, Manufacturing, Projects, Supply Chain, and more.
+            Install only what you need — all modules share one database, one login.
+            Modules marked <strong>Early Access</strong> are newer and actively being built out.
+          </>
+        }
+      />
 
       {/* Filter + search */}
       <section className="page-section" style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
@@ -158,7 +156,7 @@ export function ProductsClient() {
 
       {/* CTA */}
       <section style={{ textAlign: 'center', padding: '3rem 1.5rem 6rem' }}>
-        <div className="glass-panel cta-glow" style={{ maxWidth: '680px', margin: '0 auto', padding: '3rem 2rem' }}>
+        <div className="hologram hologram-sheen" style={{ maxWidth: '680px', margin: '0 auto', padding: '3rem 2rem' }}>
           <h2 style={{ fontSize: '1.9rem', fontWeight: 800, marginBottom: '0.75rem' }}>
             Not sure which modules you need?
           </h2>

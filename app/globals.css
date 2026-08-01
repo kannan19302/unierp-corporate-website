@@ -1,31 +1,35 @@
-﻿:root, [data-theme="light"] {
+﻿/* ───────────────────────────────────────────────────────────────────
+   Theme tokens. Dark is the canonical UniERP identity and therefore
+   owns `:root` — an unknown/absent `data-theme` resolves to dark, and
+   any token the light block forgets to override falls back to a dark
+   value rather than a mismatched light one. Light is an explicit
+   opt-in via the header toggle.
+
+   NOTE: `app/tailwind.css` declares the same custom-property names in
+   an `@theme inline` block. It is imported BEFORE this file in
+   `app/layout.tsx`, so these concrete values win. Keep that import
+   order — reversing it makes every colour token self-referential.
+   ─────────────────────────────────────────────────────────────────── */
+:root {
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
-  --color-bg: #f8fafc;
-  --color-surface: #f1f5f9;
-  --color-surface-hover: #e2e8f0;
-  --color-card: rgba(255, 255, 255, 0.85);
-  --color-card-border: rgba(226, 232, 240, 0.8);
-  --color-card-hover-border: rgba(37, 99, 235, 0.4);
-  --color-primary: #2563eb;
-  --color-primary-glow: rgba(37, 99, 235, 0.15);
-  --color-accent: #4f46e5;
-  --color-accent-glow: rgba(79, 70, 229, 0.2);
-  --color-emerald: #059669;
-  --color-purple: #9333ea;
-  --color-amber: #d97706;
-  --color-text-main: #0f172a;
-  --color-text-muted: #475569;
-  --color-text-subtle: #94a3b8;
-  --header-bg: rgba(255, 255, 255, 0.85);
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07), 0 0 30px 0 rgba(37, 99, 235, 0.06);
-  --terminal-bg: #0f172a;
-  --terminal-text: #f8fafc;
+
+  /* Motion — ERPSys/docs/ai/UI_UX_BRIEF.md §6 */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-[data-theme="dark"] {
+/* Dark first: `:root` and `[data-theme="dark"]` share specificity (0,1,0)
+   with the light block below, so the light block must come LAST to win
+   when it is the active theme. Do not reorder these two blocks. */
+:root, [data-theme="dark"] {
+  color-scheme: dark;
   --color-bg: #030712;
   --color-surface: #0b1329;
   --color-surface-hover: #111d3d;
@@ -48,6 +52,32 @@
   --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 30px 0 rgba(56, 189, 248, 0.15);
   --terminal-bg: #090d16;
   --terminal-text: #e2e8f0;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #f8fafc;
+  --color-surface: #f1f5f9;
+  --color-surface-hover: #e2e8f0;
+  --color-card: rgba(255, 255, 255, 0.85);
+  --color-card-border: rgba(226, 232, 240, 0.8);
+  --color-card-hover-border: rgba(37, 99, 235, 0.4);
+  --color-primary: #2563eb;
+  --color-primary-glow: rgba(37, 99, 235, 0.15);
+  --color-accent: #4f46e5;
+  --color-accent-glow: rgba(79, 70, 229, 0.2);
+  --color-emerald: #059669;
+  --color-purple: #9333ea;
+  --color-amber: #d97706;
+  --color-text-main: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-subtle: #94a3b8;
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07), 0 0 30px 0 rgba(37, 99, 235, 0.06);
+  --terminal-bg: #0f172a;
+  --terminal-text: #f8fafc;
 }
 
 * {
@@ -420,6 +450,20 @@ body {
 .reveal.visible {
   opacity: 1;
   transform: none;
+}
+
+/* Content must never be gated behind JS. Without scripting there is no
+   IntersectionObserver to add `.visible`, so every reveal would stay at
+   opacity 0 and the page would render as a tall empty column. */
+@media (scripting: none) {
+  .reveal,
+  .reveal.reveal-left,
+  .reveal.reveal-right,
+  .reveal.reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* Stagger delays for grid children */

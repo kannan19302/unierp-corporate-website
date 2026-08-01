@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Moon, Sun, Menu, X, ChevronDown,
   CreditCard, Users, Package, Hammer, BarChart3,
@@ -11,72 +12,92 @@ import {
   Cpu, FileText, Globe, Activity, Zap, Shield,
   LogIn, UserPlus, Compass, BookOpen, HelpCircle,
   Star, ArrowRight, Phone, MessageSquare, Layers,
-  PieChart, Settings2, Code2
+  PieChart, Settings2, Code2, Sparkles,
+  type LucideIcon,
 } from 'lucide-react';
 import { useTheme } from '@/lib/useTheme';
 import { useSiteContent } from './SiteContentProvider';
+import { Magnetic } from './anim/Magnetic';
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 // ─── Mega menu data ─────────────────────────────────────────────────────────
 
 const PRODUCTS_MENU = {
   core: [
-    { icon: CreditCard, label: 'Finance & Accounting', href: '/products/finance', desc: 'GL, AR, AP, multi-currency, budgeting' },
-    { icon: Users, label: 'Human Resources', href: '/products/hr', desc: 'Payroll, leave, performance, attendance' },
-    { icon: BarChart3, label: 'CRM & Sales', href: '/products/crm', desc: 'Pipelines, CPQ, forecasting, territories' },
-    { icon: Package, label: 'Inventory & Warehouse', href: '/products/inventory', desc: 'Multi-location, barcode, serial/batch' },
-    { icon: ShoppingCart, label: 'Procurement', href: '/products/procurement', desc: 'RFQ, PO, vendor mgmt, 3-way matching' },
-    { icon: Truck, label: 'Supply Chain', href: '/products/supply-chain', desc: 'Logistics, DRP, container tracking' },
+    { icon: CreditCard as LucideIcon, label: 'Finance & Accounting', href: '/products/finance', desc: 'GL, AR, AP, multi-currency, budgeting' },
+    { icon: Users as LucideIcon, label: 'Human Resources', href: '/products/hr', desc: 'Payroll, leave, performance, attendance' },
+    { icon: BarChart3 as LucideIcon, label: 'CRM & Sales', href: '/products/crm', desc: 'Pipelines, CPQ, forecasting, territories' },
+    { icon: Package as LucideIcon, label: 'Inventory & Warehouse', href: '/products/inventory', desc: 'Multi-location, barcode, serial/batch' },
+    { icon: ShoppingCart as LucideIcon, label: 'Procurement', href: '/products/procurement', desc: 'RFQ, PO, vendor mgmt, 3-way matching' },
+    { icon: Truck as LucideIcon, label: 'Supply Chain', href: '/products/supply-chain', desc: 'Logistics, DRP, container tracking' },
   ],
   advanced: [
-    { icon: Hammer, label: 'Manufacturing (MRP)', href: '/products/manufacturing', desc: 'BOM, work orders, quality, scrap' },
-    { icon: Briefcase, label: 'Project Management', href: '/products/projects', desc: 'Gantt, Agile, EVM, CAPEX, PMO' },
-    { icon: Activity, label: 'Analytics & BI', href: '/products/analytics', desc: 'Dashboards, KPIs, predictive AI, ETL' },
-    { icon: ShoppingBag, label: 'E-Commerce', href: '/products/ecommerce', desc: 'Storefront, cart, Stripe, coupons' },
-    { icon: Store, label: 'Point of Sale', href: '/products/pos', desc: 'Offline-first POS, receipts, cash' },
-    { icon: FileText, label: 'Documents & Drive', href: '/products/documents', desc: 'Templates, approvals, OCR, version' },
+    { icon: Hammer as LucideIcon, label: 'Manufacturing (MRP)', href: '/products/manufacturing', desc: 'BOM, work orders, quality, scrap' },
+    { icon: Briefcase as LucideIcon, label: 'Project Management', href: '/products/projects', desc: 'Gantt, Agile, EVM, CAPEX, PMO' },
+    { icon: Activity as LucideIcon, label: 'Analytics & BI', href: '/products/analytics', desc: 'Dashboards, KPIs, predictive AI, ETL' },
+    { icon: ShoppingBag as LucideIcon, label: 'E-Commerce', href: '/products/ecommerce', desc: 'Storefront, cart, Stripe, coupons' },
+    { icon: Store as LucideIcon, label: 'Point of Sale', href: '/products/pos', desc: 'Offline-first POS, receipts, cash' },
+    { icon: FileText as LucideIcon, label: 'Documents & Drive', href: '/products/documents', desc: 'Templates, approvals, OCR, version' },
   ],
   industry: [
-    { icon: Heart, label: 'Healthcare', href: '/products/healthcare', desc: 'Early access — clinical & scheduling' },
-    { icon: GraduationCap, label: 'Education', href: '/products/education', desc: 'Early access — student & campus' },
-    { icon: Building2, label: 'Real Estate', href: '/products/real-estate', desc: 'Early access — property & leases' },
-    { icon: Wrench, label: 'Field Service', href: '/products/field-service', desc: 'Early access — dispatch & crews' },
-    { icon: Globe, label: 'Marketplace', href: '/marketplace', desc: 'Browse third-party apps & integrations' },
-    { icon: Cpu, label: 'API Platform', href: '/products/api-platform', desc: 'Early access — REST & webhooks' },
+    { icon: Heart as LucideIcon, label: 'Healthcare', href: '/products/healthcare', desc: 'Early access — clinical & scheduling' },
+    { icon: GraduationCap as LucideIcon, label: 'Education', href: '/products/education', desc: 'Early access — student & campus' },
+    { icon: Building2 as LucideIcon, label: 'Real Estate', href: '/products/real-estate', desc: 'Early access — property & leases' },
+    { icon: Wrench as LucideIcon, label: 'Field Service', href: '/products/field-service', desc: 'Early access — dispatch & crews' },
+    { icon: Globe as LucideIcon, label: 'Marketplace', href: '/marketplace', desc: 'Browse third-party apps & integrations' },
+    { icon: Cpu as LucideIcon, label: 'API Platform', href: '/products/api-platform', desc: 'Early access — REST & webhooks' },
   ],
 };
 
 const SOLUTIONS_MENU = [
-  { icon: Heart, label: 'Healthcare', href: '/industries/healthcare', desc: 'Early access — clinical & scheduling' },
-  { icon: GraduationCap, label: 'Education', href: '/industries/education', desc: 'Early access — student & campus' },
-  { icon: Building2, label: 'Real Estate', href: '/industries/real-estate', desc: 'Early access — property & leases' },
-  { icon: Wrench, label: 'Field Service', href: '/industries/field-service', desc: 'Early access — dispatch & work orders' },
+  { icon: Heart as LucideIcon, label: 'Healthcare', href: '/industries/healthcare', desc: 'Early access — clinical & scheduling' },
+  { icon: GraduationCap as LucideIcon, label: 'Education', href: '/industries/education', desc: 'Early access — student & campus' },
+  { icon: Building2 as LucideIcon, label: 'Real Estate', href: '/industries/real-estate', desc: 'Early access — property & leases' },
+  { icon: Wrench as LucideIcon, label: 'Field Service', href: '/industries/field-service', desc: 'Early access — dispatch & work orders' },
 ];
 
 const RESOURCES_MENU = [
-  { icon: BookOpen, label: 'Documentation', href: '/docs', desc: 'End-user, admin & developer guides' },
-  { icon: HelpCircle, label: 'Help Center', href: '/help', desc: 'Searchable knowledge base & FAQs' },
-  { icon: Code2, label: 'API Reference', href: '/docs/api', desc: 'REST endpoints, auth, webhooks' },
-  { icon: FileText, label: 'Blog', href: '/blog', desc: 'Product updates, best practices' },
-  { icon: Layers, label: 'Resources Library', href: '/resources', desc: 'Whitepapers, webinars, templates' },
-  { icon: Star, label: 'Customer Stories', href: '/customers', desc: 'How businesses use UniERP' },
-  { icon: PieChart, label: 'Pricing', href: '/pricing', desc: 'Plans for every team size' },
-  { icon: Shield, label: 'Security', href: '/security', desc: 'GDPR, SOC2, encryption details' },
+  { icon: BookOpen as LucideIcon, label: 'Documentation', href: '/docs', desc: 'End-user, admin & developer guides' },
+  { icon: HelpCircle as LucideIcon, label: 'Help Center', href: '/help', desc: 'Searchable knowledge base & FAQs' },
+  { icon: Code2 as LucideIcon, label: 'API Reference', href: '/docs/api', desc: 'REST endpoints, auth, webhooks' },
+  { icon: FileText as LucideIcon, label: 'Blog', href: '/blog', desc: 'Product updates, best practices' },
+  { icon: Layers as LucideIcon, label: 'Resources Library', href: '/resources', desc: 'Whitepapers, webinars, templates' },
+  { icon: Star as LucideIcon, label: 'Customer Stories', href: '/customers', desc: 'How businesses use UniERP' },
+  { icon: PieChart as LucideIcon, label: 'Pricing', href: '/pricing', desc: 'Plans for every team size' },
+  { icon: Shield as LucideIcon, label: 'Security', href: '/security', desc: 'GDPR, SOC2, encryption details' },
 ];
 
 const COMPANY_MENU = [
-  { icon: Globe, label: 'About', href: '/about', desc: 'Our mission, team & values' },
-  { icon: Briefcase, label: 'Careers', href: '/careers', desc: 'Open roles — join us' },
-  { icon: MessageSquare, label: 'Contact', href: '/contact', desc: 'Talk to sales or support' },
-  { icon: Activity, label: 'Status', href: '/status', desc: 'Platform uptime & incidents' },
-  { icon: Settings2, label: 'Partners', href: '/contact?type=partnership', desc: 'Become a reseller or integrator' },
+  { icon: Globe as LucideIcon, label: 'About', href: '/about', desc: 'Our mission, team & values' },
+  { icon: Briefcase as LucideIcon, label: 'Careers', href: '/careers', desc: 'Open roles — join us' },
+  { icon: MessageSquare as LucideIcon, label: 'Contact', href: '/contact', desc: 'Talk to sales or support' },
+  { icon: Activity as LucideIcon, label: 'Status', href: '/status', desc: 'Platform uptime & incidents' },
+  { icon: Settings2 as LucideIcon, label: 'Partners', href: '/contact?type=partnership', desc: 'Become a reseller or integrator' },
 ];
 
-// ─── MegaMenu Dropdown ───────────────────────────────────────────────────────
+// ─── Mega menu content ───────────────────────────────────────────────────────
 
-function MegaMenuProducts({ visible = true }: { visible?: boolean }) {
+function MegaItem({ icon: Icon, label, href, desc }: {
+  icon: LucideIcon; label: string; href: string; desc: string;
+}) {
   return (
-    <div className={`mega-menu mega-menu-wide ${visible ? 'mega-menu-visible' : ''}`}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0' }}>
+    <Link href={href} className="mega-item">
+      <div className="mega-item-icon">
+        <Icon size={17} />
+      </div>
+      <div>
+        <div className="mega-item-label">{label}</div>
+        <div className="mega-item-desc">{desc}</div>
+      </div>
+    </Link>
+  );
+}
+
+function MegaMenuProducts() {
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}>
         <div className="mega-col">
           <div className="mega-col-title">Core ERP</div>
           {PRODUCTS_MENU.core.map((item) => (
@@ -107,48 +128,32 @@ function MegaMenuProducts({ visible = true }: { visible?: boolean }) {
           <Zap size={15} /> View pricing <ArrowRight size={14} />
         </Link>
       </div>
+    </>
+  );
+}
+
+function MegaMenuSimple({ items }: { items: typeof SOLUTIONS_MENU }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+      {items.map((item) => (
+        <MegaItem key={item.href} {...item} />
+      ))}
     </div>
   );
 }
 
-function MegaMenuSimple({ items, visible = true }: { items: typeof SOLUTIONS_MENU; visible?: boolean }) {
-  return (
-    <div className={`mega-menu mega-menu-medium ${visible ? 'mega-menu-visible' : ''}`}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
-        {items.map((item) => (
-          <MegaItem key={item.href} {...item} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MegaItem({ icon: Icon, label, href, desc }: {
-  icon: React.ElementType; label: string; href: string; desc: string;
-}) {
-  return (
-    <Link href={href} className="mega-item">
-      <div className="mega-item-icon">
-        <Icon size={17} />
-      </div>
-      <div>
-        <div className="mega-item-label">{label}</div>
-        <div className="mega-item-desc">{desc}</div>
-      </div>
-    </Link>
-  );
-}
-
-// ─── NavItem with mega dropdown ──────────────────────────────────────────────
+// ─── NavItem with animated mega dropdown ─────────────────────────────────────
 
 function NavDropdown({
   label,
   children,
   active,
+  width = 'medium',
 }: {
   label: string;
   children: React.ReactNode;
   active: boolean;
+  width?: 'wide' | 'medium';
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -177,7 +182,21 @@ function NavDropdown({
         {label}
         <ChevronDown size={14} className={`nav-chevron ${open ? 'nav-chevron-open' : ''}`} />
       </button>
-      {open && children}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className={`mega-menu mega-menu--framer ${width === 'wide' ? 'mega-menu-wide' : 'mega-menu-medium'}`}
+            initial={{ opacity: 0, y: -10, scale: 0.99 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.99 }}
+            transition={{ duration: 0.22, ease: EASE }}
+            style={{ visibility: 'visible', pointerEvents: 'auto' }}
+            role="menu"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -190,17 +209,13 @@ function MobileMenu({
   erpAppUrl,
   loginPath,
   registerPath,
-  demoLabel,
 }: {
   open: boolean;
   onClose: () => void;
   erpAppUrl: string;
   loginPath: string;
   registerPath: string;
-  demoLabel: string;
 }) {
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
-
   const sections = [
     { label: 'Products', href: '/products' },
     { label: 'Solutions', href: '/industries' },
@@ -211,29 +226,41 @@ function MobileMenu({
   ];
 
   return (
-    <div className={`mobile-overlay ${open ? 'mobile-overlay-open' : ''}`} role="dialog" aria-label="Navigation menu">
-      <div className="mobile-overlay-header">
-        <span style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--color-text-main)' }}>UniERP</span>
-        <button onClick={onClose} className="mobile-close-btn" aria-label="Close menu">
-          <X size={22} />
-        </button>
-      </div>
-      <nav className="mobile-nav">
-        {sections.map((s) => (
-          <Link key={s.href} href={s.href} className="mobile-nav-link" onClick={onClose}>
-            {s.label}
-          </Link>
-        ))}
-      </nav>
-      <div className="mobile-cta-group">
-        <a href={`${erpAppUrl}${loginPath}`} className="mobile-cta-secondary" onClick={onClose}>
-          <LogIn size={16} /> Sign In
-        </a>
-        <a href={`${erpAppUrl}${registerPath}`} className="mobile-cta-primary btn-primary" onClick={onClose}>
-          <UserPlus size={16} /> Get Started Free
-        </a>
-      </div>
-    </div>
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="mobile-overlay"
+          role="dialog"
+          aria-label="Navigation menu"
+          initial={{ opacity: 0, x: '100%' }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: '100%' }}
+          transition={{ duration: 0.32, ease: EASE }}
+        >
+          <div className="mobile-overlay-header">
+            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--color-text-main)' }}>UniERP</span>
+            <button onClick={onClose} className="mobile-close-btn" aria-label="Close menu">
+              <X size={22} />
+            </button>
+          </div>
+          <nav className="mobile-nav">
+            {sections.map((s) => (
+              <Link key={s.href} href={s.href} className="mobile-nav-link" onClick={onClose}>
+                {s.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="mobile-cta-group">
+            <a href={`${erpAppUrl}${loginPath}`} className="mobile-cta-secondary" onClick={onClose}>
+              <LogIn size={16} /> Sign In
+            </a>
+            <a href={`${erpAppUrl}${registerPath}`} className="mobile-cta-primary btn-cosmic" onClick={onClose}>
+              <UserPlus size={16} /> Get Started Free
+            </a>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -278,7 +305,7 @@ export function Header() {
       <header className={`site-header ${scrolled ? 'site-header-scrolled' : ''}`}>
         <div className="header-inner">
           {/* Logo */}
-          <Link href="/" className="header-logo" aria-label="UniERP home">
+          <Link href="/" className="header-logo" aria-label={`${settings.brandName} home`}>
             {settings.logoImageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={settings.logoImageUrl} alt={settings.brandName} className="header-logo-img" />
@@ -295,20 +322,20 @@ export function Header() {
 
           {/* Desktop nav */}
           <nav className="header-nav" role="navigation" aria-label="Main navigation">
-            <NavDropdown label="Products" active={isProducts}>
-              <MegaMenuProducts visible={true} />
+            <NavDropdown label="Products" active={isProducts} width="wide">
+              <MegaMenuProducts />
             </NavDropdown>
             <NavDropdown label="Solutions" active={isSolutions}>
-              <MegaMenuSimple items={SOLUTIONS_MENU} visible={true} />
+              <MegaMenuSimple items={SOLUTIONS_MENU} />
             </NavDropdown>
             <Link href="/pricing" className={`nav-link ${pathname === '/pricing' ? 'nav-link-active' : ''}`}>
               Pricing
             </Link>
             <NavDropdown label="Resources" active={isResources}>
-              <MegaMenuSimple items={RESOURCES_MENU} visible={true} />
+              <MegaMenuSimple items={RESOURCES_MENU} />
             </NavDropdown>
             <NavDropdown label="Company" active={isCompany}>
-              <MegaMenuSimple items={COMPANY_MENU} visible={true} />
+              <MegaMenuSimple items={COMPANY_MENU} />
             </NavDropdown>
           </nav>
 
@@ -327,10 +354,12 @@ export function Header() {
               <span>Sign In</span>
             </a>
 
-            <Link href={settings.headerCtaHref || '/contact'} className="btn-primary header-cta-btn">
-              <Zap size={15} />
-              <span>{settings.headerCtaLabel || 'Start Free Trial'}</span>
-            </Link>
+            <Magnetic strength={0.35}>
+              <Link href={settings.headerCtaHref || '/contact'} className="btn-cosmic header-cta-btn">
+                <Zap size={15} />
+                <span>{settings.headerCtaLabel || 'Start Free Trial'}</span>
+              </Link>
+            </Magnetic>
           </div>
 
           {/* Mobile hamburger */}
@@ -352,7 +381,6 @@ export function Header() {
         erpAppUrl={erpAppUrl}
         loginPath={settings.erpLoginPath || '/login'}
         registerPath={settings.erpRegisterPath || '/register'}
-        demoLabel={settings.headerDemoLabel || 'Live Demo'}
       />
     </>
   );

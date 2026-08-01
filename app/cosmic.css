@@ -1,0 +1,405 @@
+/* ════════════════════════════════════════════════════════════════════
+   COSMIC DESIGN SYSTEM — "Universal Business Operating System"
+   Added on top of globals.css / enterprise.css. Everything here is
+   additive: it never overrides the token system or existing markup.
+   All new UI is built from these classes + the reusable anim kit.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Smooth scrolling (Lenis) ────────────────────────────────────────── */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ── Keyframes ───────────────────────────────────────────────────────── */
+@keyframes cosmic-twinkle {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.9; }
+}
+@keyframes cosmic-orbit-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes cosmic-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -14px, 0); }
+}
+@keyframes cosmic-aurora {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes cosmic-shine {
+  0%   { transform: translateX(-130%) skewX(-18deg); }
+  60%, 100% { transform: translateX(230%) skewX(-18deg); }
+}
+@keyframes cosmic-pulse-ring {
+  0%   { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes cosmic-spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes cosmic-grain {
+  0%   { background-position: 0 0; }
+  100% { background-position: 500px 500px; }
+}
+
+/* ── Aurora — fixed, animated nebula wash ─────────────────────────────── */
+.cosmic-aurora {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.cosmic-aurora::before {
+  content: '';
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: -30%;
+  height: 140%;
+  background:
+    radial-gradient(42% 55% at 18% 22%, rgba(56, 189, 248, 0.20) 0%, transparent 100%),
+    radial-gradient(38% 48% at 82% 16%, rgba(168, 85, 247, 0.18) 0%, transparent 100%),
+    radial-gradient(46% 60% at 65% 88%, rgba(16, 185, 129, 0.14) 0%, transparent 100%),
+    radial-gradient(34% 42% at 34% 72%, rgba(99, 102, 241, 0.16) 0%, transparent 100%);
+  filter: blur(60px) saturate(1.15);
+  background-size: 160% 160%;
+  animation: cosmic-aurora 26s ease-in-out infinite alternate;
+}
+[data-theme="light"] .cosmic-aurora::before {
+  opacity: 0.55;
+}
+.cosmic-aurora--conic::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    rgba(56, 189, 248, 0.05),
+    rgba(139, 92, 246, 0.05),
+    rgba(16, 185, 129, 0.05),
+    rgba(56, 189, 248, 0.05)
+  );
+  filter: blur(40px);
+  animation: cosmic-spin-slow 90s linear infinite;
+}
+
+/* ── 2D starfield fallback (used when WebGL is unavailable) ───────────── */
+.cosmic-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 28%, rgba(148, 197, 255, 0.9) 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 38% 64%, rgba(216, 180, 254, 0.8) 50%, transparent 51%),
+    radial-gradient(1.8px 1.8px at 62% 12%, rgba(255, 255, 255, 0.85) 50%, transparent 51%),
+    radial-gradient(1.1px 1.1px at 78% 42%, rgba(165, 243, 252, 0.8) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 22% 82%, rgba(199, 210, 254, 0.85) 50%, transparent 51%),
+    radial-gradient(1.3px 1.3px at 88% 76%, rgba(253, 224, 71, 0.65) 50%, transparent 51%);
+  background-size: 520px 520px;
+  animation: cosmic-twinkle 7s ease-in-out infinite alternate;
+}
+[data-theme="light"] .cosmic-stars { opacity: 0.35; }
+
+/* ── Holographic panel — glass + animated gradient edge ───────────────── */
+.hologram {
+  position: relative;
+  isolation: isolate;
+  border-radius: 24px;
+  background:
+    linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
+    linear-gradient(135deg, rgba(56, 189, 248, 0.55), rgba(168, 85, 247, 0.35), rgba(16, 185, 129, 0.45)) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow:
+    0 30px 60px -20px rgba(2, 6, 23, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+[data-theme="light"] .hologram {
+  box-shadow:
+    0 30px 60px -25px rgba(30, 64, 175, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.hologram:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 40px 80px -24px rgba(2, 6, 23, 0.5),
+    0 0 0 1px rgba(56, 189, 248, 0.18),
+    0 0 44px -8px rgba(56, 189, 248, 0.45);
+}
+[data-theme="light"] .hologram:hover {
+  box-shadow:
+    0 40px 80px -28px rgba(30, 64, 175, 0.45),
+    0 0 0 1px rgba(37, 99, 235, 0.14),
+    0 0 44px -8px rgba(37, 99, 235, 0.35);
+}
+.hologram-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.hologram-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.16) 50%, transparent 70%);
+  transform: translateX(-130%) skewX(-18deg);
+  pointer-events: none;
+}
+.hologram-sheen:hover::after { animation: cosmic-shine 0.9s ease; }
+
+/* ── Cosmic gradient text ─────────────────────────────────────────────── */
+.cosmic-text {
+  background: linear-gradient(115deg, var(--color-primary) 0%, var(--color-accent) 38%, var(--color-purple) 68%, var(--color-emerald) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: cosmic-aurora 8s ease infinite;
+}
+
+/* ── Primary button — lit, glass-feathered ────────────────────────────── */
+.btn-cosmic {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 12px 34px -10px var(--color-primary-glow), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, filter 0.25s ease;
+  overflow: hidden;
+}
+.btn-cosmic:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.btn-cosmic::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; width: 45%;
+  left: 0;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: translateX(-160%) skewX(-18deg);
+  z-index: -1;
+}
+.btn-cosmic:hover::before { animation: cosmic-shine 0.9s ease; }
+
+.btn-ghost-cosmic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-main);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-ghost-cosmic:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary-glow), 0 14px 34px -12px var(--color-primary-glow);
+}
+
+/* ── Pulsing rings (radar/orbit accents) ──────────────────────────────── */
+.cosmic-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  animation: cosmic-pulse-ring 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* ── Utility: crisp focus rings for the new interactive surfaces ──────── */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── Footer — cosmic ribbon ─────────────────────────────────────────────── */
+.site-footer {
+  position: relative;
+  overflow: hidden;
+}
+.site-footer > .footer-inner { position: relative; z-index: 1; }
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), var(--color-purple), var(--color-emerald), transparent);
+  z-index: 2;
+}
+.footer-brand-name { font-size: 1.4rem; }
+.footer-brand-name::after {
+  content: '';
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-top: 0.75rem;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-purple));
+}
+.footer-social-btn {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.footer-social-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -6px var(--color-primary-glow), 0 0 0 1px var(--color-primary);
+}
+.footer-badge {
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.footer-badge:hover {
+  transform: translateY(-2px);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 16px -8px var(--color-primary-glow);
+}
+.footer-newsletter-form { max-width: 460px; }
+.footer-newsletter-input {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.footer-newsletter-input:focus {
+  box-shadow: 0 0 0 3px var(--color-primary-glow), inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.footer-newsletter-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  box-shadow: 0 8px 20px -8px var(--color-primary-glow);
+}
+.footer-newsletter-btn:hover { opacity: 1; filter: brightness(1.08); }
+
+/* ── Scroll-triggered parallax helper ─────────────────────────────────── */
+.cosmic-parallax { will-change: transform; }
+
+/* ── Reduced motion: bring everything to rest ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-aurora::before,
+  .cosmic-aurora--conic::after,
+  .cosmic-stars,
+  .hologram-sheen::after,
+  .cosmic-text,
+  .btn-cosmic::before,
+  .cosmic-ring { animation: none !important; }
+}
+
+/* ── Hero poster — CSS stand-in for the WebGL globe ───────────────────── */
+/* Server-rendered and visible on the very first paint. The three.js scene
+   fades in over it once it has a frame; on reduced-motion, small screens and
+   WebGL-less clients this is what ships permanently. */
+.hero-poster-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-slower) var(--ease-out);
+}
+
+.hero-poster {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.hero-poster__globe,
+.hero-poster__halo,
+.hero-poster__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+/* Dark ocean core with a lit limb, matching the scene's key light. */
+.hero-poster__globe {
+  width: clamp(16rem, 30vw, 26rem);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(103, 232, 249, 0.30) 0%, transparent 46%),
+    radial-gradient(circle at 62% 72%, rgba(99, 102, 241, 0.26) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%, #0a1c33 58%, #061321 100%);
+  box-shadow:
+    inset -18px -12px 48px rgba(0, 0, 0, 0.65),
+    0 0 90px -10px var(--color-primary-glow);
+}
+
+/* Fresnel-style atmosphere, mirroring the shader halo in Earth.tsx. */
+.hero-poster__halo {
+  width: clamp(20rem, 38vw, 33rem);
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle,
+    transparent 56%,
+    var(--color-primary-glow) 68%,
+    transparent 78%
+  );
+  filter: blur(6px);
+  opacity: 0.9;
+}
+
+.hero-poster__ring {
+  aspect-ratio: 1;
+  border: 1px solid var(--color-card-border);
+  opacity: 0.55;
+}
+.hero-poster__ring--a {
+  width: clamp(24rem, 46vw, 40rem);
+  transform: translate3d(-50%, -50%, 0) rotateX(74deg) rotateZ(24deg);
+}
+.hero-poster__ring--b {
+  width: clamp(30rem, 58vw, 50rem);
+  transform: translate3d(-50%, -50%, 0) rotateX(68deg) rotateZ(-32deg);
+  opacity: 0.35;
+}
+
+/* Only the poster-as-permanent-fallback breathes; while it is a loading
+   placeholder the page is still settling and extra motion is noise. */
+.hero-poster--animated .hero-poster__halo {
+  animation: cosmic-pulse-halo 6s var(--ease-default) infinite;
+}
+
+@keyframes cosmic-pulse-halo {
+  0%, 100% { opacity: 0.75; transform: translate3d(-50%, -50%, 0) scale(1); }
+  50%      { opacity: 1;    transform: translate3d(-50%, -50%, 0) scale(1.04); }
+}
+
+[data-theme="light"] .hero-poster__globe {
+  background:
+    radial-gradient(circle at 34% 28%, rgba(37, 99, 235, 0.22) 0%, transparent 46%),
+    radial-gradient(circle at 62% 72%, rgba(79, 70, 229, 0.18) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%, #dbeafe 58%, #bfdbfe 100%);
+  box-shadow:
+    inset -18px -12px 48px rgba(15, 23, 42, 0.16),
+    0 0 90px -10px var(--color-primary-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-poster--animated .hero-poster__halo { animation: none; }
+  .hero-poster-layer { transition: none; }
+}

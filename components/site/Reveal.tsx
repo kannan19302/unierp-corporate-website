@@ -1,11 +1,12 @@
 'use client';
 
 import type { ReactNode, CSSProperties } from 'react';
-import { useIntersectionObserver } from '@/lib/useIntersectionObserver';
+import { FramerReveal } from '@/components/site/anim/FramerReveal';
 
 /**
- * Shared scroll-reveal wrapper (same pattern as SectionRenderer's RevealSection).
- * Wrap any static content section below a page hero to fade/slide it in on scroll.
+ * Shared scroll-reveal wrapper backed by Framer Motion's viewport observer
+ * (same API as the previous CSS-based Reveal). Wrap any static content
+ * section below a page hero to fade/slide it in on scroll.
  */
 export function Reveal({
   children,
@@ -20,15 +21,9 @@ export function Reveal({
   as?: 'div' | 'section';
   style?: CSSProperties;
 }) {
-  const { ref, isVisible } = useIntersectionObserver<HTMLDivElement>({ threshold: 0.06 });
-  const Tag = as as any;
   return (
-    <Tag
-      ref={ref}
-      className={`reveal ${isVisible ? 'visible' : ''} ${className}`}
-      style={{ transitionDelay: `${delay}ms`, ...style }}
-    >
+    <FramerReveal as={as} className={className} delay={delay} style={style} amount={0.1}>
       {children}
-    </Tag>
+    </FramerReveal>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { PageHero } from '@/components/site/anim/PageHero';
 import { Check, Zap, Building2, Rocket, ArrowRight, HelpCircle, ChevronDown } from 'lucide-react';
 
 const PLANS = [
@@ -87,22 +88,18 @@ export default function PricingPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="page-hero">
-        <div className="mesh-orb mesh-orb-1" />
-        <div className="mesh-orb mesh-orb-2" />
-        <div className="page-hero-badge hero-enter">
-          <Zap size={13} /> Simple, transparent pricing
-        </div>
-        <h1 className="hero-enter-delay-1">
-          Plans for every team size
-        </h1>
-        <p className="hero-enter-delay-2">
-          Start free, scale as you grow. No hidden fees, no lock-in.
-          Every plan includes 30 days free and all core features.
-        </p>
-
+      <PageHero
+        eyebrow={<><Zap size={13} /> Simple, transparent pricing</>}
+        title={<>Plans for every <span className="cosmic-text">team size</span></>}
+        sub={
+          <>
+            Start free, scale as you grow. No hidden fees, no lock-in.
+            Every plan includes 30 days free and all core features.
+          </>
+        }
+      >
         {/* Billing toggle */}
-        <div className="hero-enter-delay-3" style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
           <div className="toggle-pill">
             <button
               className={`toggle-option ${billing === 'monthly' ? 'toggle-option-active' : ''}`}
@@ -118,7 +115,7 @@ export default function PricingPage() {
             </button>
           </div>
         </div>
-      </section>
+      </PageHero>
 
       {/* Pricing cards */}
       <section className="page-section" style={{ paddingTop: '2rem' }}>
@@ -247,7 +244,7 @@ export default function PricingPage() {
 
       {/* CTA */}
       <section style={{ textAlign: 'center', padding: '4rem 1.5rem 6rem' }}>
-        <div className="glass-panel cta-glow" style={{ maxWidth: '700px', margin: '0 auto', padding: '3rem 2rem' }}>
+        <div className="hologram hologram-sheen" style={{ maxWidth: '700px', margin: '0 auto', padding: '3rem 2rem' }}>
           <Rocket size={36} style={{ color: 'var(--color-primary)', marginBottom: '1rem' }} />
           <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.75rem' }}>
             Ready to transform your business?

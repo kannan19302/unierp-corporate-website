@@ -4,6 +4,7 @@ import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import { Layers, ArrowRight, Check, X, Shield, Cpu, Zap, Search } from 'lucide-react';
 import { Reveal } from '@/components/site/Reveal';
+import { PageHero } from '@/components/site/anim/PageHero';
 
 const MODULES = [
   {
@@ -77,14 +78,13 @@ export function FeaturesClient() {
 
   return (
     <div>
-      <section className="page-hero" style={{ paddingBottom: '2rem' }}>
-        <div className="page-hero-badge hero-enter"><Layers size={13} /> Capability Matrix</div>
-        <h1 className="hero-enter-delay-1">Compare all features</h1>
-        <p className="hero-enter-delay-2">
-          A deep dive into exactly what&apos;s included in each UniERP plan.
-        </p>
-
-        <div className="help-search hero-enter-delay-3" style={{ marginTop: '2rem' }}>
+      <PageHero
+        eyebrow={<><Layers size={13} /> Capability Matrix</>}
+        title={<>Compare all <span className="cosmic-text">features</span></>}
+        sub={<>A deep dive into exactly what&apos;s included in each UniERP plan.</>}
+        padding="0 0 1rem"
+      >
+        <div className="help-search" style={{ marginTop: '1.5rem' }}>
           <Search size={18} className="help-search-icon" />
           <input
             type="search"
@@ -94,7 +94,7 @@ export function FeaturesClient() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-      </section>
+      </PageHero>
 
       <section className="page-section" style={{ paddingTop: '1rem' }}>
         <Reveal as="div" style={{ overflowX: 'auto' }}>
@@ -145,7 +145,7 @@ export function FeaturesClient() {
 
       {/* Security Teaser */}
       <section className="page-section" style={{ paddingTop: '2rem' }}>
-        <Reveal as="div" className="glass-panel" style={{ padding: '3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
+        <Reveal as="div" className="hologram hologram-sheen" style={{ padding: '3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
           <div>
             <div className="page-hero-badge" style={{ marginBottom: '1rem' }}><Shield size={13} /> Enterprise Security</div>
             <h2 className="section-title" style={{ fontSize: '1.75rem' }}>Bank-grade security on every plan</h2>

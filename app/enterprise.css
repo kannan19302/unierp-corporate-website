@@ -42,6 +42,14 @@
 }
 .site-header-scrolled { box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.12); }
 [data-theme="dark"] .site-header-scrolled { box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5); }
+.site-header-scrolled::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), var(--color-purple), transparent);
+  opacity: 0.8;
+}
 
 .header-inner {
   max-width: 1360px;
@@ -68,7 +76,9 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  background: linear-gradient(135deg, #4f46e5, #7c3aed, #2563eb);
+  background-size: 220% 220%;
+  animation: gradient-shift 7s ease infinite;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,16 +138,8 @@
 
 /* Dropdown wrapper */
 .nav-dropdown-wrapper { position: relative; }
-.nav-dropdown-wrapper:hover > .mega-menu,
-.nav-dropdown-wrapper:focus-within > .mega-menu,
-.mega-menu-visible {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateY(0) !important;
-  pointer-events: all !important;
-}
 
-/* Mega menu */
+/* Mega menu — visibility/entrance is driven by Framer Motion now */
 .mega-menu {
   position: absolute;
   top: calc(100% + 8px);
@@ -151,14 +153,22 @@
   box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s;
   pointer-events: none;
   z-index: 2000;
   min-width: 280px;
   overflow: hidden;
 }
+.mega-menu--framer { transition: none; }
+.mega-menu--framer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), var(--color-purple), transparent);
+  opacity: 0.7;
+}
 [data-theme="dark"] .mega-menu {
-  background: #0b1329;
+  background: rgba(11, 19, 41, 0.85);
   box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 .mega-menu-wide { width: 860px; left: -160px; }
@@ -229,15 +239,12 @@
   cursor: pointer; margin-left: auto; flex-shrink: 0;
 }
 
-/* Mobile overlay */
+/* Mobile overlay — entrance/exit driven by Framer Motion */
 .mobile-overlay {
   position: fixed; inset: 0; background: var(--color-bg); z-index: 999;
   display: flex; flex-direction: column;
-  opacity: 0; visibility: hidden; transform: translateX(100%);
-  transition: opacity 0.3s ease, visibility 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow-y: auto;
 }
-.mobile-overlay-open { opacity: 1; visibility: visible; transform: translateX(0); }
 .mobile-overlay-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--glass-border);
