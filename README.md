@@ -1,5 +1,8 @@
 # UniERP Corporate Marketing Website
 
+> Part of **[UniERP](https://github.com/kannan19302/UniERP)** — an open-source, self-hostable multi-tenant application platform.
+> [Repository map](https://github.com/kannan19302/UniERP#repository-map) · [Architecture](https://github.com/kannan19302/UniERP#how-the-pieces-fit-at-runtime) · [Contributing](https://github.com/kannan19302/UniERP/blob/main/CONTRIBUTING.md) · [Security](https://github.com/kannan19302/UniERP/blob/main/SECURITY.md)
+
 > The official corporate landing page, product pitch, SaaS pricing, and documentation gateway for the **UniERP Platform**.
 
 ---
