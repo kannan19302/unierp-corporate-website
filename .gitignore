@@ -1,41 +1,63 @@
-# dependencies
-/node_modules
-/.pnpm-store
+# Dependencies
+node_modules/
+.pnpm-store/
 
-# next.js
-/.next/
-/out/
+# Build output
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
 
-# production
-/build
+# Test and coverage artifacts
+coverage/
+test-results/
+playwright-report/
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Caches
+.turbo/
+.eslintcache
+.vite/
 
-# local env files
+# Environment and secrets
 .env
-.env*.local
+.env.*
 !.env.example
 
-# vercel
-.vercel
+# Editor and OS
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
 
-# admin-uploaded media (local disk storage, not committed)
-/public/uploads/
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# Repo hygiene — no one-off scripts, scratch work, or debug artifacts
+# Logs and scratch
 *.log
-svc.log
-scratch/
-**/scratch/
-temp_*
-tmp_*
 *.tmp
 *.bak
 *.orig
+scratch/
+
+# Storybook
+storybook-static/
+
+# Repository-specific
+**/scratch/
+.env*.local
+.env.local
+.vercel
+/.next/
+/.pnpm-store
+/build
+/node_modules
+/out/
+/public/uploads/
+next-env.d.ts
+npm-debug.log*
+svc.log
+temp_*
+tmp_*
+yarn-debug.log*
+yarn-error.log*
