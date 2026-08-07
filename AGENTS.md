@@ -1,61 +1,101 @@
-# GOVERNANCE — this repository is part of the UniERP program
+# AGENTS.md — unierp-corporate-website
 
-> **You are working on a production enterprise system intended to run real businesses for a
+> **You are working on a production enterprise platform intended to run real businesses for a
 > decade. Not a prototype.**
 
-## The master documents live in the `ERPSys` repository
+## Read this first, in `unierp-workspace`
 
-This repository does **not** carry its own PRD, TRD, architecture docs, or changelog. There is
-one governing document set for the entire program, and it lives at **`ERPSys/docs/ai/`**:
+This repository carries **no** PRD, TRD, architecture doc, plan, or changelog of its own. There is
+one governing set for the whole platform and it lives in the **`unierp-workspace`** repository:
 
-| File | What it governs |
-|:--|:--|
-| `docs/ai/README.md` | **THE LAW — read this first** |
-| `docs/ai/PRD.md` | The Goal, scope, personas, requirements |
-| `docs/ai/TRD.md` | Tech stack, hosting, CI/CD, the open-source mandate |
-| `docs/ai/APP_FLOW.md` | User journeys, screens, actions, states |
-| `docs/ai/UI_UX_BRIEF.md` | Colour, type, spacing, motion, accessibility |
-| `docs/ai/BACKEND_SCHEMA.md` | Data model, auth, tenancy, encryption |
-| `docs/ai/IMPLEMENTATION_PLAN.md` | Build order and the agent workflow |
-| `docs/ai/ARCHITECTURE_REVIEW.md` | Honest state of the system + remediation |
-| `docs/ai/CODE_STANDARDS.md` | **Conduct, code quality, maintainability — the review checklist** |
-| `docs/ai/CHANGELOG.md` | **The one log — you append to it, from this repo too** |
+- **[`AGENTS.md`](https://github.com/kannan19302/unierp-workspace/blob/main/AGENTS.md)** — the operating contract for every coding agent, whichever vendor
+- `docs/ai/` — the ten governance documents (product, technical, flow, design, schema, standards)
+- `docs/programme/` — the 308-phase development plan
 
-If you do not have `ERPSys` checked out alongside this repository, clone it before starting
-non-trivial work. Guessing at the conventions is how the program fragments.
+This repository's work is mostly **Track H**: `docs/programme/17-TRACK-H-MARKETING.md`.
 
-## Rules that apply here, without exception
+## Do not read the plan. Run start.
 
-1. **NEVER create a new file in `ERPSys/docs/ai/`.** It holds exactly ten files, for the
-   entire life of the project. **Never fork the master docs into this repo.**
-2. **NEVER overwrite or regenerate a master document.** Amend surgically.
-3. **NEVER suppress a check to make it pass.** No `@ts-nocheck`, `@ts-ignore`,
-   `eslint-disable`, `continue-on-error`, `|| true`, `--no-verify`. A failing check means the
-   code is wrong, not the check.
-4. **ALWAYS build end-to-end**: Model → Database → API → Auth → UI → Test.
-5. **ALWAYS log to `ERPSys/docs/ai/CHANGELOG.md`**, tagged with this repo's name. One log for
-   the whole program — there is no local changelog.
-6. **ALWAYS keep the shared contract**: this service talks to the core through the extension
-   gateway with a declared `apiVersion`. Never bypass it, and never import core internals.
+From a `unierp-workspace` checkout:
 
-## Non-negotiables on every change
+```bash
+node scripts/start.mjs        # picks the next phase, CLAIMS it, prints the work order
+node scripts/start.mjs --who  # what other agents are holding right now
+```
 
-- Every table has `tenantId` + an RLS policy + a passing two-tenant isolation test
-- Every endpoint has an explicit permission check and Zod validation
-- Money is `Decimal(19,4)` — never `Float`
-- No hardcoded hex colours or pixel values — design tokens only
-- No secrets, credentials, or real customer data in the repo
-- No one-off scripts, temp files, debug logs, or scratch directories left behind
+The plan is 308 phases across 20 documents. An agent that reads it partially produces work that
+contradicts a phase it never opened, which is worse than not reading it. `start.mjs` extracts
+exactly one phase — and claims it with a pushed commit, so two agents never take the same work.
 
-## The two agents
+Before you stop, always one of:
 
-- **`feature-architect`** — builds new capability and scales the platform (the DEV flow)
-- **`security-sentinel`** — finds and fixes bugs, vulnerabilities, and decay (the QA flow)
+```bash
+node scripts/start.mjs --progress "what is done, what is next"
+node scripts/start.mjs --finish --evidence-file ev.txt
+node scripts/start.mjs --release "why blocked"
+```
 
-Definitions: `ERPSys/.claude/agents/`. They are vendor-neutral — follow them whichever tool
-you are (Claude, Antigravity, DeepSeek, Copilot, Cursor, Gemini, Windsurf, or any future one).
+## First time here? Two commands
 
-## Current priority
+```bash
+git clone https://github.com/kannan19302/unierp-workspace.git
+cd unierp-workspace && node scripts/start.mjs
+```
 
-**Phase 0 — foundation restoration.** Read `ERPSys/docs/ai/ARCHITECTURE_REVIEW.md`. The
-platform scores 5.4/10. Foundation remediation outranks new features until Phase 0 completes.
+## Running alongside other agents
+
+ADP's lock is a **pushed commit**, so it only works between agents that share one branch.
+Two agents on two different feature branches cannot see each other's claims and will take
+the same phase. That is a known limitation with a phase of its own (A27); until it lands:
+
+- **One agent per working tree.** `node scripts/worktree.mjs new <slug>` gives you your own.
+  Two agents in one tree overwrite each other's files no matter what ADP does.
+- **All agents on the same branch**, so claims are mutually visible.
+- `node scripts/start.mjs --who` before you begin. If someone holds the phase you wanted,
+  pick another — do not work it anyway.
+
+## The rule that matters more than any other
+
+> **No claim without a mechanism that can fail.**
+
+Do not report that something works. Show the command, its output, and its output when you break it
+on purpose. This platform has three documented cases of a claim outliving its mechanism — 3,241
+files silencing the type checker, a coverage gate with no threshold, and a CI step guarded by
+`if: hashFiles(...)` on a script that exists in no repository.
+
+**Making a gate pass by weakening the gate is the worst thing you can do here.** If a gate blocks
+you and you believe it is wrong, say so and log it — do not defang it.
+
+## Rejected on sight
+
+1. A table without `tenantId` **and** an RLS policy in a migration.
+2. An endpoint without `@Permissions(...)` in the same commit. Unauthorised → **403**.
+3. `Float` anywhere near money. `Decimal(19,4)`, and keep the arithmetic in Decimal.
+4. A hardcoded hex or `px` value. Design tokens only — 7 themes, orthogonal density.
+5. A new document for notes or progress. Findings → `docs/programme/90-DEFECT-LOG.md`.
+   Narrative → `docs/ai/CHANGELOG.md`. Nothing else.
+
+## Build order, always
+
+```
+MODEL → DATABASE → API → AUTH → UI → TEST → SHIP
+```
+
+A layer does not start until the one above it passes its tests. A page written before its migration
+exists is a mock, not a feature.
+
+## This repository's layer
+
+**L4 — Presentation**
+
+> A repository may depend only on published artifacts of a strictly lower layer. Never
+> sideways. Never upward.
+
+## Every change
+
+Append **one line** to `docs/ai/CHANGELOG.md` in `unierp-workspace`. It is the only channel
+between you and the next agent, who will have no memory of this session.
+
+## Licence
+
+AGPL-3.0. Every dependency you add must be open source.
