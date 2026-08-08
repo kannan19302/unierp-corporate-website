@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma';
 import bcrypt from 'bcryptjs';
 import { upsertTenant } from './seed/tenant';
 import { seedUnierpContent } from './seed/content/unierp';
-
-const prisma = new PrismaClient();
 
 async function main() {
   const email = process.env.SEED_ADMIN_EMAIL;

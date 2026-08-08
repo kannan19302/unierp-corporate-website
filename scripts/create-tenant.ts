@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma';
 import { provisionTenant, provisionTenantSchema } from '../lib/platform/provision-tenant';
 
 function parseArgs(argv: string[]): Record<string, string> {
@@ -37,7 +37,6 @@ async function main() {
     process.exit(1);
   }
 
-  const prisma = new PrismaClient();
   try {
     const result = await provisionTenant(prisma, parsed.data);
     console.log(`Provisioned tenant "${result.tenant.name}" (${result.tenant.slug}) with admin ${result.admin.email}`);
