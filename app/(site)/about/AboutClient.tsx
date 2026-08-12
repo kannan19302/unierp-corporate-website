@@ -6,7 +6,7 @@ import { Rocket, Globe, Users, ArrowRight, Star, Shield, Zap, Heart } from 'luci
 const VALUES = [
   { icon: Rocket, title: 'Move Fast, Ship Quality', desc: 'We build enterprise software at startup velocity — with zero compromise on production readiness.' },
   { icon: Globe, title: 'Global by Default', desc: 'Multi-currency, multi-language, multi-entity. Built for businesses that operate across borders.' },
-  { icon: Shield, title: 'Security First', desc: 'SOC 2, GDPR, HIPAA-ready. Your data is yours — fully encrypted, audited, and never sold.' },
+  { icon: Shield, title: 'Security First', desc: 'Built with a compliance roadmap in mind. Your data is yours — encrypted and never sold.' },
   { icon: Heart, title: 'Customer Obsessed', desc: 'Every feature starts with a customer problem. Our support team is an extension of your team.' },
   { icon: Users, title: 'Open Collaboration', desc: 'We build in public, share roadmaps openly, and treat customer feedback as our product spec.' },
   { icon: Zap, title: 'Composable Architecture', desc: 'Install only what you need. UniERP grows with your business, not the other way around.' },

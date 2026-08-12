@@ -24,6 +24,9 @@ jobs:
       - name: Secret scan
         run: node scripts/ci/check-secrets.mjs --all
 
+      - name: Compliance-claim gate
+        run: node scripts/ci/check-compliance-claims.mjs
+
       - name: Governance present
         run: |
           test -f GOVERNANCE.md || {

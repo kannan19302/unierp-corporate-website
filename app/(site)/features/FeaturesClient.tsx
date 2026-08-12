@@ -57,7 +57,7 @@ const MODULES = [
       { name: 'Webhooks', ent: true, pro: true, starter: false },
       { name: 'Custom User Roles (RBAC)', ent: true, pro: true, starter: false },
       { name: 'SSO (SAML 2.0 / OIDC)', ent: true, pro: false, starter: false },
-      { name: 'Audit Logs (HIPAA/SOC2)', ent: '7 years', pro: '90 days', starter: false },
+      { name: 'Audit Logs', ent: '7 years', pro: '90 days', starter: false },
       { name: 'Custom Domain & White-label', ent: true, pro: false, starter: false },
       { name: 'Dedicated Infrastructure', ent: true, pro: false, starter: false },
     ]
@@ -157,7 +157,7 @@ export function FeaturesClient() {
             </Link>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            {['SOC 2 Type II', 'GDPR Compliant', 'HIPAA Ready', 'ISO 27001', 'Data Residency', 'Role-Based Access'].map(b => (
+            {['Encryption at Rest & Transit', 'GDPR-style Data Controls', 'Compliance Roadmap', 'Data Residency Options', 'Role-Based Access', 'Audit Logging'].map(b => (
               <div key={b} style={{ background: 'var(--color-surface)', padding: '1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', fontWeight: 600 }}>
                 <Check size={16} color="var(--color-primary)" /> {b}
               </div>
