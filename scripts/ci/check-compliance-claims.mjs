@@ -17,6 +17,13 @@
  * certification language, which needs an actual auditor's letter behind
  * it, not just a shipped feature.
  *
+ * H02/D131: the same principle extends past compliance wording. The
+ * About page hardcoded a fictional 8-person "Leadership Team" (invented
+ * names and titles) and a STATS block claiming "2,500+ Businesses
+ * served" and "99.97% Uptime SLA" — specific, falsifiable numbers with
+ * nothing behind them. The uptime-percentage and customer-count
+ * patterns below catch that same shape of unverified metric claim.
+ *
  * Usage: node scripts/ci/check-compliance-claims.mjs
  */
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
@@ -36,6 +43,9 @@ const PROHIBITED = [
   /FERPA\s*(compliant|certified)/i,
   /GDPR\s*Compliant\b/i,
   /Full\s+compliance\s+with\s+global\s+privacy\s+frameworks/i,
+  // H02/D131 — unverified business metrics presented as fact.
+  /\d+(\.\d+)?%\s*Uptime/i,
+  /\d[\d,]*\+?\s*Businesses\s+served/i,
 ];
 
 function files(dir, out = []) {

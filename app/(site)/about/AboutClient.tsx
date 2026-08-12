@@ -12,23 +12,17 @@ const VALUES = [
   { icon: Zap, title: 'Composable Architecture', desc: 'Install only what you need. UniERP grows with your business, not the other way around.' },
 ];
 
-const TEAM = [
-  { name: 'Priya Krishnamurthy', role: 'CEO & Co-Founder', initials: 'PK', color: '#4f46e5' },
-  { name: 'Akira Tanaka', role: 'CTO & Co-Founder', initials: 'AT', color: '#2563eb' },
-  { name: 'Santiago Reyes', role: 'Chief Product Officer', initials: 'SR', color: '#7c3aed' },
-  { name: 'Amara Osei', role: 'VP of Engineering', initials: 'AO', color: '#059669' },
-  { name: 'Elena Vasquez', role: 'Head of Design', initials: 'EV', color: '#d97706' },
-  { name: 'James Okafor', role: 'VP of Customer Success', initials: 'JO', color: '#dc2626' },
-  { name: 'Mei-Lin Zhang', role: 'Head of Finance', initials: 'MZ', color: '#7c3aed' },
-  { name: 'David Müller', role: 'Head of Partnerships', initials: 'DM', color: '#0891b2' },
-];
-
-const STATS = [
-  { num: '2,500+', label: 'Businesses served' },
-  { num: '24', label: 'ERP modules' },
-  { num: '19', label: 'Countries' },
-  { num: '99.97%', label: 'Uptime SLA' },
-];
+/**
+ * H02/D131: this file previously hardcoded a fictional 8-person
+ * "Leadership Team" (invented names, roles, and photos-as-initials)
+ * and a fabricated stats block claiming a specific customer count and
+ * a specific uptime figure - presented as real facts about the
+ * company. This platform has no verified customer base, no measured
+ * uptime history, and no confirmed team roster to publish - both were
+ * removed rather than replaced with different invented numbers or
+ * names. See G-3 / K03 (D118) for the same principle applied to
+ * compliance claims.
+ */
 
 export function AboutClient() {
   return (
@@ -53,18 +47,6 @@ export function AboutClient() {
           <Link href="/contact" className="btn-secondary">
             Talk to us <ArrowRight size={14} />
           </Link>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="page-section" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-        <div className="stats-row">
-          {STATS.map((s) => (
-            <div key={s.label} className="stat-item reveal">
-              <span className="stat-number">{s.num}</span>
-              <span className="stat-label">{s.label}</span>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -137,35 +119,6 @@ export function AboutClient() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="page-section">
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div className="page-hero-badge" style={{ margin: '0 auto 1.5rem' }}>
-            <Users size={13} /> Leadership Team
-          </div>
-          <div className="section-title">Meet the builders</div>
-          <p className="section-sub" style={{ margin: '0 auto' }}>
-            Former engineers and operators from top ERP, SaaS, and enterprise software companies.
-          </p>
-        </div>
-        <div className="team-grid">
-          {TEAM.map((m) => (
-            <div key={m.name} className="team-card reveal">
-              <div className="team-avatar" style={{ background: `linear-gradient(135deg, ${m.color}, ${m.color}88)` }}>
-                {m.initials}
-              </div>
-              <div className="team-name">{m.name}</div>
-              <div className="team-role">{m.role}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-          <Link href="/careers" className="btn-secondary">
-            <Rocket size={15} /> View open roles
-          </Link>
         </div>
       </section>
 
