@@ -1,0 +1,7 @@
+{
+  "_comment": "H03 claim-verification gate. Each key is a module-group name exactly as it appears in app/(site)/features/FeaturesClient.tsx's MODULES array. Each value is the list of real backend module directories (unierp-api/src/modules/<name>) that back it. A module group with no entry here, or whose backing directories don't exist, fails scripts/ci/check-feature-claims.mjs.",
+  "Finance & Accounting": ["finance", "advanced-finance", "fixed-assets"],
+  "Human Resources": ["hr", "advanced-hr", "hr-advanced", "people"],
+  "CRM & Sales": ["crm", "sales"],
+  "Platform & Security": ["admin", "org-structure"]
+}

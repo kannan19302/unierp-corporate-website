@@ -21,11 +21,26 @@ jobs:
         with:
           fetch-depth: 0
 
+      # H03's claim-verification gate needs unierp-api's real module
+      # directory to check feature claims against — the same "the gate
+      # comes to the code" pattern unierp-workspace's policy-gate.yml
+      # uses for its own schema-aware checks.
+      - name: Check out unierp-api for the claim-verification gate
+        uses: actions/checkout@v4
+        with:
+          repository: kannan19302/unierp-api
+          path: unierp-api-sibling
+
       - name: Secret scan
         run: node scripts/ci/check-secrets.mjs --all
 
       - name: Compliance-claim gate
         run: node scripts/ci/check-compliance-claims.mjs
+
+      - name: Claim-verification gate (H03)
+        run: node scripts/ci/check-feature-claims.mjs
+        env:
+          UNIERP_API_PATH: ${{ github.workspace }}/unierp-api-sibling
 
       - name: Governance present
         run: |
