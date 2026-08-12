@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { requireAdminTenant } from '@/lib/auth';
 import { logAudit } from '@/lib/audit';
+import { getDisallowedFields } from '@/lib/rbac';
 
 const schema = z.object({
   brandName: z.string().trim().min(1).max(100),
@@ -75,6 +76,18 @@ export async function POST(req: Request) {
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 });
+  }
+
+  // H04: FIELD_PERMISSIONS (lib/rbac.ts) was only ever enforced by a UI
+  // lock icon — a direct POST here bypassed it entirely. Reject any field
+  // the caller's role is not permitted to write instead of trusting the
+  // client to have hidden it.
+  const disallowed = getDisallowedFields(auth.session.role, Object.keys(parsed.data));
+  if (disallowed.length > 0) {
+    return NextResponse.json(
+      { error: `Not permitted to change: ${disallowed.join(', ')}` },
+      { status: 403 }
+    );
   }
 
   const settings = await prisma.siteSettings.upsert({

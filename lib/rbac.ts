@@ -56,3 +56,22 @@ export function canRead(role: AdminRole | null, fieldId: string): boolean {
   if (!role) return false;
   return true; // all authenticated admins can read all fields
 }
+
+/**
+ * H04: server-side enforcement of FIELD_PERMISSIONS.
+ *
+ * canEdit() previously only gated RbacField.tsx's lock icon — a client-side
+ * rendering decision, not an authorization check. No admin API route called
+ * it, so an ADMIN (non-SUPER_ADMIN) could bypass the UI entirely and POST
+ * directly to e.g. /api/admin/content/site-settings to change erpAppUrl or
+ * chatSystemPrompt, both declared SUPER_ADMIN-only here. Returns the subset
+ * of `fieldIds` the given role is NOT permitted to write, so a route can
+ * reject the request outright rather than silently trusting the client to
+ * have hidden the field.
+ */
+export function getDisallowedFields(
+  role: AdminRole | null,
+  fieldIds: string[]
+): string[] {
+  return fieldIds.filter((id) => !canEdit(role, id));
+}
