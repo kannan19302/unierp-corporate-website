@@ -1,0 +1,28 @@
+# Run the platform policy gate against this repository's own source.
+#
+# This file declares WHICH gate applies. It contains no rule logic — that lives once, in
+# unierp-workspace/.github/workflows/policy-gate.yml, driven by scripts/ci/check-policy.mjs.
+#
+# H01/D138: this repo was never registered as a target of the hardcoded-hex/hardcoded-pixel
+# rules at all (they only ever named unierp-web's monorepo path), so this repo's own token
+# debt — 222 hardcoded colours, 209 hardcoded pixel values — went unmeasured and unratcheted
+# indefinitely. Fixed in unierp-workspace's check-policy.mjs; this file is what actually turns
+# that fix into an enforced CI gate for this repo, on every push/PR from now on.
+#
+# .quality-policy-baseline.json in this repo is the ratchet. It may fall, never rise.
+name: Policy gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  policy:
+    uses: kannan19302/unierp-workspace/.github/workflows/policy-gate.yml@main
+    with:
+      repo: unierp-corporate-website

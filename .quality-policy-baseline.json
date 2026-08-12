@@ -1,0 +1,8 @@
+{
+  "$comment": "Policy ratchet baseline. These numbers may only go DOWN. See docs/ai/ARCHITECTURE_REVIEW.md.",
+  "updatedAt": "2026-08-12",
+  "counts": {
+    "hardcodedColors": 222,
+    "hardcodedSpacing": 209
+  }
+}
