@@ -18,6 +18,20 @@ COPY . .
 RUN pnpm prisma generate
 RUN pnpm build
 
+# ── dev ─────────────────────────────────────────────────────────────────────
+FROM node:22-alpine AS dev
+RUN apk add --no-cache openssl libc6-compat
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN pnpm prisma generate
+ENV NODE_ENV=development
+ENV PORT=3003
+EXPOSE 3003
+CMD ["npx", "next", "dev", "-p", "3003", "-H", "0.0.0.0"]
+
+# ── runner ──────────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
 RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
