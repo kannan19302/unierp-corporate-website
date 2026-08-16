@@ -27,16 +27,16 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN pnpm prisma generate
 ENV NODE_ENV=development
-ENV PORT=3003
-EXPOSE 3003
-CMD ["npx", "next", "dev", "-p", "3003", "-H", "0.0.0.0"]
+ENV PORT=4001
+EXPOSE 4001
+CMD ["npx", "next", "dev", "-p", "4001", "-H", "0.0.0.0"]
 
 # ── runner ──────────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
 RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 ENV NODE_ENV=production
-ENV PORT=3003
+ENV PORT=4001
 
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 
@@ -47,6 +47,6 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 USER nextjs
-EXPOSE 3003
+EXPOSE 4001
 
 CMD ["node", "server.js"]

@@ -4,16 +4,18 @@
   "private": true,
   "description": "Corporate Marketing Website for UniERP SaaS Platform",
   "scripts": {
-    "dev": "next dev -p 3002",
+    "dev": "next dev -p 4001",
     "build": "next build",
-    "start": "next start -p 3002",
+    "start": "next start -p 4001",
     "lint": "next lint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
-    "tenant:create": "tsx scripts/create-tenant.ts",
+    "test": "pnpm tsx --test lib/rbac.test.ts && pnpm test:e2e",
+    "test:e2e": "tsx scripts/test-e2e.ts",
+    "test:rbac": "tsx --test lib/rbac.test.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

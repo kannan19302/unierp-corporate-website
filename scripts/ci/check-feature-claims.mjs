@@ -35,9 +35,12 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const MANIFEST_PATH = path.join(ROOT, "capability-manifest.json");
 const FEATURES_SRC = path.join(ROOT, "app", "(site)", "features", "FeaturesClient.tsx");
+const defaultApiPath = existsSync(path.resolve(ROOT, "..", "api"))
+  ? path.resolve(ROOT, "..", "api")
+  : path.resolve(ROOT, "..", "unierp-api");
 const API_PATH = process.env.UNIERP_API_PATH
   ? path.resolve(process.env.UNIERP_API_PATH)
-  : path.resolve(ROOT, "..", "unierp-api");
+  : defaultApiPath;
 const API_MODULES_DIR = path.join(API_PATH, "src", "modules");
 
 function currentModuleGroups() {

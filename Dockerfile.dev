@@ -1,12 +1,11 @@
-# Local development image — matches the ERPSys sibling repo's dev-container
-# pattern (bind-mounted source, polling file watch for Windows Docker Desktop).
+# Local development image — UniERP Marketing Site (Plane 0)
 FROM node:22-alpine
 
-RUN apk add --no-cache openssl libc6-compat
+RUN apk add --no-cache openssl libc6-compat wget curl
 RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
 WORKDIR /app
 
-EXPOSE 3002
+EXPOSE 4001
 
-CMD ["sh", "-c", "pnpm install --no-frozen-lockfile && pnpm prisma generate && pnpm dev"]
+CMD ["sh", "-c", "pnpm install --no-frozen-lockfile && pnpm prisma db push && pnpm db:seed && pnpm dev"]

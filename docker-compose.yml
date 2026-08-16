@@ -1,12 +1,10 @@
 # ============================================================
-# Local dev services for unierp-corporate-website
+# Local dev services for unierp-corporate-website (Plane 0)
 #   - postgres (host port 5433 -> container 5432) — PostgreSQL 16
-#   - web      (host port 3002 -> container 3002) — Next.js dev server
+#   - web      (host port 4001 -> container 4001) — Next.js dev server
 #
-# Fully independent from the sibling ERPSys repo's own docker-compose
-# stack: distinct project name (network), distinct container names
-# (unerp-marketing-*), distinct volumes, distinct ports (3002/5433 vs
-# ERPSys's 3000/3001/5432/6379/9000-9001/11434). No shared bind mounts.
+# Standalone stack with dedicated project name (unierp-marketing),
+# isolated database volume, and non-conflicting ports (4001/5433).
 # ============================================================
 
 name: unierp-marketing
@@ -39,20 +37,25 @@ services:
     working_dir: /app
     environment:
       - NODE_ENV=development
+      - NODE_OPTIONS=--max-old-space-size=4096
+      - PORT=4001
       - DATABASE_URL=postgresql://unerp_marketing:unerp_marketing_password@postgres:5432/unerp_marketing?schema=public
-      - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET in .env}
-      - ENCRYPTION_KEY=${ENCRYPTION_KEY:?set ENCRYPTION_KEY in .env}
+      - JWT_SECRET=${JWT_SECRET:-unierp-marketing-site-dev-secret-key-32-chars-long!}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
       - DEV_TENANT_DOMAIN=${DEV_TENANT_DOMAIN:-localhost}
       - ENFORCE_TENANT_HOST_MATCH=${ENFORCE_TENANT_HOST_MATCH:-true}
+      - SEED_ADMIN_EMAIL=${SEED_ADMIN_EMAIL:-superadmin@unierp.com}
+      - SEED_ADMIN_PASSWORD=${SEED_ADMIN_PASSWORD:-SuperAdmin@2026!}
+      - SEED_ADMIN_TENANT_SLUG=${SEED_ADMIN_TENANT_SLUG:-unierp}
+      - SEED_DEMO_TENANT=${SEED_DEMO_TENANT:-false}
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
       - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:3b}
-      # File watching (Windows Docker Desktop bind mounts need polling —
-      # same rationale as ERPSys/docker-compose.dev.yml)
+      # File watching polling for bind mounts
       - WATCHPACK_POLLING=1000
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=1000
     ports:
-      - "3002:3002"
+      - "4001:4001"
     volumes:
       - .:/app
       - marketing_node_modules:/app/node_modules

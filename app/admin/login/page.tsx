@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('superadmin@unierp.com');
-  const [password, setPassword] = useState('UniERP@Dev2026!');
+  const [password, setPassword] = useState('SuperAdmin@2026!');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function AdminLogin() {
 
   const fillDemoCreds = () => {
     setEmail('superadmin@unierp.com');
-    setPassword('UniERP@Dev2026!');
+    setPassword('SuperAdmin@2026!');
     setError('');
   };
 

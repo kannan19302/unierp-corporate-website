@@ -18,7 +18,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unrecognized site domain' }, { status: 404 });
     }
 
-    const { email, password } = await request.json();
+    let body: { email?: string; password?: string };
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
+    }
+
+    const { email, password } = body || {};
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
