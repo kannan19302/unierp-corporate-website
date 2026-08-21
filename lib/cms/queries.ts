@@ -75,10 +75,17 @@ export function withSiteDefaults(settings: Awaited<ReturnType<typeof prisma.site
     headerCtaLabel: settings?.headerCtaLabel || 'Get Started',
     headerCtaHref: settings?.headerCtaHref || '/contact',
 
-    erpAppUrl: settings?.erpAppUrl || 'http://localhost:3000',
+    // Ports 3000/3002 were the old monorepo layout and are served by nothing in
+    // the current platform — infra/docker-compose.platform.yml puts the ERP app
+    // (tenant-apps, P3) on 4003 and this site on 4001. Compose was already
+    // passing NEXT_PUBLIC_ERP_APP_URL and nothing read it, so every "Log In",
+    // "Get Started" and announcement CTA on the marketing site pointed at a
+    // dead port. Read the env first, and keep the port map as the fallback.
+    erpAppUrl:
+      settings?.erpAppUrl || process.env.NEXT_PUBLIC_ERP_APP_URL || 'http://localhost:4003',
     erpLoginPath: settings?.erpLoginPath || '/login',
     erpRegisterPath: settings?.erpRegisterPath || '/register',
-    siteUrl: settings?.siteUrl || 'http://localhost:3002',
+    siteUrl: settings?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4001',
 
     trustStats: (settings?.trustStats as { label: string; value: string }[] | undefined) || [],
     logoWallHeading: settings?.logoWallHeading || '',
