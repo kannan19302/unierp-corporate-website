@@ -1,6 +1,22 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+// Design-system tokens FIRST, this site's own CSS after.
+//
+// Order is the whole adoption strategy. This site was built outside the design
+// system — 1,683 lines of its own CSS, 178 colour declarations, Tailwind v4 —
+// and flipping it to Meridian wholesale would be a redesign of forty public
+// routes with no way to verify them one by one. Importing tokens underneath
+// instead is additive: every value this site already defines still wins (same
+// specificity, later source order), so nothing moves today, while
+// --brand-signal, --scope-*, the display scale and the Meridian palette become
+// available to the routes as they are migrated onto EditorialShell.
+//
+// Both stylesheets, not one: `./styles` is tokens and layers only, `./styles.css`
+// is the CSS-module bundle. globals.css never imports its sibling.
+import '@kannan19302/ui/styles';
+import '@kannan19302/ui/styles.css';
+
 import './tailwind.css';
 import './globals.css';
 import './enterprise.css';
@@ -34,7 +50,19 @@ export async function generateMetadata(): Promise<Metadata> {
 // first-class opt-in via the header toggle, persisted in localStorage.
 const THEME_INIT_SCRIPT = `
 try {
-  var t = localStorage.getItem('unierp-theme');
+  // 'unerp.theme' — the key ThemeProvider uses in every other app. This site
+  // used 'unierp-theme', so a visitor who chose light here and then signed in
+  // landed on a dark product, and vice versa. The legacy key is read once and
+  // migrated so the existing choice is not silently thrown away.
+  var t = localStorage.getItem('unerp.theme');
+  if (t !== 'light' && t !== 'dark') {
+    var legacy = localStorage.getItem('unierp-theme');
+    if (legacy === 'light' || legacy === 'dark') {
+      t = legacy;
+      localStorage.setItem('unerp.theme', legacy);
+      localStorage.removeItem('unierp-theme');
+    }
+  }
   if (t !== 'light' && t !== 'dark') t = 'dark';
   document.documentElement.setAttribute('data-theme', t);
 } catch (e) {
