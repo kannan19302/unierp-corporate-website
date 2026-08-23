@@ -1,30 +1,17 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-// Design-system tokens FIRST, this site's own CSS after.
-//
-// Order is the whole adoption strategy. This site was built outside the design
-// system — 1,683 lines of its own CSS, 178 colour declarations, Tailwind v4 —
-// and flipping it to Meridian wholesale would be a redesign of forty public
-// routes with no way to verify them one by one. Importing tokens underneath
-// instead is additive: every value this site already defines still wins (same
-// specificity, later source order), so nothing moves today, while
-// --brand-signal, --scope-*, the display scale and the Meridian palette become
-// available to the routes as they are migrated onto EditorialShell.
-//
-// Both stylesheets, not one: `./styles` is tokens and layers only, `./styles.css`
-// is the CSS-module bundle. globals.css never imports its sibling.
+import { Inter, Instrument_Sans, Martian_Mono } from 'next/font/google';
 import '@kannan19302/ui/styles';
 import '@kannan19302/ui/styles.css';
-
 import './tailwind.css';
 import './globals.css';
 import './enterprise.css';
 import './cosmic.css';
 import { getSeoMetadata } from '@/lib/seo';
 
-const geistSans = Geist({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
-const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+const instrumentSans = Instrument_Sans({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
+const martianMono = Martian_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
 
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -94,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className={`grid-bg-pattern ${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning style={{ position: 'relative', minHeight: '100vh' }}>
+      <body className={`grid-bg-pattern ${inter.variable} ${instrumentSans.variable} ${martianMono.variable}`} suppressHydrationWarning style={{ position: 'relative', minHeight: '100vh' }}>
         {children}
       </body>
     </html>

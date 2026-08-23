@@ -279,39 +279,23 @@ async function main() {
     }
   });
 
-  await runTest('Admin Security', 'POST /api/admin/login authenticates seeded Super Admin', async () => {
+  await runTest('Admin Security', 'POST /api/admin/login is retired (OIDC replaces it)', async () => {
     const res = await fetchWithRetry(`${BASE_URL}/api/admin/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: 'superadmin@unierp.com',
-        password: 'SuperAdmin@2026!',
+        password: 'any-password-should-fail',
       }),
     });
 
-    if (res.status !== 200) {
-      const errText = await res.text();
-      throw new Error(`Expected 200 OK for superadmin login, got ${res.status}: ${errText}`);
+    // The direct login endpoint is retired — it returns 410 Gone.
+    // Authentication now flows through the centralized IDP's OIDC hosted login.
+    if (res.status !== 410) {
+      throw new Error(`Expected 410 Gone for retired login endpoint, got ${res.status}`);
     }
 
-    const data = await res.json();
-    if (!data.success || data.role !== 'SUPER_ADMIN') {
-      throw new Error(`Unexpected login response: ${JSON.stringify(data)}`);
-    }
-
-    // Extract set-cookie header
-    const setCookie = res.headers.get('set-cookie');
-    if (!setCookie || !setCookie.includes('admin_token=')) {
-      throw new Error(`Expected admin_token cookie in set-cookie header, got: ${setCookie}`);
-    }
-
-    // Parse the cookie string
-    const match = setCookie.match(/admin_token=([^;]+)/);
-    if (!match) {
-      throw new Error(`Could not parse admin_token cookie from: ${setCookie}`);
-    }
-    adminCookie = `admin_token=${match[1]}`;
-    return { details: `Authenticated as ${data.role}` };
+    return { details: 'Direct login correctly retired (410 Gone), OIDC handles auth' };
   });
 
   // ──────────────────────────────────────────────────────────────────────────

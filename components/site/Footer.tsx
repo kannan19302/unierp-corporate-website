@@ -92,8 +92,28 @@ export function Footer() {
         <div className="footer-top">
           {/* Brand column */}
           <div className="footer-brand">
-            <div className="footer-brand-name">
-              {settings.footerBrandName || settings.brandName}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.75rem' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #1d4ed8, #2563eb, #3b82f6)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ffffff',
+                  fontWeight: 900,
+                  fontSize: '0.95rem',
+                  boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+                  flexShrink: 0,
+                }}
+              >
+                U
+              </div>
+              <div className="footer-brand-name" style={{ margin: 0 }}>
+                {settings.footerBrandName || settings.brandName}
+              </div>
             </div>
             <p className="footer-brand-desc">
               {settings.footerBlurb ||
@@ -151,14 +171,24 @@ export function Footer() {
             <input
               type="email"
               required
-              placeholder={settings.newsletterPlaceholder || 'Enter your work email'}
+              disabled={status === 'done'}
+              placeholder={status === 'done' ? '✓ You are on the VIP update list' : (settings.newsletterPlaceholder || 'Enter your work email')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="footer-newsletter-input"
               aria-label="Newsletter email"
             />
-            <button type="submit" className="footer-newsletter-btn" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Sending…' : status === 'done' ? '✓ Subscribed!' : status === 'error' ? 'Try again' : (settings.newsletterCtaLabel || 'Subscribe')}
+            <button
+              type="submit"
+              className="footer-newsletter-btn"
+              disabled={status === 'sending' || status === 'done'}
+              style={{
+                background: status === 'done' ? '#10b981' : undefined,
+                color: status === 'done' ? '#ffffff' : undefined,
+                borderColor: status === 'done' ? '#10b981' : undefined,
+              }}
+            >
+              {status === 'sending' ? 'Sending…' : status === 'done' ? '✓ Subscribed' : status === 'error' ? 'Try again' : (settings.newsletterCtaLabel || 'Subscribe')}
             </button>
           </form>
         </div>

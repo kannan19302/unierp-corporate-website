@@ -12,7 +12,7 @@ import {
   Cpu, FileText, Globe, Activity, Zap, Shield,
   LogIn, UserPlus, Compass, BookOpen, HelpCircle,
   Star, ArrowRight, Phone, MessageSquare, Layers,
-  PieChart, Settings2, Code2, Sparkles,
+  PieChart, Settings2, Code2, Sparkles, Handshake,
   type LucideIcon,
 } from 'lucide-react';
 import { useTheme } from '@/lib/useTheme';
@@ -51,29 +51,29 @@ const PRODUCTS_MENU = {
 };
 
 const SOLUTIONS_MENU = [
-  { icon: Heart as LucideIcon, label: 'Healthcare', href: '/industries/healthcare', desc: 'Early access — clinical & scheduling' },
-  { icon: GraduationCap as LucideIcon, label: 'Education', href: '/industries/education', desc: 'Early access — student & campus' },
-  { icon: Building2 as LucideIcon, label: 'Real Estate', href: '/industries/real-estate', desc: 'Early access — property & leases' },
-  { icon: Wrench as LucideIcon, label: 'Field Service', href: '/industries/field-service', desc: 'Early access — dispatch & work orders' },
+  { icon: Heart as LucideIcon, label: 'Healthcare', href: '/industries/healthcare', desc: 'Clinical & scheduling blueprints' },
+  { icon: GraduationCap as LucideIcon, label: 'Education', href: '/industries/education', desc: 'Student & campus automation' },
+  { icon: Building2 as LucideIcon, label: 'Real Estate', href: '/industries/real-estate', desc: 'Property & commercial leases' },
+  { icon: Wrench as LucideIcon, label: 'Field Service', href: '/industries/field-service', desc: 'Dispatch & technician workflows' },
 ];
 
 const RESOURCES_MENU = [
   { icon: BookOpen as LucideIcon, label: 'Documentation', href: '/docs', desc: 'End-user, admin & developer guides' },
-  { icon: HelpCircle as LucideIcon, label: 'Help Center', href: '/help', desc: 'Searchable knowledge base & FAQs' },
-  { icon: Code2 as LucideIcon, label: 'API Reference', href: '/docs/api', desc: 'REST endpoints, auth, webhooks' },
-  { icon: FileText as LucideIcon, label: 'Blog', href: '/blog', desc: 'Product updates, best practices' },
-  { icon: Layers as LucideIcon, label: 'Resources Library', href: '/resources', desc: 'Whitepapers, webinars, templates' },
-  { icon: Star as LucideIcon, label: 'Customer Stories', href: '/customers', desc: 'How businesses use UniERP' },
-  { icon: PieChart as LucideIcon, label: 'Pricing', href: '/pricing', desc: 'Plans for every team size' },
-  { icon: Shield as LucideIcon, label: 'Security', href: '/security', desc: 'GDPR, SOC2, encryption details' },
+  { icon: HelpCircle as LucideIcon, label: 'FAQ Hub', href: '/faq', desc: 'Repeated questions & knowledge base' },
+  { icon: Sparkles as LucideIcon, label: 'Events & Keynotes', href: '/events', desc: 'Live webinars, workshops & replays' },
+  { icon: Code2 as LucideIcon, label: 'Developer Platform', href: '/developers', desc: 'REST APIs, webhooks, live explorer' },
+  { icon: PieChart as LucideIcon, label: 'ROI Calculator', href: '/calculator', desc: 'Estimate 3-year cost & labor savings' },
+  { icon: Star as LucideIcon, label: 'Customer Stories', href: '/customers', desc: 'Verified ROI case studies' },
+  { icon: FileText as LucideIcon, label: 'Blog & Updates', href: '/blog', desc: 'Engineering insights & releases' },
+  { icon: Shield as LucideIcon, label: 'Security & Trust', href: '/security', desc: 'GDPR, SOC2, PostgreSQL RLS' },
 ];
 
 const COMPANY_MENU = [
-  { icon: Globe as LucideIcon, label: 'About', href: '/about', desc: 'Our mission, team & values' },
-  { icon: Briefcase as LucideIcon, label: 'Careers', href: '/careers', desc: 'Open roles — join us' },
+  { icon: Globe as LucideIcon, label: 'About Us', href: '/about', desc: 'Our mission, team & values' },
+  { icon: Briefcase as LucideIcon, label: 'Careers', href: '/careers', desc: 'Join our team — open roles' },
+  { icon: Handshake as LucideIcon, label: 'Partner Program', href: '/partners', desc: 'Certified implementation & resellers' },
   { icon: MessageSquare as LucideIcon, label: 'Contact', href: '/contact', desc: 'Talk to sales or support' },
-  { icon: Activity as LucideIcon, label: 'Status', href: '/status', desc: 'Platform uptime & incidents' },
-  { icon: Settings2 as LucideIcon, label: 'Partners', href: '/contact?type=partnership', desc: 'Become a reseller or integrator' },
+  { icon: Activity as LucideIcon, label: 'System Status', href: '/status', desc: '99.99% uptime & latency telemetry' },
 ];
 
 // ─── Mega menu content ───────────────────────────────────────────────────────
@@ -217,12 +217,12 @@ function MobileMenu({
   registerPath: string;
 }) {
   const sections = [
-    { label: 'Products', href: '/products' },
+    { label: 'Platform', href: '/products' },
     { label: 'Solutions', href: '/industries' },
-    { label: 'Pricing', href: '/pricing' },
+    { label: 'Industries', href: '/industries' },
     { label: 'Resources', href: '/resources' },
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Company', href: '/about' },
   ];
 
   return (
@@ -238,7 +238,10 @@ function MobileMenu({
           transition={{ duration: 0.32, ease: EASE }}
         >
           <div className="mobile-overlay-header">
-            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--color-text-main)' }}>UniERP</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div className="header-logo-mark">U</div>
+              <span style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--color-text-main)' }}>UniERP</span>
+            </div>
             <button onClick={onClose} className="mobile-close-btn" aria-label="Close menu">
               <X size={22} />
             </button>
@@ -250,12 +253,15 @@ function MobileMenu({
               </Link>
             ))}
           </nav>
-          <div className="mobile-cta-group">
-            <a href={`${erpAppUrl}${loginPath}`} className="mobile-cta-secondary" onClick={onClose}>
-              <LogIn size={16} /> Sign In
-            </a>
-            <a href={`${erpAppUrl}${registerPath}`} className="mobile-cta-primary btn-cosmic" onClick={onClose}>
-              <UserPlus size={16} /> Get Started Free
+          <div className="mobile-cta-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.5rem' }}>
+            <Link href="/register" className="btn-start-free" style={{ textAlign: 'center', padding: '0.85rem' }} onClick={onClose}>
+              Start Free (30 Days)
+            </Link>
+            <Link href="/contact" className="btn-talk-sales" style={{ textAlign: 'center', padding: '0.85rem' }} onClick={onClose}>
+              Talk to Sales
+            </Link>
+            <a href={loginPath.startsWith('http') ? loginPath : '/login'} className="header-signin-btn" style={{ justifyContent: 'center', padding: '0.65rem' }} onClick={onClose}>
+              Sign In
             </a>
           </div>
         </motion.div>
@@ -322,18 +328,21 @@ export function Header() {
 
           {/* Desktop nav */}
           <nav className="header-nav" role="navigation" aria-label="Main navigation">
-            <NavDropdown label="Products" active={isProducts} width="wide">
+            <NavDropdown label="Platform" active={isProducts} width="wide">
               <MegaMenuProducts />
             </NavDropdown>
             <NavDropdown label="Solutions" active={isSolutions}>
               <MegaMenuSimple items={SOLUTIONS_MENU} />
             </NavDropdown>
-            <Link href="/pricing" className={`nav-link ${pathname === '/pricing' ? 'nav-link-active' : ''}`}>
-              Pricing
+            <Link href="/industries" className={`nav-link ${pathname.startsWith('/industries') ? 'nav-link-active' : ''}`}>
+              Industries
             </Link>
             <NavDropdown label="Resources" active={isResources}>
               <MegaMenuSimple items={RESOURCES_MENU} />
             </NavDropdown>
+            <Link href="/pricing" className={`nav-link ${pathname === '/pricing' ? 'nav-link-active' : ''}`}>
+              Pricing
+            </Link>
             <NavDropdown label="Company" active={isCompany}>
               <MegaMenuSimple items={COMPANY_MENU} />
             </NavDropdown>
@@ -346,20 +355,23 @@ export function Header() {
               className="header-theme-btn"
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
-              {theme === 'light' ? <Moon size={17} /> : <Sun size={17} />}
+              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
             </button>
 
-            <a href={`${erpAppUrl}${settings.erpLoginPath || '/login'}`} className="header-signin-btn">
-              <LogIn size={15} />
-              <span>Sign In</span>
+            <a
+              href={settings.erpLoginPath?.startsWith('http') ? settings.erpLoginPath : '/login'}
+              className="header-signin-btn"
+            >
+              Sign In
             </a>
 
-            <Magnetic strength={0.35}>
-              <Link href={settings.headerCtaHref || '/contact'} className="btn-cosmic header-cta-btn">
-                <Zap size={15} />
-                <span>{settings.headerCtaLabel || 'Start Free Trial'}</span>
-              </Link>
-            </Magnetic>
+            <Link href="/register" className="btn-start-free">
+              Start Free
+            </Link>
+
+            <Link href="/contact" className="btn-talk-sales">
+              Talk to Sales
+            </Link>
           </div>
 
           {/* Mobile hamburger */}

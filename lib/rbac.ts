@@ -43,16 +43,16 @@ export const FIELD_PERMISSIONS: Record<string, AdminRole[]> = {
 };
 
 /** Check if a given role can edit a specific field */
-export function canEdit(role: AdminRole | null, fieldId: string): boolean {
+export function canEdit(role: AdminRole | string | null, fieldId: string): boolean {
   if (!role) return false;
   if (role === 'SUPER_ADMIN') return true;
   const allowed = FIELD_PERMISSIONS[fieldId];
   if (!allowed) return true; // unlisted fields = anyone can edit
-  return allowed.includes(role);
+  return allowed.includes(role as AdminRole);
 }
 
 /** Check if a given role can READ a specific field */
-export function canRead(role: AdminRole | null, fieldId: string): boolean {
+export function canRead(role: AdminRole | string | null, fieldId: string): boolean {
   if (!role) return false;
   return true; // all authenticated admins can read all fields
 }
@@ -70,7 +70,7 @@ export function canRead(role: AdminRole | null, fieldId: string): boolean {
  * have hidden the field.
  */
 export function getDisallowedFields(
-  role: AdminRole | null,
+  role: AdminRole | string | null,
   fieldIds: string[]
 ): string[] {
   return fieldIds.filter((id) => !canEdit(role, id));

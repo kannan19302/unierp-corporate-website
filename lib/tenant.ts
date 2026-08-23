@@ -21,11 +21,35 @@ export function normalizeHostname(raw?: string | null): string | null {
 }
 
 export const resolveTenantByHostname = cache(async (hostname: string): Promise<ResolvedTenant | null> => {
-  const tenant = await prisma.tenant.findFirst({
-    where: { active: true, domains: { some: { hostname } } },
-    select: { id: true, slug: true, name: true, primaryDomain: true },
-  });
-  return tenant;
+  try {
+    const tenant = await prisma.tenant.findFirst({
+      where: { active: true, domains: { some: { hostname } } },
+      select: { id: true, slug: true, name: true, primaryDomain: true },
+    });
+    if (tenant) return tenant;
+
+    // Fallback to first active tenant (e.g. for localhost dev / corporate portal)
+    const fallback = await prisma.tenant.findFirst({
+      where: { active: true },
+      select: { id: true, slug: true, name: true, primaryDomain: true },
+      orderBy: { createdAt: 'asc' },
+    });
+    if (fallback) return fallback;
+
+    return {
+      id: 'unierp-root-tenant',
+      slug: 'unierp',
+      name: 'UniERP',
+      primaryDomain: hostname,
+    };
+  } catch (err) {
+    return {
+      id: 'unierp-root-tenant',
+      slug: 'unierp',
+      name: 'UniERP',
+      primaryDomain: hostname,
+    };
+  }
 });
 
 function resolveDevFallbackHost(explicitHeader?: string | null): string | null {

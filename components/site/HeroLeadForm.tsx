@@ -23,7 +23,7 @@ export function HeroLeadForm() {
     if (!email) return;
     persistDraft(email, false);
     setSubmitted(true);
-    window.location.href = `${settings.erpAppUrl}${settings.erpLoginPath}?email=${encodeURIComponent(email)}`;
+    window.location.href = `/register?email=${encodeURIComponent(email)}`;
   };
 
   return (

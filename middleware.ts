@@ -1,39 +1,32 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
-const ENFORCE_TENANT_HOST_MATCH = process.env.ENFORCE_TENANT_HOST_MATCH !== 'false';
+/**
+ * Marketing site middleware — admin route protection via OIDC tokens.
+ *
+ * Previously verified a local `admin_token` cookie against `JWT_SECRET`.
+ * Now verifies the `auth_token` cookie set by the centralized IDP's OIDC
+ * hosted login page, against the IDP's published JWKS (RS256).
+ *
+ * The `auth_token` cookie is set by the IDP's login.controller.ts after
+ * successful authentication — the same cookie every other UniERP platform
+ * uses. This middleware validates the signature, expiry, and session ID
+ * before allowing access to /admin routes.
+ */
 
-function normalizeHost(raw: string | null): string | null {
-  if (!raw) return null;
-  return raw.trim().toLowerCase().split(':')[0].replace(/\.$/, '') || null;
-}
+const IDP_ORIGIN = process.env.IDP_ORIGIN || process.env.NEXT_PUBLIC_IDP_ORIGIN || 'http://localhost:3005';
+const JWKS_URL = new URL('/oidc/jwks.json', IDP_ORIGIN);
 
-async function verifyTenantToken(request: NextRequest, token: string): Promise<boolean> {
-  const { payload } = await jwtVerify(token, JWT_SECRET);
-
-  if (!payload.tenantId) return false;
-
-  if (ENFORCE_TENANT_HOST_MATCH) {
-    const devOverride = process.env.NODE_ENV !== 'production' ? request.headers.get('x-tenant-domain') : null;
-    const currentHost =
-      normalizeHost(devOverride) ||
-      normalizeHost(request.headers.get('x-forwarded-host')) ||
-      normalizeHost(request.headers.get('host'));
-
-    if (payload.tenantHost !== currentHost) return false;
-  }
-
-  return true;
-}
+/** Cached JWKS — created once per edge worker lifecycle. */
+const jwks = createRemoteJWKSet(JWKS_URL);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect /admin routes, but allow /admin/login
+  // Protect /admin routes, but allow /admin/login (the OIDC redirect page)
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    const token = request.cookies.get('admin_token')?.value;
+    const token = request.cookies.get('auth_token')?.value;
 
     if (!token) {
       const loginUrl = new URL('/admin/login', request.url);
@@ -44,17 +37,23 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      const valid = await verifyTenantToken(request, token);
-      if (!valid) throw new Error('Tenant mismatch or missing claim');
+      const { payload } = await jwtVerify(token, jwks, { issuer: IDP_ORIGIN });
+
+      // Reject tokens without a session ID — they can't be revoked.
+      if (typeof payload.sid !== 'string' || !payload.sid) {
+        throw new Error('Token has no session ID');
+      }
+
       const res = NextResponse.next();
       res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       res.headers.set('Pragma', 'no-cache');
       return res;
     } catch (error) {
-      console.error('JWT Verification Failed:', error);
+      console.error('OIDC Token Verification Failed:', error);
       const loginUrl = new URL('/admin/login', request.url);
       const response = NextResponse.redirect(loginUrl);
-      response.cookies.delete('admin_token');
+      // Clear the stale/invalid cookie
+      response.cookies.delete('auth_token');
       response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       response.headers.set('Pragma', 'no-cache');
       return response;
@@ -63,7 +62,7 @@ export async function middleware(request: NextRequest) {
 
   // Protect Admin API routes except login
   if (pathname.startsWith('/api/admin') && !pathname.startsWith('/api/admin/login')) {
-    const token = request.cookies.get('admin_token')?.value;
+    const token = request.cookies.get('auth_token')?.value;
 
     if (!token) {
       const res = NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -72,8 +71,10 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      const valid = await verifyTenantToken(request, token);
-      if (!valid) throw new Error('Tenant mismatch or missing claim');
+      const { payload } = await jwtVerify(token, jwks, { issuer: IDP_ORIGIN });
+      if (typeof payload.sid !== 'string' || !payload.sid) {
+        throw new Error('Token has no session ID');
+      }
       const res = NextResponse.next();
       res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       return res;

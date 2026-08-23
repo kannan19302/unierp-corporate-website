@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  transpilePackages: ['@kannan19302/shared', '@kannan19302/ui', '@kannan19302/framework'],
   serverExternalPackages: ['@prisma/adapter-pg', 'pg'],
   webpack: (config, { dev }) => {
     if (dev) {

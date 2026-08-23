@@ -1,4 +1,4 @@
-﻿/* ───────────────────────────────────────────────────────────────────
+/* ───────────────────────────────────────────────────────────────────
    Theme tokens. Dark is the canonical UniERP identity and therefore
    owns `:root` — an unknown/absent `data-theme` resolves to dark, and
    any token the light block forgets to override falls back to a dark
@@ -11,72 +11,81 @@
    order — reversing it makes every colour token self-referential.
    ─────────────────────────────────────────────────────────────────── */
 :root {
+  --font-display: 'Instrument Sans', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
+  --font-mono: 'Martian Mono', ui-monospace, 'IBM Plex Mono', 'Consolas', monospace;
 
-  /* Motion — ERPSys/docs/ai/UI_UX_BRIEF.md §6 */
+  /* Motion */
   --duration-fast: 100ms;
   --duration-normal: 200ms;
   --duration-slow: 300ms;
   --duration-slower: 500ms;
-  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-default: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Dark first: `:root` and `[data-theme="dark"]` share specificity (0,1,0)
-   with the light block below, so the light block must come LAST to win
-   when it is the active theme. Do not reorder these two blocks. */
-:root, [data-theme="dark"] {
-  color-scheme: dark;
-  --color-bg: #030712;
-  --color-surface: #0b1329;
-  --color-surface-hover: #111d3d;
-  --color-card: rgba(17, 24, 39, 0.7);
-  --color-card-border: rgba(255, 255, 255, 0.08);
-  --color-card-hover-border: rgba(56, 189, 248, 0.4);
-  --color-primary: #38bdf8;
-  --color-primary-glow: rgba(56, 189, 248, 0.25);
-  --color-accent: #6366f1;
-  --color-accent-glow: rgba(99, 102, 241, 0.3);
-  --color-emerald: #10b981;
-  --color-purple: #a855f7;
-  --color-amber: #f59e0b;
-  --color-text-main: #f8fafc;
-  --color-text-muted: #94a3b8;
-  --color-text-subtle: #64748b;
-  --header-bg: rgba(3, 7, 18, 0.85);
-  --glass-bg: rgba(15, 23, 42, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 30px 0 rgba(56, 189, 248, 0.15);
-  --terminal-bg: #090d16;
-  --terminal-text: #e2e8f0;
-}
-
-[data-theme="light"] {
+/* Light theme default / canonical enterprise presentation */
+:root, [data-theme="light"] {
   color-scheme: light;
   --color-bg: #f8fafc;
-  --color-surface: #f1f5f9;
-  --color-surface-hover: #e2e8f0;
-  --color-card: rgba(255, 255, 255, 0.85);
-  --color-card-border: rgba(226, 232, 240, 0.8);
-  --color-card-hover-border: rgba(37, 99, 235, 0.4);
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5f9;
+  --color-card: #ffffff;
+  --color-card-border: #e2e8f0;
+  --color-card-hover-border: #2563eb;
   --color-primary: #2563eb;
-  --color-primary-glow: rgba(37, 99, 235, 0.15);
-  --color-accent: #4f46e5;
-  --color-accent-glow: rgba(79, 70, 229, 0.2);
-  --color-emerald: #059669;
-  --color-purple: #9333ea;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-active: #1e40af;
+  --color-primary-glow: rgba(37, 99, 235, 0.1);
+  --color-brand-navy: #0f172a;
+  --color-brand-indigo: #4f46e5;
+  --color-accent: #2563eb;
+  --color-accent-glow: rgba(37, 99, 235, 0.15);
+  --color-emerald: #10b981;
+  --color-purple: #7c3aed;
   --color-amber: #d97706;
   --color-text-main: #0f172a;
   --color-text-muted: #475569;
   --color-text-subtle: #94a3b8;
-  --header-bg: rgba(255, 255, 255, 0.85);
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07), 0 0 30px 0 rgba(37, 99, 235, 0.06);
+  --header-bg: rgba(255, 255, 255, 0.94);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: #e2e8f0;
+  --glass-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 0 1px 1px rgba(15, 23, 42, 0.03);
+  --hero-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.05);
   --terminal-bg: #0f172a;
+  --terminal-text: #f8fafc;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #090d16;
+  --color-surface: #0f172a;
+  --color-surface-hover: #1e293b;
+  --color-card: rgba(15, 23, 42, 0.85);
+  --color-card-border: rgba(255, 255, 255, 0.08);
+  --color-card-hover-border: #3b82f6;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #60a5fa;
+  --color-primary-active: #93c5fd;
+  --color-primary-glow: rgba(59, 130, 246, 0.18);
+  --color-brand-navy: #f8fafc;
+  --color-brand-indigo: #818cf8;
+  --color-accent: #3b82f6;
+  --color-accent-glow: rgba(59, 130, 246, 0.2);
+  --color-emerald: #10b981;
+  --color-purple: #8b5cf6;
+  --color-amber: #f59e0b;
+  --color-text-main: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-text-subtle: #64748b;
+  --header-bg: rgba(9, 13, 22, 0.92);
+  --glass-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px 0 rgba(59, 130, 246, 0.1);
+  --hero-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --terminal-bg: #040711;
   --terminal-text: #f8fafc;
 }
 
@@ -84,6 +93,11 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display, var(--font-sans));
+  letter-spacing: -0.025em;
 }
 
 html {
@@ -621,8 +635,8 @@ body {
 }
 
 .mesh-orb-3 {
-  width: 300px;
-  height: 300px;
+  width: 18.75rem;
+  height: 18.75rem;
   background: radial-gradient(circle, rgba(5,150,105,0.1) 0%, transparent 70%);
   top: 40%;
   left: 30%;
@@ -630,22 +644,22 @@ body {
   animation-delay: -6s;
 }
 
-/* â”€â”€ Section entrance animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Section entrance animation ────────────────────── */
 .section-enter {
   animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* â”€â”€ Hover lift â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Hover lift ────────────────────────────────────── */
 .hover-lift {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
 }
 
 .hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-0.25rem);
+  box-shadow: 0 0.75rem 2rem -0.5rem rgba(0, 0, 0, 0.15);
 }
 
-/* â”€â”€ Nav link underline animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Nav link underline animation ──────────────────── */
 nav a {
   position: relative;
 }
@@ -658,7 +672,7 @@ nav a::after {
   width: 0;
   height: 2px;
   background: var(--color-primary);
-  border-radius: 9999px;
+  border-radius: var(--radius-full, 9999px);
   transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -666,7 +680,7 @@ nav a:hover::after {
   width: 100%;
 }
 
-/* â”€â”€ Modal backdrop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Modal backdrop ────────────────────────────────── */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -679,11 +693,11 @@ nav a:hover::after {
   animation: fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* â”€â”€ Process step accent â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Process step accent ───────────────────────────── */
 .process-step-number {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full, 50%);
   background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
   color: #fff;
   font-size: 1.1rem;
@@ -692,7 +706,7 @@ nav a:hover::after {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 0.25rem 1rem rgba(37, 99, 235, 0.3);
 }
 
 /* â”€â”€ Comparison table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */

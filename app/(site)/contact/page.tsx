@@ -19,10 +19,10 @@ export default function ContactPage() {
             Tell us about your business and we&apos;ll tailor a demo around what matters most to you.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {['Response within one business day', 'Free trial, no credit card required', 'Dedicated onboarding for Enterprise plans'].map((item) => (
+            {['Response within one business day', '30-days free trial, no credit card required', 'Dedicated onboarding for Enterprise plans'].map((item) => (
               <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>
-                <CheckCircle2 size={18} color="var(--color-emerald)" />
-                {item}
+                <CheckCircle2 size={18} color="#2563eb" />
+                <span>{item}</span>
               </div>
             ))}
           </div>

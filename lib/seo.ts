@@ -7,7 +7,7 @@ export async function getSeoMetadata(path: string, fallback: Metadata): Promise<
     const tenant = await getTenant();
     if (!tenant) return fallback;
 
-    const setting = await prisma.seoSetting.findUnique({ where: { tenantId_path: { tenantId: tenant.id, path } } });
+    const setting = await prisma.seoSetting.findUnique({ where: { tenantId_path: { tenantId: tenant.id, path } } }).catch(() => null);
     if (!setting) return fallback;
 
     return {
@@ -17,8 +17,7 @@ export async function getSeoMetadata(path: string, fallback: Metadata): Promise<
       openGraph: setting.ogImage ? { images: [{ url: setting.ogImage }] } : undefined,
       icons: fallback.icons,
     };
-  } catch (error) {
-    console.error(`Failed to load SEO settings for ${path}:`, error);
+  } catch {
     return fallback;
   }
 }

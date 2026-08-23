@@ -1,263 +1,614 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { PageHero } from '@/components/site/anim/PageHero';
-import { Check, Zap, Building2, Rocket, ArrowRight, HelpCircle, ChevronDown } from 'lucide-react';
+import {
+  Check,
+  Zap,
+  Building2,
+  Rocket,
+  ArrowRight,
+  HelpCircle,
+  ChevronDown,
+  Shield,
+  Layers,
+  Activity,
+  Globe,
+  Sparkles,
+} from 'lucide-react';
+import { useAnalytics } from '@/lib/useAnalytics';
 
-const PLANS = [
+const CURRENCIES = {
+  INR: { symbol: '₹', mult: 1, standard: { annual: 999, monthly: 1249 }, pro: { annual: 1999, monthly: 2499 } },
+  USD: { symbol: '$', mult: 0.012, standard: { annual: 39, monthly: 49 }, pro: { annual: 89, monthly: 109 } },
+  EUR: { symbol: '€', mult: 0.011, standard: { annual: 35, monthly: 45 }, pro: { annual: 82, monthly: 99 } },
+  GBP: { symbol: '£', mult: 0.0095, standard: { annual: 29, monthly: 39 }, pro: { annual: 69, monthly: 85 } },
+};
+
+const FEATURE_COMPARISON = [
   {
-    name: 'Starter',
-    monthly: 49,
-    annual: 39,
-    desc: 'Perfect for small teams getting started with ERP fundamentals.',
-    color: '#6366f1',
+    category: 'Core Modules',
     features: [
-      'Up to 10 users',
-      'Finance & Accounting',
-      'Basic HR & Payroll',
-      'CRM (500 contacts)',
-      'Inventory (1 warehouse)',
-      '5 GB storage',
-      'Email support',
-      'Community access',
+      { name: 'Finance & Accounting (GL, AR, AP)', standard: true, pro: true, enterprise: true },
+      { name: 'CRM & Lead Pipeline', standard: true, pro: true, enterprise: true },
+      { name: 'Inventory & Warehouse Management', standard: true, pro: true, enterprise: true },
+      { name: 'HR & Payroll Management', standard: 'Up to 25 employees', pro: 'Unlimited', enterprise: 'Unlimited + Global' },
+      { name: 'Manufacturing & MRP II', standard: false, pro: true, enterprise: true },
+      { name: 'Projects & Timesheets', standard: false, pro: true, enterprise: true },
+      { name: 'Point of Sale (POS)', standard: false, pro: true, enterprise: true },
     ],
-    cta: 'Start Free Trial',
-    ctaHref: '/contact',
   },
   {
-    name: 'Professional',
-    monthly: 149,
-    annual: 119,
-    desc: 'For growing businesses that need the full ERP suite.',
-    color: '#2563eb',
-    popular: true,
+    category: 'Workflows & Automation',
     features: [
-      'Up to 50 users',
-      'All Core ERP Modules',
-      'Manufacturing & MRP',
-      'Project Management',
-      'Unlimited contacts',
-      '5 warehouses',
-      '50 GB storage',
-      'Priority email & chat',
-      'API access (10k req/day)',
-      'Custom dashboards',
+      { name: 'Visual Workflow Builder', standard: '5 Workflows', pro: 'Unlimited', enterprise: 'Unlimited + Custom DAGs' },
+      { name: 'Automated 3-Way Matching', standard: false, pro: true, enterprise: true },
+      { name: 'Email & In-App Alerts', standard: true, pro: true, enterprise: true },
+      { name: 'Multi-Sig Approval Chains', standard: false, pro: true, enterprise: true },
     ],
-    cta: 'Start Free Trial',
-    ctaHref: '/contact',
   },
   {
-    name: 'Enterprise',
-    monthly: null,
-    annual: null,
-    desc: 'For large organizations with custom needs, multi-entity, and advanced compliance.',
-    color: '#7c3aed',
+    category: 'Platform, Security & Infrastructure',
     features: [
-      'Unlimited users',
-      'All modules included',
-      'Multi-entity & multi-currency',
-      'Dedicated infrastructure',
-      'Unlimited storage',
-      'SSO & SAML 2.0',
-      'Custom SLA & uptime',
-      '24/7 dedicated support',
-      'Unlimited API access',
-      'On-premise option',
-      'Custom integrations',
-      'Professional services',
+      { name: 'PostgreSQL RLS Multi-Tenant Mesh', standard: true, pro: true, enterprise: true },
+      { name: 'Single Sign-On (SSO / OIDC / SAML 2.0)', standard: false, pro: false, enterprise: true },
+      { name: 'Dedicated VPC / On-Premise Helm Chart', standard: false, pro: false, enterprise: true },
+      { name: 'Audit Trail Retention', standard: '30 Days', pro: '1 Year', enterprise: '7 Years / Unlimited' },
+      { name: 'REST API & Webhooks', standard: '1,000 req/day', pro: '50,000 req/day', enterprise: 'Unlimited' },
+      { name: 'Uptime SLA Guarantee', standard: '99.9%', pro: '99.95%', enterprise: '99.999% Guaranteed' },
     ],
-    cta: 'Contact Sales',
-    ctaHref: '/contact?type=enterprise',
+  },
+  {
+    category: 'Support & Success',
+    features: [
+      { name: 'Community & Documentation', standard: true, pro: true, enterprise: true },
+      { name: 'Email & Chat Support', standard: 'Standard (24h)', pro: 'Priority (4h)', enterprise: '24/7 Dedicated (15m SLA)' },
+      { name: 'Dedicated Solutions Architect', standard: false, pro: false, enterprise: true },
+      { name: 'Custom ERP Data Migration', standard: false, pro: 'Assisted', enterprise: 'Full White-Glove' },
+    ],
   },
 ];
 
 const FAQS = [
-  { q: 'Is there a free trial?', a: 'Yes — all plans include a 30-day free trial with full access to every feature. No credit card required.' },
-  { q: 'Can I change my plan later?', a: 'Absolutely. You can upgrade, downgrade, or switch billing cycles at any time. Prorated credits apply immediately.' },
-  { q: 'What happens to my data if I cancel?', a: 'Your data is safely exported in standard CSV/JSON formats within 30 days of cancellation. We never delete data without consent.' },
-  { q: 'Do you offer discounts for non-profits or education?', a: 'Yes — we offer 50% discounts for verified non-profits, NGOs, and educational institutions. Contact us to verify.' },
-  { q: 'Is the pricing per user or per module?', a: 'Per user. All included modules are available to every user on your plan — no per-module fees.' },
-  { q: 'What payment methods do you accept?', a: 'We accept all major credit/debit cards, bank transfers (ACH/SEPA), and can arrange invoicing for Enterprise plans.' },
+  { q: 'How does the 30-day free trial work?', a: 'All plans include 30 days full access with no credit card required. You get access to all core modules and can invite your entire team immediately.' },
+  { q: 'Can I change my plan or user count later?', a: 'Yes. You can upgrade, downgrade, add seats, or remove seats at any time. Prorated credits apply automatically to your billing statement.' },
+  { q: 'What happens to my data if I cancel?', a: 'Your data belongs to you. You can export complete PostgreSQL partitions, CSVs, and JSON schemas at any time without vendor lock-in.' },
+  { q: 'Do you offer non-profit or education discounts?', a: 'Yes! We offer a 50% discount for verified non-profit organizations, NGOs, and accredited educational institutions.' },
+  { q: 'Can we deploy UniERP on our own cloud infrastructure?', a: 'Yes. Enterprise customers can choose our private AWS/GCP/Azure dedicated VPC deployment or self-host with our Kubernetes Helm charts.' },
 ];
 
 export default function PricingPage() {
-  const [billing, setBilling] = useState<'monthly' | 'annual'>('annual');
+  useAnalytics('/pricing');
+  const [billing, setBilling] = useState<'annual' | 'monthly'>('annual');
+  const [currency, setCurrency] = useState<'INR' | 'USD' | 'EUR' | 'GBP'>('INR');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  const curr = CURRENCIES[currency];
+  const standardPrice = billing === 'annual' ? curr.standard.annual : curr.standard.monthly;
+  const proPrice = billing === 'annual' ? curr.pro.annual : curr.pro.monthly;
+
   return (
-    <div>
-      {/* Hero */}
-      <PageHero
-        eyebrow={<><Zap size={13} /> Simple, transparent pricing</>}
-        title={<>Plans for every <span className="cosmic-text">team size</span></>}
-        sub={
-          <>
-            Start free, scale as you grow. No hidden fees, no lock-in.
-            Every plan includes 30 days free and all core features.
-          </>
-        }
-      >
-        {/* Billing toggle */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-          <div className="toggle-pill">
+    <div style={{ background: 'var(--color-bg)', color: 'var(--color-text-main)', minHeight: '100vh' }}>
+      {/* ═══ 1. PRICING HERO ═══ */}
+      <section style={{ maxWidth: '1360px', margin: '0 auto', padding: '4.5rem 1.5rem 3rem', textAlign: 'center' }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            padding: '0.35rem 1rem',
+            borderRadius: '9999px',
+            background: 'rgba(37, 99, 235, 0.08)',
+            color: '#2563eb',
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            marginBottom: '1rem',
+          }}
+        >
+          <Zap size={13} />
+          <span>Simple, transparent enterprise pricing</span>
+        </div>
+
+        <h1
+          style={{
+            fontSize: 'clamp(2.5rem, 5vw, 3.85rem)',
+            fontWeight: 900,
+            fontFamily: 'var(--font-display)',
+            letterSpacing: '-0.035em',
+            margin: '0 0 1rem',
+            color: 'var(--color-text-main)',
+          }}
+        >
+          Plans for every <span style={{ color: '#2563eb' }}>stage of growth</span>
+        </h1>
+
+        <p style={{ fontSize: '1.15rem', color: 'var(--color-text-muted)', maxWidth: '640px', margin: '0 auto 2.5rem', lineHeight: 1.6 }}>
+          Start with a 30-day free trial. Full access to enterprise capabilities with zero lock-in and no credit card required.
+        </p>
+
+        {/* Currency & Billing Toggles */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+          {/* Monthly / Annual Toggle */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              background: 'var(--color-surface)',
+              border: '1.5px solid var(--color-card-border)',
+              borderRadius: '9999px',
+              padding: '0.25rem',
+            }}
+          >
             <button
-              className={`toggle-option ${billing === 'monthly' ? 'toggle-option-active' : ''}`}
+              type="button"
               onClick={() => setBilling('monthly')}
+              style={{
+                padding: '0.5rem 1.25rem',
+                borderRadius: '9999px',
+                border: 'none',
+                background: billing === 'monthly' ? '#2563eb' : 'transparent',
+                color: billing === 'monthly' ? '#ffffff' : 'var(--color-text-muted)',
+                fontSize: '0.88rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
             >
               Monthly
             </button>
             <button
-              className={`toggle-option ${billing === 'annual' ? 'toggle-option-active' : ''}`}
+              type="button"
               onClick={() => setBilling('annual')}
+              style={{
+                padding: '0.5rem 1.25rem',
+                borderRadius: '9999px',
+                border: 'none',
+                background: billing === 'annual' ? '#2563eb' : 'transparent',
+                color: billing === 'annual' ? '#ffffff' : 'var(--color-text-muted)',
+                fontSize: '0.88rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+              }}
             >
-              Annual <span style={{ fontSize: '0.75rem', marginLeft: '0.25rem', opacity: 0.85 }}>Save 20%</span>
+              <span>Annual</span>
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  background: billing === 'annual' ? 'rgba(255, 255, 255, 0.25)' : 'rgba(16, 185, 129, 0.15)',
+                  color: billing === 'annual' ? '#ffffff' : '#059669',
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: '9999px',
+                  fontWeight: 800,
+                }}
+              >
+                Save 20%
+              </span>
             </button>
           </div>
-        </div>
-      </PageHero>
 
-      {/* Pricing cards */}
-      <section className="page-section" style={{ paddingTop: '2rem' }}>
-        <div className="pricing-grid">
-          {PLANS.map((plan) => (
-            <div key={plan.name} className={`pricing-card reveal ${plan.popular ? 'pricing-card-popular' : ''}`}>
-              {plan.popular && <div className="pricing-popular-badge">Most Popular</div>}
-              <div className="pricing-tier-name">{plan.name}</div>
-
-              {plan.monthly !== null ? (
-                <>
-                  <div className="pricing-price">
-                    <sup>$</sup>
-                    {billing === 'annual' ? plan.annual : plan.monthly}
-                  </div>
-                  <div className="pricing-period">per user / month, billed {billing}</div>
-                </>
-              ) : (
-                <>
-                  <div className="pricing-price" style={{ fontSize: '2rem' }}>Custom</div>
-                  <div className="pricing-period">tailored to your needs</div>
-                </>
-              )}
-
-              <p className="pricing-desc">{plan.desc}</p>
-
-              <ul className="pricing-features">
-                {plan.features.map((f) => (
-                  <li key={f} className="pricing-feature">
-                    <div className="pricing-feature-check"><Check size={11} /></div>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href={plan.ctaHref}
-                className={plan.popular ? 'btn-primary btn-ripple' : 'btn-secondary'}
-                style={{ textAlign: 'center', justifyContent: 'center' }}
-              >
-                {plan.cta}
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        <p style={{ textAlign: 'center', marginTop: '2rem', fontSize: '0.875rem', color: 'var(--color-text-subtle)' }}>
-          All prices in USD. Sales tax may apply.{' '}
-          <Link href="/contact" style={{ color: 'var(--color-primary)' }}>
-            Need a custom quote? <ArrowRight size={13} style={{ display: 'inline', verticalAlign: 'middle' }} />
-          </Link>
-        </p>
-      </section>
-
-      {/* Feature comparison */}
-      <section className="page-section" style={{ background: 'var(--color-surface)', borderRadius: '24px', marginBottom: '3rem', paddingTop: '3rem', paddingBottom: '3rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <div className="section-title">Compare plans</div>
-        </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table className="compare-table" style={{ width: '100%' }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left' }}>Feature</th>
-                <th>Starter</th>
-                <th className="our-col">Professional</th>
-                <th>Enterprise</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['Finance & Accounting', '✓', '✓', '✓'],
-                ['HR & Payroll', '✓', '✓', '✓'],
-                ['CRM & Sales', '✓', '✓', '✓'],
-                ['Inventory Management', 'Basic', '✓', '✓'],
-                ['Manufacturing (MRP)', '—', '✓', '✓'],
-                ['Project Management', '—', '✓', '✓'],
-                ['API Access', '—', '10k/day', 'Unlimited'],
-                ['SSO / SAML', '—', '—', '✓'],
-                ['Multi-entity', '—', '—', '✓'],
-                ['White-label', '—', '—', '✓'],
-              ].map(([feature, starter, pro, ent]) => (
-                <tr key={feature as string}>
-                  <td>{feature}</td>
-                  <td className={starter === '—' ? 'compare-cross' : 'compare-check'}>{starter}</td>
-                  <td className={`our-col ${pro === '—' ? 'compare-cross' : 'compare-check'}`}>{pro}</td>
-                  <td className={ent === '—' ? 'compare-cross' : 'compare-check'}>{ent}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <Link href="/features" className="btn-secondary" style={{ fontSize: '0.875rem', padding: '0.6rem 1.25rem' }}>
-            View full feature comparison <ArrowRight size={14} />
-          </Link>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="page-section" style={{ paddingTop: '3rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <div className="page-hero-badge" style={{ margin: '0 auto 1rem' }}>
-            <HelpCircle size={13} /> Frequently Asked Questions
-          </div>
-          <div className="section-title">Have questions?</div>
-        </div>
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          {FAQS.map((faq, i) => (
-            <div key={i} className="faq-item">
+          {/* Currency Switcher */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              background: 'var(--color-surface)',
+              border: '1.5px solid var(--color-card-border)',
+              borderRadius: '9999px',
+              padding: '0.25rem',
+            }}
+          >
+            {(['INR', 'USD', 'EUR', 'GBP'] as const).map((c) => (
               <button
-                className="faq-question"
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                aria-expanded={openFaq === i}
+                key={c}
+                type="button"
+                onClick={() => setCurrency(c)}
+                style={{
+                  padding: '0.45rem 0.85rem',
+                  borderRadius: '9999px',
+                  border: 'none',
+                  background: currency === c ? 'var(--color-brand-navy)' : 'transparent',
+                  color: currency === c ? 'var(--color-surface)' : 'var(--color-text-muted)',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
               >
-                {faq.q}
-                <ChevronDown size={18} style={{ transform: openFaq === i ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} />
+                {c}
               </button>
-              <div className={`faq-answer ${openFaq === i ? 'faq-answer-open' : ''}`}>
-                <div className="faq-answer-inner">{faq.a}</div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 2. PRICING CARDS ═══ */}
+      <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '2rem 1.5rem 5rem' }}>
+        <div className="ref-pricing-grid">
+          {/* Standard Card */}
+          <div className="ref-pricing-card">
+            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--color-text-main)', marginBottom: '0.4rem' }}>
+              Standard
+            </div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+              For small teams getting started with ERP fundamentals.
+            </p>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <span style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--color-text-main)' }}>
+                {curr.symbol}{standardPrice}
+              </span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-subtle)', marginLeft: '4px' }}>
+                /user/month
+              </span>
+              <div style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)', marginTop: '2px' }}>
+                {billing === 'annual' ? 'billed annually' : 'billed monthly'}
               </div>
             </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '2rem', flex: 1 }}>
+              {['Core ERP Modules', 'Up to 5 Users', 'Standard Financial Reports', 'Email Support', '30-Day Free Trial'].map((feat) => (
+                <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.88rem', color: 'var(--color-text-main)' }}>
+                  <Check size={16} color="#2563eb" style={{ flexShrink: 0 }} />
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/register?plan=standard"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                padding: '0.85rem',
+                borderRadius: '10px',
+                background: 'var(--color-surface)',
+                color: 'var(--color-text-main)',
+                border: '1.5px solid var(--color-card-border)',
+                fontSize: '0.92rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+            >
+              Start Free (30 Days)
+            </Link>
+          </div>
+
+          {/* Professional Card (Most Popular) */}
+          <div className="ref-pricing-card popular">
+            <div
+              style={{
+                position: 'absolute',
+                top: '-13px',
+                right: '24px',
+                background: '#2563eb',
+                color: '#ffffff',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                padding: '0.25rem 0.85rem',
+                borderRadius: '9999px',
+                letterSpacing: '0.05em',
+              }}
+            >
+              Most Popular
+            </div>
+
+            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--color-text-main)', marginBottom: '0.4rem' }}>
+              Professional
+            </div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+              For growing businesses that need full automation and advanced modules.
+            </p>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <span style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--color-text-main)' }}>
+                {curr.symbol}{proPrice}
+              </span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-subtle)', marginLeft: '4px' }}>
+                /user/month
+              </span>
+              <div style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)', marginTop: '2px' }}>
+                {billing === 'annual' ? 'billed annually' : 'billed monthly'}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '2rem', flex: 1 }}>
+              {[
+                'All Standard Features',
+                'Manufacturing & MRP II',
+                'Visual Workflow Automation',
+                'Advanced BI Dashboards',
+                'Priority 4h Support',
+                '30-Day Free Trial',
+              ].map((feat) => (
+                <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.88rem', color: 'var(--color-text-main)' }}>
+                  <Check size={16} color="#2563eb" style={{ flexShrink: 0 }} />
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/register?plan=pro"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                padding: '0.85rem',
+                borderRadius: '10px',
+                background: '#2563eb',
+                color: '#ffffff',
+                border: 'none',
+                fontSize: '0.92rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 15px rgba(37, 99, 235, 0.3)',
+              }}
+            >
+              Start Free (30 Days)
+            </Link>
+          </div>
+
+          {/* Enterprise Card */}
+          <div className="ref-pricing-card">
+            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--color-text-main)', marginBottom: '0.4rem' }}>
+              Enterprise
+            </div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+              For large organizations with complex multi-entity and dedicated compliance needs.
+            </p>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <span style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--color-text-main)' }}>
+                Custom
+              </span>
+              <div style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)', marginTop: '2px' }}>
+                tailored enterprise SLA &amp; deployment
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '2rem', flex: 1 }}>
+              {[
+                'Unlimited Users & Tenants',
+                'Dedicated VPC / On-Premise',
+                'SAML 2.0 & OIDC SSO',
+                '24/7 Dedicated Support & SLA',
+                'White-Glove Migration Services',
+              ].map((feat) => (
+                <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.88rem', color: 'var(--color-text-main)' }}>
+                  <Check size={16} color="#2563eb" style={{ flexShrink: 0 }} />
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/contact?type=enterprise"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                padding: '0.85rem',
+                borderRadius: '10px',
+                background: 'var(--color-surface)',
+                color: 'var(--color-text-main)',
+                border: '1.5px solid var(--color-card-border)',
+                fontSize: '0.92rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+            >
+              Talk to Sales
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 3. DETAILED FEATURE COMPARISON TABLE ═══ */}
+      <section style={{ maxWidth: '1180px', margin: '0 auto', padding: '2rem 1.5rem 5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 900, fontFamily: 'var(--font-display)', margin: '0 0 0.5rem' }}>
+            Compare All Features
+          </h2>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '1.05rem' }}>
+            Detailed breakdown of capabilities across all tiers.
+          </p>
+        </div>
+
+        <div
+          style={{
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-card-border)',
+            borderRadius: '18px',
+            boxShadow: 'var(--glass-shadow)',
+            position: 'relative',
+          }}
+        >
+          {/* Table Header (Sticky) */}
+          <div
+            style={{
+              position: 'sticky',
+              top: '72px',
+              zIndex: 20,
+              display: 'grid',
+              gridTemplateColumns: '2fr 1fr 1fr 1fr',
+              padding: '1.25rem 1.5rem',
+              background: 'var(--color-surface)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderBottom: '1px solid var(--color-card-border)',
+              borderTopLeftRadius: '17px',
+              borderTopRightRadius: '17px',
+              fontWeight: 800,
+              fontSize: '0.9rem',
+              color: 'var(--color-text-main)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
+            }}
+          >
+            <span>Feature / Capability</span>
+            <span style={{ textAlign: 'center' }}>Standard</span>
+            <span style={{ textAlign: 'center', color: '#2563eb' }}>Professional</span>
+            <span style={{ textAlign: 'center' }}>Enterprise</span>
+          </div>
+
+          {/* Table Categories */}
+          {FEATURE_COMPARISON.map((cat) => (
+            <div key={cat.category}>
+              <div
+                style={{
+                  padding: '0.85rem 1.5rem',
+                  background: 'var(--color-surface-hover)',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  color: '#2563eb',
+                  borderBottom: '1px solid var(--color-card-border)',
+                }}
+              >
+                {cat.category}
+              </div>
+
+              {cat.features.map((row, idx) => (
+                <div
+                  key={row.name}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '2fr 1fr 1fr 1fr',
+                    padding: '1rem 1.5rem',
+                    borderBottom: '1px solid var(--color-card-border)',
+                    fontSize: '0.88rem',
+                    color: 'var(--color-text-main)',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span style={{ fontWeight: 600 }}>{row.name}</span>
+
+                  <div style={{ textAlign: 'center' }}>
+                    {typeof row.standard === 'boolean' ? (
+                      row.standard ? <Check size={18} color="#10b981" style={{ margin: '0 auto' }} /> : <span style={{ color: 'var(--color-text-subtle)' }}>—</span>
+                    ) : (
+                      <span style={{ fontSize: '0.82rem', fontWeight: 600 }}>{row.standard}</span>
+                    )}
+                  </div>
+
+                  <div style={{ textAlign: 'center' }}>
+                    {typeof row.pro === 'boolean' ? (
+                      row.pro ? <Check size={18} color="#2563eb" style={{ margin: '0 auto' }} /> : <span style={{ color: 'var(--color-text-subtle)' }}>—</span>
+                    ) : (
+                      <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#2563eb' }}>{row.pro}</span>
+                    )}
+                  </div>
+
+                  <div style={{ textAlign: 'center' }}>
+                    {typeof row.enterprise === 'boolean' ? (
+                      row.enterprise ? <Check size={18} color="#10b981" style={{ margin: '0 auto' }} /> : <span style={{ color: 'var(--color-text-subtle)' }}>—</span>
+                    ) : (
+                      <span style={{ fontSize: '0.82rem', fontWeight: 700 }}>{row.enterprise}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ textAlign: 'center', padding: '4rem 1.5rem 6rem' }}>
-        <div className="hologram hologram-sheen" style={{ maxWidth: '700px', margin: '0 auto', padding: '3rem 2rem' }}>
-          <Rocket size={36} style={{ color: 'var(--color-primary)', marginBottom: '1rem' }} />
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.75rem' }}>
-            Ready to transform your business?
+      {/* ═══ 4. PRICING FAQ ═══ */}
+      <section style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1.5rem 5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'var(--font-display)', margin: '0 0 0.5rem' }}>
+            Frequently Asked Questions
           </h2>
-          <p style={{ color: 'var(--color-text-muted)', marginBottom: '2rem' }}>
-            Start your 30-day free trial today. No credit card required.
+          <p style={{ color: 'var(--color-text-muted)' }}>Everything you need to know about our pricing and licensing.</p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {FAQS.map((faq, index) => {
+            const isOpen = openFaq === index;
+            return (
+              <div
+                key={faq.q}
+                style={{
+                  borderRadius: '12px',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-card-border)',
+                  overflow: 'hidden',
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(isOpen ? null : index)}
+                  style={{
+                    width: '100%',
+                    padding: '1.25rem 1.5rem',
+                    background: 'transparent',
+                    border: 'none',
+                    textAlign: 'left',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    color: 'var(--color-text-main)',
+                    fontSize: '0.98rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  <span>{faq.q}</span>
+                  <ChevronDown
+                    size={18}
+                    style={{
+                      transform: isOpen ? 'rotate(180deg)' : 'rotate(0)',
+                      transition: 'transform 0.2s',
+                      color: 'var(--color-text-subtle)',
+                    }}
+                  />
+                </button>
+                {isOpen && (
+                  <div style={{ padding: '0 1.5rem 1.25rem', color: 'var(--color-text-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ═══ 5. FINAL ROYAL BLUE CTA ═══ */}
+      <section style={{ padding: '0 1.5rem 6rem' }}>
+        <div className="ref-royal-cta">
+          <h2
+            style={{
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              fontWeight: 900,
+              fontFamily: 'var(--font-display)',
+              margin: '0 0 1rem',
+              color: '#ffffff',
+            }}
+          >
+            Start your 30-day free trial today
+          </h2>
+          <p style={{ fontSize: '1.1rem', color: 'rgba(255, 255, 255, 0.9)', maxWidth: '600px', margin: '0 auto 2rem', lineHeight: 1.6 }}>
+            Deploy your dedicated multi-tenant workspace in under 60 seconds with full access to all 40+ modules.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/contact" className="btn-primary btn-ripple">
-              Start Free Trial <ArrowRight size={16} />
+            <Link href="/register" className="btn-royal-white">
+              <span>Start 30-Day Free Trial</span>
+              <ArrowRight size={16} />
             </Link>
-            <Link href="/contact?type=demo" className="btn-secondary">
-              <Building2 size={16} /> Talk to Sales
+            <Link href="/contact?type=enterprise" className="btn-royal-outline">
+              <span>Book Enterprise Demo</span>
             </Link>
           </div>
         </div>
