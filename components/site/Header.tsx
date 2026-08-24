@@ -21,6 +21,15 @@ import { Magnetic } from './anim/Magnetic';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+function UniErpMark({ size = 32 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M4 5.5 16 1l12 4.5v9.7c0 7.2-4.8 12.5-12 15.8C8.8 27.7 4 22.4 4 15.2V5.5Z" fill="var(--color-primary, #4f46e5)" />
+      <path d="M10 9v7.2c0 4 2.2 6.1 6 6.1s6-2.1 6-6.1V9h-3.7v7c0 2.1-.7 3.1-2.3 3.1s-2.3-1-2.3-3.1V9H10Z" fill="var(--color-surface, white)" />
+    </svg>
+  );
+}
+
 // ─── Mega menu data ─────────────────────────────────────────────────────────
 
 const PRODUCTS_MENU = {
@@ -239,7 +248,7 @@ function MobileMenu({
         >
           <div className="mobile-overlay-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div className="header-logo-mark">U</div>
+              <UniErpMark size={30} />
               <span style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--color-text-main)' }}>UniERP</span>
             </div>
             <button onClick={onClose} className="mobile-close-btn" aria-label="Close menu">
@@ -316,9 +325,7 @@ export function Header() {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={settings.logoImageUrl} alt={settings.brandName} className="header-logo-img" />
             ) : (
-              <div className="header-logo-mark">
-                {settings.logoText || 'U'}
-              </div>
+              <UniErpMark size={34} />
             )}
             <span className="header-logo-name">
               {settings.brandName}
