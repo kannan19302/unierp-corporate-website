@@ -1,6 +1,10 @@
 {
   "name": "unierp-corporate-website",
   "version": "1.0.0",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=22 <23"
+  },
   "private": true,
   "description": "Corporate Marketing Website for UniERP SaaS Platform",
   "scripts": {
