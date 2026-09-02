@@ -1,5 +1,8 @@
+import path from 'node:path';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: path.resolve(process.cwd(), '..'),
   reactStrictMode: true,
   output: 'standalone',
   transpilePackages: ['@kannan19302/shared', '@kannan19302/ui', '@kannan19302/framework'],
