@@ -60,8 +60,8 @@ FROM localdeps AS dev
 ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS=--max-old-space-size=8192
-EXPOSE 4001
-CMD ["npx", "next", "dev", "-p", "4001", "-H", "0.0.0.0"]
+EXPOSE 4000
+CMD ["npx", "next", "dev", "-p", "4000", "-H", "0.0.0.0"]
 
 # ── build ───────────────────────────────────────────────────────────────────
 FROM builder AS prod-builder
@@ -79,7 +79,7 @@ FROM node:22-slim AS runner
 WORKDIR /app
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
-ENV PORT=4001
+ENV PORT=4000
 
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 
@@ -90,6 +90,6 @@ COPY --from=prod-builder /app/prisma ./prisma
 COPY --from=prod-builder /app/node_modules/@prisma ./node_modules/@prisma
 
 USER nextjs
-EXPOSE 4001
+EXPOSE 4000
 
 CMD ["node", "server.js"]

@@ -107,7 +107,7 @@ export function withSiteDefaults(settings: Awaited<ReturnType<typeof prisma.site
       settings?.erpAppUrl || process.env.NEXT_PUBLIC_ERP_APP_URL || 'http://localhost:4003',
     erpLoginPath: settings?.erpLoginPath || '/login',
     erpRegisterPath: settings?.erpRegisterPath || '/register',
-    siteUrl: settings?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4001',
+    siteUrl: settings?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4000',
 
     trustStats: (settings?.trustStats as { label: string; value: string }[] | undefined) || [],
     logoWallHeading: settings?.logoWallHeading || '',

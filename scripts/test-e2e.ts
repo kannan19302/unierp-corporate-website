@@ -7,10 +7,10 @@
  * 
  * Usage:
  *   npx tsx scripts/test-e2e.ts [baseUrl]
- *   (defaults to http://localhost:4001)
+ *   (defaults to http://localhost:4000)
  */
 
-const BASE_URL = process.env.MARKETING_SITE_URL || process.argv[2] || 'http://localhost:4001';
+const BASE_URL = process.env.MARKETING_SITE_URL || process.argv[2] || 'http://localhost:4000';
 
 interface TestResult {
   name: string;

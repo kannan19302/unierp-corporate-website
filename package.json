@@ -8,10 +8,10 @@
   "private": true,
   "description": "Corporate Marketing Website for Enterprise SaaS Platform",
   "scripts": {
-    "dev": "next dev -p 4001",
+    "dev": "next dev -p 4000",
     "build": "next build",
     "typecheck": "tsc --noEmit",
-    "start": "next start -p 4001",
+    "start": "next start -p 4000",
     "lint": "next lint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

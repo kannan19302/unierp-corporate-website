@@ -6,6 +6,6 @@ RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
 WORKDIR /app
 
-EXPOSE 4001
+EXPOSE 4000
 
 CMD ["sh", "-c", "pnpm install --no-frozen-lockfile && pnpm prisma db push && pnpm db:seed && pnpm dev"]
