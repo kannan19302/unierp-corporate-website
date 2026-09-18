@@ -15,8 +15,10 @@ import {
   Activity,
   Globe,
   Sparkles,
+  CreditCard,
 } from 'lucide-react';
 import { useAnalytics } from '@/lib/useAnalytics';
+import { CheckoutModal } from '@/components/site/checkout/CheckoutModal';
 
 const CURRENCIES = {
   INR: { symbol: '₹', mult: 1, standard: { annual: 999, monthly: 1249 }, pro: { annual: 1999, monthly: 2499 } },
@@ -82,6 +84,13 @@ export default function PricingPage() {
   const [billing, setBilling] = useState<'annual' | 'monthly'>('annual');
   const [currency, setCurrency] = useState<'INR' | 'USD' | 'EUR' | 'GBP'>('INR');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
+  const [modalPlan, setModalPlan] = useState<'standard' | 'pro' | 'enterprise'>('pro');
+
+  const openCheckout = (plan: 'standard' | 'pro' | 'enterprise') => {
+    setModalPlan(plan);
+    setCheckoutModalOpen(true);
+  };
 
   const curr = CURRENCIES[currency];
   const standardPrice = billing === 'annual' ? curr.standard.annual : curr.standard.monthly;
@@ -258,26 +267,51 @@ export default function PricingPage() {
               ))}
             </div>
 
-            <Link
-              href="/register?plan=standard"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                padding: '0.85rem',
-                borderRadius: '10px',
-                background: 'var(--color-surface)',
-                color: 'var(--color-text-main)',
-                border: '1.5px solid var(--color-card-border)',
-                fontSize: '0.92rem',
-                fontWeight: 700,
-                textDecoration: 'none',
-                transition: 'all 0.2s',
-              }}
-            >
-              Start Free (30 Days)
-            </Link>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <button
+                type="button"
+                onClick={() => openCheckout('standard')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
+                  width: '100%',
+                  padding: '0.85rem',
+                  borderRadius: '10px',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-main)',
+                  border: '1.5px solid var(--color-card-border)',
+                  fontSize: '0.92rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <CreditCard size={16} />
+                <span>Configure &amp; Subscribe</span>
+              </button>
+
+              <Link
+                href={`/register?plan=standard&billing=${billing}&currency=${currency}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.35rem',
+                  width: '100%',
+                  padding: '0.65rem',
+                  borderRadius: '8px',
+                  color: '#2563eb',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                <span>Start Free (30 Days)</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
 
           {/* Professional Card (Most Popular) */}
@@ -334,27 +368,52 @@ export default function PricingPage() {
               ))}
             </div>
 
-            <Link
-              href="/register?plan=pro"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                padding: '0.85rem',
-                borderRadius: '10px',
-                background: '#2563eb',
-                color: '#ffffff',
-                border: 'none',
-                fontSize: '0.92rem',
-                fontWeight: 700,
-                textDecoration: 'none',
-                transition: 'all 0.2s',
-                boxShadow: '0 4px 15px rgba(37, 99, 235, 0.3)',
-              }}
-            >
-              Start Free (30 Days)
-            </Link>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <button
+                type="button"
+                onClick={() => openCheckout('pro')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
+                  width: '100%',
+                  padding: '0.85rem',
+                  borderRadius: '10px',
+                  background: '#2563eb',
+                  color: '#ffffff',
+                  border: 'none',
+                  fontSize: '0.92rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 4px 15px rgba(37, 99, 235, 0.3)',
+                }}
+              >
+                <Zap size={16} />
+                <span>Configure &amp; Subscribe</span>
+              </button>
+
+              <Link
+                href={`/register?plan=pro&billing=${billing}&currency=${currency}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.35rem',
+                  width: '100%',
+                  padding: '0.65rem',
+                  borderRadius: '8px',
+                  color: '#2563eb',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                <span>Start Free (30 Days)</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
 
           {/* Enterprise Card */}
@@ -390,26 +449,51 @@ export default function PricingPage() {
               ))}
             </div>
 
-            <Link
-              href="/contact?type=enterprise"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                padding: '0.85rem',
-                borderRadius: '10px',
-                background: 'var(--color-surface)',
-                color: 'var(--color-text-main)',
-                border: '1.5px solid var(--color-card-border)',
-                fontSize: '0.92rem',
-                fontWeight: 700,
-                textDecoration: 'none',
-                transition: 'all 0.2s',
-              }}
-            >
-              Talk to Sales
-            </Link>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <button
+                type="button"
+                onClick={() => openCheckout('enterprise')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
+                  width: '100%',
+                  padding: '0.85rem',
+                  borderRadius: '10px',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-main)',
+                  border: '1.5px solid var(--color-card-border)',
+                  fontSize: '0.92rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <Building2 size={16} />
+                <span>Configure Enterprise Tier</span>
+              </button>
+
+              <Link
+                href="/contact?type=enterprise"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.35rem',
+                  width: '100%',
+                  padding: '0.65rem',
+                  borderRadius: '8px',
+                  color: 'var(--color-text-muted)',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                <span>Talk to Solutions Architect</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -613,6 +697,15 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Self-Serve Checkout & Tier Configuration Modal */}
+      <CheckoutModal
+        isOpen={checkoutModalOpen}
+        onClose={() => setCheckoutModalOpen(false)}
+        initialPlan={modalPlan}
+        initialBilling={billing}
+        initialCurrency={currency}
+      />
     </div>
   );
 }

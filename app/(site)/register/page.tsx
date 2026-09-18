@@ -14,8 +14,39 @@ export default function RegisterPage() {
 
 function RegisterRedirectInner() {
   const searchParams = useSearchParams();
-  const returnTo = searchParams.get('returnTo') || searchParams.get('return_to') || 'http://localhost:4000';
-  const targetOidcUrl = `http://localhost:3005/oidc/register?return_to=${encodeURIComponent(returnTo)}`;
+  const plan = searchParams.get('plan') || 'standard';
+  const billing = searchParams.get('billing') || 'annual';
+  const seats = searchParams.get('seats') || '5';
+  const coupon = searchParams.get('coupon') || '';
+  const currency = searchParams.get('currency') || 'USD';
+  const source = searchParams.get('source') || '';
+
+  const rawReturnTo = searchParams.get('returnTo') || searchParams.get('return_to') || 'http://localhost:4000';
+  
+  let finalReturnTo = rawReturnTo;
+  try {
+    const urlObj = new URL(rawReturnTo.startsWith('http') ? rawReturnTo : `http://localhost:4000${rawReturnTo.startsWith('/') ? rawReturnTo : `/${rawReturnTo}`}`);
+    if (!urlObj.searchParams.has('plan')) urlObj.searchParams.set('plan', plan);
+    if (!urlObj.searchParams.has('billing')) urlObj.searchParams.set('billing', billing);
+    if (!urlObj.searchParams.has('seats')) urlObj.searchParams.set('seats', seats);
+    if (coupon && !urlObj.searchParams.has('coupon')) urlObj.searchParams.set('coupon', coupon);
+    if (currency && !urlObj.searchParams.has('currency')) urlObj.searchParams.set('currency', currency);
+    finalReturnTo = urlObj.toString();
+  } catch {
+    finalReturnTo = rawReturnTo;
+  }
+
+  const queryParts = [
+    `return_to=${encodeURIComponent(finalReturnTo)}`,
+    `plan=${encodeURIComponent(plan)}`,
+    `billing=${encodeURIComponent(billing)}`,
+    `seats=${encodeURIComponent(seats)}`,
+  ];
+  if (coupon) queryParts.push(`coupon=${encodeURIComponent(coupon)}`);
+  if (currency) queryParts.push(`currency=${encodeURIComponent(currency)}`);
+  if (source) queryParts.push(`source=${encodeURIComponent(source)}`);
+
+  const targetOidcUrl = `http://localhost:3005/oidc/register?${queryParts.join('&')}`;
 
   useEffect(() => {
     // Immediate clean browser redirect to centralized OIDC Identity Provider hosted registration

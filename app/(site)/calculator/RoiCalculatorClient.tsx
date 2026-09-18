@@ -332,17 +332,27 @@ export function RoiCalculatorClient() {
               </button>
 
               <Link
-                href="/register"
+                href={`/register?plan=pro&seats=${users}&currency=${currency}&source=roi_calculator`}
                 style={{
                   textAlign: 'center',
-                  padding: '0.75rem',
-                  color: '#93c5fd',
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
+                  padding: '0.85rem',
+                  borderRadius: '10px',
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  color: '#34d399',
+                  fontSize: '0.9rem',
+                  fontWeight: 800,
                   textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
+                  transition: 'all 0.15s',
                 }}
               >
-                Or Start Your 30-Day Free Trial →
+                <Sparkles size={16} />
+                <span>Switch to UniERP &amp; Claim Savings ({users} seats)</span>
+                <ArrowRight size={15} />
               </Link>
             </div>
           </div>

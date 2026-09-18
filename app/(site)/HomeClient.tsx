@@ -608,7 +608,7 @@ export default function HomeClient({ page }: { page?: any }) {
               fontFamily: 'var(--font-display)',
               letterSpacing: '-0.03em',
               margin: '0 0 1rem',
-              color: '#ffffff',
+              color: 'var(--color-text-inverse, #ffffff)',
             }}
           >
             Ready to transform your business with UniERP?
@@ -617,7 +617,7 @@ export default function HomeClient({ page }: { page?: any }) {
             style={{
               fontSize: '1.15rem',
               color: 'rgba(255, 255, 255, 0.9)',
-              maxWidth: '640px',
+              maxWidth: '40rem',
               margin: '0 auto 2.5rem',
               lineHeight: 1.6,
             }}
